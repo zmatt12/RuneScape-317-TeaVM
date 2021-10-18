@@ -80,6 +80,6 @@ public final class TeaSocket implements ISocket {
         if (closeUnderlying) {
             socket.close();
         }
-        System.out.println("close()");
+        System.out.println("close(" + socket.getUrl() + ")");
     }
 }

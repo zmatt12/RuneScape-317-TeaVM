@@ -6229,7 +6229,7 @@ public class Game extends GameShell {
 				aBoolean1205 = connection.read() == 1;
 				aLong1220 = 0L;
 				anInt1022 = 0;
-				//mouseRecorder.anInt810 = 0;
+				mouseRecorder.anInt810 = 0;
 				super.aBoolean17 = true;
 				aBoolean954 = true;
 				ingame = true;
