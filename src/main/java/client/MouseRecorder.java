@@ -17,19 +17,19 @@ public class MouseRecorder implements Runnable {
 
 	@Override
 	public void run() {
-//		while (aBoolean808) {
-//			synchronized (lock) {
-//				if (anInt810 < 500) {
-//					anIntArray809[anInt810] = aGame805.mouseX;
-//					anIntArray807[anInt810] = aGame805.mouseY;
-//					anInt810++;
-//				}
-//			}
-//			try {
-//				Thread.sleep(50L);
-//			} catch (Exception ignored) {
-//			}
-//		}
+		while (aBoolean808) {
+			synchronized (lock) {
+				if (anInt810 < 500) {
+					anIntArray809[anInt810] = aGame805.mouseX;
+					anIntArray807[anInt810] = aGame805.mouseY;
+					anInt810++;
+				}
+			}
+			try {
+				Thread.sleep(50L);
+			} catch (Exception ignored) {
+			}
+		}
 	}
 
 }
