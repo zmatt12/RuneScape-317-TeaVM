@@ -2,3 +2,6 @@
 .idea/
 target/
 out/
+classes.js
+/classes.js.teavmdbg
+/classes.js.map
