@@ -23,7 +23,6 @@ public class WebSocketInputStream extends InputStream {
         this.socket = socket;
         socket.onMessage(evt -> {
             Uint8ClampedArray arr = Uint8ClampedArray.create(evt.getDataAsArray());
-            System.out.println("Received Data:" + arr.getLength());
             buffers.add(arr);
             completeAndDelete(CallbackResult.READ);
         });
@@ -52,7 +51,7 @@ public class WebSocketInputStream extends InputStream {
     public int available() throws IOException {
         int i = curr != null ? curr.getLength() - index : 0;
         for (int j = 0; j < buffers.size(); j++) {
-            i += buffers.get(i).getLength();
+            i += buffers.get(j).getLength();
         }
         return i;
     }
