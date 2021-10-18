@@ -55,7 +55,6 @@ public final class TeaSocket implements ISocket {
     }
 
     public static TeaSocket open(String server, int port){
-        port -= 10000; // TODO offset for websocket, have it passed in via main
         System.out.println("TeaSocket.open(" + server + "," + port + ")");
         TeaSocket socket = connect(server, port);
         socket.socket.onClose(e ->{

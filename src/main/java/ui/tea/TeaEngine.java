@@ -17,8 +17,13 @@ import java.net.UnknownHostException;
 public class TeaEngine extends WindowEngine {
 
     private static HtmlComponent component;
+    private static int portOffset;
 
     public static void init(String canvasId){
+        init(canvasId, 10000);
+    }
+
+    public static void init(String canvasId, int portOffset){
         if(component != null){
             return;
         }
@@ -27,6 +32,7 @@ public class TeaEngine extends WindowEngine {
         double bsr = JSMethods.getBackingStoreRatio(context);
         double pr = Window.current().getDevicePixelRatio();
         component = new HtmlComponent(canvas, context, pr/bsr);
+        portOffset = portOffset;
     }
 
     @Override
@@ -74,6 +80,7 @@ public class TeaEngine extends WindowEngine {
 
     @Override
     public ISocket openSocket(String server, int port) throws UnknownHostException, IOException {
+        port -= portOffset;
         return TeaSocket.open(server, port);
     }
 }
