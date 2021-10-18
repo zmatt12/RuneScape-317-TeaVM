@@ -42,9 +42,15 @@ public final class TeaSocket implements ISocket {
 
     @Override
     public void close() throws IOException {
+        close(true);
+    }
+
+    public void close(boolean closeUnderlying) throws IOException {
         out.close();
         in.close();
-        socket.close();
+        if(closeUnderlying) {
+            socket.close();
+        }
         System.out.println("close()");
     }
 
@@ -52,6 +58,18 @@ public final class TeaSocket implements ISocket {
         port -= 10000; // TODO offset for websocket, have it passed in via main
         System.out.println("TeaSocket.open(" + server + "," + port + ")");
         TeaSocket socket = connect(server, port);
+        socket.socket.onClose(e ->{
+            try {
+                socket.close(false);
+            } catch (IOException ignored) {
+            }
+        });
+        socket.socket.onError(event -> {
+            try {
+                socket.close(false);
+            } catch (IOException ignored) {
+            }
+        });
         return socket;
     }
 
@@ -63,11 +81,5 @@ public final class TeaSocket implements ISocket {
         TeaSocket s = new TeaSocket(ws);
         ws.onOpen( e -> callback.complete(s));
         ws.onError(e -> callback.error(new IOException("Unable to open socket")));
-        ws.onClose(e ->{
-            try {
-                s.close();
-            } catch (IOException ignored) {
-            }
-        });
     }
 }
