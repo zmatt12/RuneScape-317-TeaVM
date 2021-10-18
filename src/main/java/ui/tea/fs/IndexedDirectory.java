@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class IndexedDirectory extends AbstractIndexedFile{
+public class IndexedDirectory extends AbstractIndexedFile {
     final Map<String, AbstractIndexedFile> children = new LinkedHashMap<>();
 
     public IndexedDirectory(String name) {

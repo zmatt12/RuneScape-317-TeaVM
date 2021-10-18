@@ -1,6 +1,9 @@
 package ui.awt.impl;
 
-import ui.*;
+import ui.AbstractComponent;
+import ui.IFont;
+import ui.IFontMetrics;
+import ui.IGraphics;
 
 import java.awt.*;
 
@@ -9,19 +12,19 @@ public class AWTComponent extends AbstractComponent {
     private final Component component;
     private IGraphics graphics;
 
-    AWTComponent(Component c){
+    AWTComponent(Component c) {
         this.component = c;
     }
 
-    public Component getAwtComponent(){
+    public Component getAwtComponent() {
         return component;
     }
 
     @Override
     public IGraphics getGraphics() {
-        if(this.graphics == null){
+        if (this.graphics == null) {
             Graphics g = component.getGraphics();
-            if(g == null) {
+            if (g == null) {
                 return null;
             }
             this.graphics = new AWTGraphics(g);
@@ -66,6 +69,6 @@ public class AWTComponent extends AbstractComponent {
 
     @Override
     public IFontMetrics getFontMetrics(IFont font) {
-        return new AWTFontMetrics(component.getFontMetrics(((AWTFont)font).getFont()));
+        return new AWTFontMetrics(component.getFontMetrics(((AWTFont) font).getFont()));
     }
 }

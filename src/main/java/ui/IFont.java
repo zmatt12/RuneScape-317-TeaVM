@@ -6,7 +6,7 @@ public interface IFont {
     int BOLD = 1;
     int ITALIC = 2;
 
-    static IFont get(String name, int style, int size){
+    static IFont get(String name, int style, int size) {
         return WindowEngine.getDefault().getFont(name, style, size);
     }
 }

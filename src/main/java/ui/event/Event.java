@@ -12,11 +12,11 @@ public abstract class Event {
 
     public abstract int getEventType();
 
-    public final boolean consumed(){
+    public final boolean consumed() {
         return consumed;
     }
 
-    public void consume(){
+    public void consume() {
         this.consumed = true;
     }
 }

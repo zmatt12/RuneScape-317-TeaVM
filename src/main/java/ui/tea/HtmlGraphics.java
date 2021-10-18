@@ -37,7 +37,7 @@ public class HtmlGraphics implements IGraphics {
     @Override
     public void setFont(IFont font) {
         //TODO scale the font size based on resolution, right now we just use the size as a pixel value
-        ImmutableFont f = (ImmutableFont)font;
+        ImmutableFont f = (ImmutableFont) font;
         context.setFont(f.toHtml());
     }
 
@@ -49,7 +49,7 @@ public class HtmlGraphics implements IGraphics {
 
     @Override
     public void drawImage(IImage img, int x, int y, Object observer) {
-        ImageDataImage i = (ImageDataImage)img;
+        ImageDataImage i = (ImageDataImage) img;
         HTMLCanvasElement canvas = i.getRenderCanvas();
         i.updateData();
         context.drawImage(canvas, x, y, img.getWidth(), img.getHeight());

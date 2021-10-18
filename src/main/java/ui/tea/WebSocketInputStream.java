@@ -19,35 +19,39 @@ public class WebSocketInputStream extends InputStream {
     private AsyncCallback<CallbackResult> callback = null;
     private boolean closed = false;
 
-    private enum CallbackResult{
-        READ, ERROR, CLOSED;
-    }
-
     public WebSocketInputStream(WebSocket socket) {
         this.socket = socket;
         socket.onMessage(evt -> {
             Uint8ClampedArray arr = Uint8ClampedArray.create(evt.getDataAsArray());
             System.out.println("Received Data:" + arr.getLength());
             buffers.add(arr);
-            fireAndDelete(CallbackResult.READ);
+            completeAndDelete(CallbackResult.READ);
         });
-        socket.onError( evt ->{
-            fireAndDelete(CallbackResult.ERROR);
+        socket.onError(evt -> {
+            errorAndDelete(new IOException("Socket Error"));
         });
     }
 
-    private void fireAndDelete(CallbackResult i) {
+    private void errorAndDelete(Throwable t) {
         AsyncCallback<CallbackResult> c = this.callback;
-        if(c != null){
+        if (c != null) {
             this.callback = null;
-            c.complete(i);
+            c.error(t);
+        }
+    }
+
+    private void completeAndDelete(CallbackResult res) {
+        AsyncCallback<CallbackResult> c = this.callback;
+        if (c != null) {
+            this.callback = null;
+            c.complete(res);
         }
     }
 
     @Override
     public int available() throws IOException {
         int i = curr != null ? curr.getLength() - index : 0;
-        for(int j = 0; j < buffers.size(); j++) {
+        for (int j = 0; j < buffers.size(); j++) {
             i += buffers.get(i).getLength();
         }
         return i;
@@ -55,19 +59,19 @@ public class WebSocketInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        if(closed){
+        if (closed) {
             return -1;
         }
-        if(curr != null && index < curr.getLength()) {
+        if (curr != null && index < curr.getLength()) {
             return curr.get(index++);
         }
-        if(!buffers.isEmpty()) {
+        if (!buffers.isEmpty()) {
             curr = buffers.remove(0);
             index = 0;
             return read(); // re try the read with the new buffer
         }
         CallbackResult result = awaitBuffer();
-        if(result == CallbackResult.READ) {
+        if (result == CallbackResult.READ) {
             return read(); // new buffer received, re-try again
         }
         //TODO throw error if result == ERROR
@@ -81,23 +85,23 @@ public class WebSocketInputStream extends InputStream {
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        if(closed){
+        if (closed) {
             return -1;
         }
-        if(curr != null && index < curr.getLength()){
+        if (curr != null && index < curr.getLength()) {
             int count = Math.min(curr.getLength() - index, len);
-            for(int i = 0; i < count; i++){
+            for (int i = 0; i < count; i++) {
                 b[off + i] = (byte) curr.get(index++);
             }
             return count;
         }
-        if(!buffers.isEmpty()) {
+        if (!buffers.isEmpty()) {
             curr = buffers.remove(0);
             index = 0;
             return read(b, off, len); // re try the read with the new buffer
         }
         CallbackResult result = awaitBuffer();
-        if(result == CallbackResult.READ) {
+        if (result == CallbackResult.READ) {
             return read(b, off, len); // new buffer received, re-try again
         }
         //TODO throw error if result == ERROR
@@ -106,14 +110,19 @@ public class WebSocketInputStream extends InputStream {
 
     @Override
     public void close() throws IOException {
-        fireAndDelete(CallbackResult.CLOSED);
+        completeAndDelete(CallbackResult.CLOSED);
         closed = true;
         super.close();
     }
 
     @Async
-    private native CallbackResult awaitBuffer();
+    private native CallbackResult awaitBuffer() throws IOException;
+
     private void awaitBuffer(AsyncCallback<CallbackResult> callback) {
         this.callback = callback;
+    }
+
+    private enum CallbackResult {
+        READ, CLOSED
     }
 }

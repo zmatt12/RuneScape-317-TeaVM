@@ -8,14 +8,14 @@ public class AWTMouseEvent extends MouseEvent {
 
     private final java.awt.event.MouseEvent event;
 
-    public AWTMouseEvent(java.awt.event.MouseEvent event){
+    public AWTMouseEvent(java.awt.event.MouseEvent event) {
         super(event.getX(), event.getY());
         this.event = event;
     }
 
     @Override
     public int getEventType() {
-        switch(event.getID()){
+        switch (event.getID()) {
             case java.awt.event.MouseEvent.MOUSE_CLICKED:
                 return TYPE_CLICKED;
             case java.awt.event.MouseEvent.MOUSE_DRAGGED:

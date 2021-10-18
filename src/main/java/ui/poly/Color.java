@@ -8,11 +8,11 @@ public final class Color {
 
     private final int red, green, blue, alpha;
 
-    public Color(int r, int g, int b){
+    public Color(int r, int g, int b) {
         this(r, g, b, 255);
     }
 
-    public Color(int r, int g, int b, int a){
+    public Color(int r, int g, int b, int a) {
         this.red = r;
         this.green = g;
         this.blue = b;
@@ -35,7 +35,7 @@ public final class Color {
         return alpha;
     }
 
-    public int toRGBA(){
+    public int toRGBA() {
         return (red << 24) | (blue << 16) | (green << 8) | alpha;
     }
 

@@ -8,7 +8,7 @@ class AWTFontMetrics implements IFontMetrics {
 
     private final FontMetrics metrics;
 
-    public AWTFontMetrics(FontMetrics metrics){
+    public AWTFontMetrics(FontMetrics metrics) {
         this.metrics = metrics;
     }
 

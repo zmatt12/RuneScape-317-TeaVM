@@ -4,11 +4,9 @@ import ui.event.KeyEvent;
 
 public class AWTKeyEvent extends KeyEvent {
 
-    private final java.awt.event.KeyEvent event;
-
     private static final int[] CODE_MAP = new int[2000];
 
-    static{
+    static {
         CODE_MAP[java.awt.event.KeyEvent.VK_LEFT] = KeyEvent.VK_LEFT;
         CODE_MAP[java.awt.event.KeyEvent.VK_RIGHT] = KeyEvent.VK_RIGHT;
         CODE_MAP[java.awt.event.KeyEvent.VK_UP] = KeyEvent.VK_UP;
@@ -19,7 +17,7 @@ public class AWTKeyEvent extends KeyEvent {
         CODE_MAP[java.awt.event.KeyEvent.VK_TAB] = KeyEvent.VK_TAB;
         CODE_MAP[java.awt.event.KeyEvent.VK_ENTER] = KeyEvent.VK_ENTER;
 
-        for(int i = 0; i < VK_F12 - VK_F1; i++) {
+        for (int i = 0; i < VK_F12 - VK_F1; i++) {
             CODE_MAP[java.awt.event.KeyEvent.VK_F1 + i] = KeyEvent.VK_F1 + i;
         }
 
@@ -29,14 +27,16 @@ public class AWTKeyEvent extends KeyEvent {
         CODE_MAP[java.awt.event.KeyEvent.VK_PAGE_DOWN] = KeyEvent.VK_PAGE_DOWN;
     }
 
-    public AWTKeyEvent(java.awt.event.KeyEvent event){
+    private final java.awt.event.KeyEvent event;
+
+    public AWTKeyEvent(java.awt.event.KeyEvent event) {
         this.event = event;
     }
 
     @Override
     public int getKeyCode() {
         int code = CODE_MAP[event.getKeyCode()];
-        if(code != 0){
+        if (code != 0) {
             return code;
         }
         return event.getKeyCode();
@@ -49,7 +49,7 @@ public class AWTKeyEvent extends KeyEvent {
 
     @Override
     public int getEventType() {
-        switch(event.getID()){
+        switch (event.getID()) {
             case java.awt.event.KeyEvent.KEY_PRESSED:
                 return KeyEvent.TYPE_PRESSED;
             case java.awt.event.KeyEvent.KEY_RELEASED:

@@ -1,6 +1,6 @@
 package ui.event;
 
-public abstract class KeyEvent extends Event{
+public abstract class KeyEvent extends Event {
 
     public static final int TYPE_PRESSED = 0;
     public static final int TYPE_RELEASED = 1;

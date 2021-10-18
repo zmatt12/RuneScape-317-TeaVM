@@ -1,9 +1,9 @@
 package ui.awt.impl;
 
-import ui.poly.Color;
 import ui.IFont;
 import ui.IGraphics;
 import ui.IImage;
+import ui.poly.Color;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -12,11 +12,11 @@ class AWTGraphics implements IGraphics {
 
     private final Graphics graphics;
 
-    public AWTGraphics(Graphics graphics){
+    public AWTGraphics(Graphics graphics) {
         this.graphics = graphics;
     }
 
-    public Graphics getGraphics(){
+    public Graphics getGraphics() {
         return graphics;
     }
 
@@ -37,7 +37,7 @@ class AWTGraphics implements IGraphics {
 
     @Override
     public void setFont(IFont font) {
-        graphics.setFont(((AWTFont)font).getFont());
+        graphics.setFont(((AWTFont) font).getFont());
     }
 
     @Override
@@ -47,6 +47,6 @@ class AWTGraphics implements IGraphics {
 
     @Override
     public void drawImage(IImage img, int width, int height, Object observer) {
-        graphics.drawImage(((AWTImage)img).getImage(), width, height, (ImageObserver) observer);
+        graphics.drawImage(((AWTImage) img).getImage(), width, height, (ImageObserver) observer);
     }
 }

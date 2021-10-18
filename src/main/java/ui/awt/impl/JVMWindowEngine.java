@@ -33,7 +33,7 @@ public class JVMWindowEngine extends WindowEngine {
     public IImage createImage(byte[] data) {
         try {
             BufferedImage br = ImageIO.read(new ByteArrayInputStream(data));
-            if(br.getType() != BufferedImage.TYPE_INT_RGB) {
+            if (br.getType() != BufferedImage.TYPE_INT_RGB) {
                 BufferedImage tmp = new BufferedImage(br.getWidth(), br.getHeight(), BufferedImage.TYPE_INT_RGB);
                 tmp.getGraphics().drawImage(br, 0, 0, null);
                 br = tmp;

@@ -19,20 +19,29 @@ public class TeaEngine extends WindowEngine {
     private static HtmlComponent component;
     private static int portOffset;
 
-    public static void init(String canvasId){
+    public static void init(String canvasId) {
         init(canvasId, 10000);
     }
 
-    public static void init(String canvasId, int offset){
-        if(component != null){
+    public static void init(String canvasId, int offset) {
+        if (component != null) {
             return;
         }
         HTMLCanvasElement canvas = Window.current().getDocument().getElementById(canvasId).cast();
         CanvasRenderingContext2D context = (CanvasRenderingContext2D) canvas.getContext("2d");
         double bsr = JSMethods.getBackingStoreRatio(context);
         double pr = Window.current().getDevicePixelRatio();
-        component = new HtmlComponent(canvas, context, pr/bsr);
+        component = new HtmlComponent(canvas, context, pr / bsr);
         portOffset = offset;
+    }
+
+    @Async
+    private static native HTMLImageElement load(String url);
+
+    private static void load(String url, AsyncCallback<HTMLImageElement> callback) {
+        HTMLImageElement img = Window.current().getDocument().createElement("img").cast();
+        img.addEventListener("load", evt -> callback.complete(img));
+        img.setSrc(url);
     }
 
     @Override
@@ -61,17 +70,9 @@ public class TeaEngine extends WindowEngine {
         return new ImageDataImage(iData);
     }
 
-    @Async
-    private static native HTMLImageElement load(String url);
-    private static void load(String url, AsyncCallback<HTMLImageElement> callback) {
-        HTMLImageElement img = Window.current().getDocument().createElement("img").cast();
-        img.addEventListener("load", evt -> callback.complete(img));
-        img.setSrc(url);
-    }
-
     @Override
     public IImage createImage(int width, int height, int type) {
-        if(type != IImage.TYPE_INT_RGB) {
+        if (type != IImage.TYPE_INT_RGB) {
             throw new RuntimeException("Bad image type");
         }
         ImageData data = component.getContext().createImageData(width, height);
@@ -79,7 +80,7 @@ public class TeaEngine extends WindowEngine {
     }
 
     @Override
-    public ISocket openSocket(String server, int port) throws UnknownHostException, IOException {
+    public ISocket openSocket(String server, int port) throws IOException {
         port -= portOffset;
         return TeaSocket.open(server, port);
     }

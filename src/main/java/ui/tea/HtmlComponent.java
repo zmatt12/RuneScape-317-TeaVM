@@ -65,7 +65,7 @@ class HtmlComponent extends AbstractComponent {
             evt.preventDefault(); // stop stuff like F1-F12 affecting the webpage
             String key = evt.getKey();
             int code = evt.getKeyCode();
-            if(key.length() > 1) {
+            if (key.length() > 1) {
                 code += 1000;
             }
             char c = key.charAt(0);

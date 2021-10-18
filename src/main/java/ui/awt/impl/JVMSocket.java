@@ -9,14 +9,14 @@ import java.net.Socket;
 
 final class JVMSocket implements ISocket {
 
-    private Socket socket;
+    private final Socket socket;
 
-    JVMSocket(Socket socket){
+    JVMSocket(Socket socket) {
         this.socket = socket;
     }
 
     @Override
-    public void setSoTimeout(int timeout) throws IOException{
+    public void setSoTimeout(int timeout) throws IOException {
         this.socket.setSoTimeout(timeout);
     }
 

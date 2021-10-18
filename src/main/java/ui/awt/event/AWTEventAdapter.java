@@ -7,6 +7,7 @@ import java.awt.event.*;
 public class AWTEventAdapter implements FocusListener, KeyListener, MouseMotionListener, MouseListener {
 
     private final IComponent target;
+
     public AWTEventAdapter(IComponent target) {
         this.target = target;
     }

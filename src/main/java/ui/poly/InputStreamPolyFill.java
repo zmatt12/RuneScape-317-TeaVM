@@ -12,7 +12,7 @@ public final class InputStreamPolyFill {
     private static final int MAX_BUFFER_SIZE = Integer.MAX_VALUE - 8;
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
-    private InputStreamPolyFill(){
+    private InputStreamPolyFill() {
 
     }
 

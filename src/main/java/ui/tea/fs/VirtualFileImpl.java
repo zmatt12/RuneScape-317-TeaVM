@@ -6,8 +6,8 @@ import org.teavm.classlib.fs.VirtualFileAccessor;
 import java.io.IOException;
 
 public class VirtualFileImpl implements VirtualFile {
-    private VirtualIndexedFileSystem fs;
-    private String path;
+    private final VirtualIndexedFileSystem fs;
+    private final String path;
 
     public VirtualFileImpl(VirtualIndexedFileSystem fs, String path) {
         this.fs = fs;

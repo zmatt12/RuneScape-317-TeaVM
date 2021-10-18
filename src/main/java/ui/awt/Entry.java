@@ -7,7 +7,7 @@ import javax.swing.*;
 
 public class Entry {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         JFrame frame = new JFrame("Lol");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

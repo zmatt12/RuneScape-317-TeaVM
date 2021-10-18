@@ -13,15 +13,15 @@ public class HtmlFontMetrics implements IFontMetrics {
     private final CanvasRenderingContext2D context;
 
     public HtmlFontMetrics(IFont font) {
-        this((HTMLCanvasElement)Window.current().getDocument().createElement("canvas"));
-        context.setFont(((ImmutableFont)font).toHtml());
+        this((HTMLCanvasElement) Window.current().getDocument().createElement("canvas"));
+        context.setFont(((ImmutableFont) font).toHtml());
     }
 
-    public HtmlFontMetrics(HTMLCanvasElement canvas){
+    public HtmlFontMetrics(HTMLCanvasElement canvas) {
         this(canvas, canvas.getContext("2d").cast());
     }
 
-    public HtmlFontMetrics(HTMLCanvasElement canvas, CanvasRenderingContext2D context){
+    public HtmlFontMetrics(HTMLCanvasElement canvas, CanvasRenderingContext2D context) {
         this.canvas = canvas;
         this.context = context;
     }

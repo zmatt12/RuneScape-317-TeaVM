@@ -10,7 +10,7 @@ public abstract class AbstractIndexedFile {
     long lastModified = System.currentTimeMillis();
     boolean readOnly;
 
-    public AbstractIndexedFile(String name){
+    public AbstractIndexedFile(String name) {
         this.name = name;
     }
 

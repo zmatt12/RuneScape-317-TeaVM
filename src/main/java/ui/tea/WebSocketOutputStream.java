@@ -10,7 +10,8 @@ import java.util.Arrays;
 public class WebSocketOutputStream extends OutputStream {
 
     private final WebSocket socket;
-    public WebSocketOutputStream(WebSocket socket){
+
+    public WebSocketOutputStream(WebSocket socket) {
         this.socket = socket;
     }
 

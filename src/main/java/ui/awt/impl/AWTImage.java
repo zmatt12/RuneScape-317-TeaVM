@@ -15,7 +15,7 @@ class AWTImage implements IImage {
         this.image = image;
     }
 
-    public Image getImage(){
+    public Image getImage() {
         return image;
     }
 
@@ -33,7 +33,7 @@ class AWTImage implements IImage {
 
     @Override
     public int[] getBufferAsIntegers() {
-        if(!(image instanceof BufferedImage)){
+        if (!(image instanceof BufferedImage)) {
             throw new RuntimeException("Bad image");
         }
         BufferedImage br = (BufferedImage) image;

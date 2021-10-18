@@ -14,7 +14,7 @@ public class ImageDataImage implements IImage {
     private final ImageData data;
     private final int[] pixels;
 
-    public ImageDataImage(ImageData data){
+    public ImageDataImage(ImageData data) {
         renderCanvas = org.teavm.jso.browser.Window.current().getDocument().createElement("canvas").cast();
         renderCanvas.setHeight(data.getHeight());
         renderCanvas.setWidth(data.getWidth());
@@ -25,11 +25,11 @@ public class ImageDataImage implements IImage {
         getPixels();
     }
 
-    public HTMLCanvasElement getRenderCanvas(){
+    public HTMLCanvasElement getRenderCanvas() {
         return renderCanvas;
     }
 
-    public ImageData getData(){
+    public ImageData getData() {
         return data;
     }
 
@@ -48,9 +48,9 @@ public class ImageDataImage implements IImage {
         return pixels;
     }
 
-    public void getPixels(){
+    public void getPixels() {
         Uint8ClampedArray arr = data.getData();
-        for(int i = 0; i < pixels.length; i++) {
+        for (int i = 0; i < pixels.length; i++) {
             int offset = i * 4;
             int r = arr.get(offset);
             int g = arr.get(offset + 1);
@@ -61,9 +61,9 @@ public class ImageDataImage implements IImage {
         }
     }
 
-    public void setPixels(){
+    public void setPixels() {
         Uint8ClampedArray arr = Uint8ClampedArray.create(data.getData().getByteLength());
-        for(int i = 0; i < arr.getByteLength(); i+= 4) {
+        for (int i = 0; i < arr.getByteLength(); i += 4) {
             int pixel = pixels[i / 4];
             int r = (pixel >> 16) & 0xFF;
             int g = (pixel >> 8) & 0xFF;

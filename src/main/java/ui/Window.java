@@ -12,7 +12,7 @@ public class Window {
         return null;
     }
 
-    public IComponent getComponent(){
+    public IComponent getComponent() {
         return component;
     }
 

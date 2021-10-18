@@ -3,15 +3,16 @@ package ui.poly;
 public final class Dimension {
 
     public int width, height;
-    public Dimension(){
-        this(0,0);
+
+    public Dimension() {
+        this(0, 0);
     }
 
-    public Dimension(Dimension dimension){
+    public Dimension(Dimension dimension) {
         this(dimension.getHeight(), dimension.getHeight());
     }
 
-    public Dimension(int width, int height){
+    public Dimension(int width, int height) {
         this.width = width;
         this.height = height;
     }

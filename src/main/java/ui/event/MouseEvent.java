@@ -1,8 +1,6 @@
 package ui.event;
 
-public abstract class MouseEvent extends Event{
-
-    private final int x, y;
+public abstract class MouseEvent extends Event {
 
     public static final int TYPE_CLICKED = 0;
     public static final int TYPE_DRAGGED = 1;
@@ -12,8 +10,9 @@ public abstract class MouseEvent extends Event{
     public static final int TYPE_PRESSED = 5;
     public static final int TYPE_RELEASED = 6;
     public static final int TYPE_WHEEL = 7;
+    private final int x, y;
 
-    public MouseEvent(int x, int y){
+    public MouseEvent(int x, int y) {
         this.x = x;
         this.y = y;
     }

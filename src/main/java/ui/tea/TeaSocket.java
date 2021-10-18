@@ -14,10 +14,39 @@ public final class TeaSocket implements ISocket {
     private final OutputStream out;
     private final InputStream in;
 
-    public TeaSocket(WebSocket socket){
+    public TeaSocket(WebSocket socket) {
         this.socket = socket;
         this.out = new WebSocketOutputStream(socket);
         this.in = new WebSocketInputStream(socket);
+    }
+
+    public static TeaSocket open(String server, int port) {
+        System.out.println("TeaSocket.open(" + server + "," + port + ")");
+        TeaSocket socket = connect(server, port);
+        socket.socket.onClose(e -> {
+            try {
+                socket.close(false);
+            } catch (IOException ignored) {
+            }
+        });
+        socket.socket.onError(event -> {
+            try {
+                socket.close(false);
+            } catch (IOException ignored) {
+            }
+        });
+        return socket;
+    }
+
+    @Async
+    private static native TeaSocket connect(String server, int port);
+
+    private static void connect(String server, int port, AsyncCallback<TeaSocket> callback) {
+        WebSocket ws = WebSocket.create("ws://" + server + ":" + port, "binary");
+        ws.setBinaryType("arraybuffer");
+        TeaSocket s = new TeaSocket(ws);
+        ws.onOpen(e -> callback.complete(s));
+        ws.onError(e -> callback.error(new IOException("Unable to open socket")));
     }
 
     @Override
@@ -48,37 +77,9 @@ public final class TeaSocket implements ISocket {
     public void close(boolean closeUnderlying) throws IOException {
         out.close();
         in.close();
-        if(closeUnderlying) {
+        if (closeUnderlying) {
             socket.close();
         }
         System.out.println("close()");
-    }
-
-    public static TeaSocket open(String server, int port){
-        System.out.println("TeaSocket.open(" + server + "," + port + ")");
-        TeaSocket socket = connect(server, port);
-        socket.socket.onClose(e ->{
-            try {
-                socket.close(false);
-            } catch (IOException ignored) {
-            }
-        });
-        socket.socket.onError(event -> {
-            try {
-                socket.close(false);
-            } catch (IOException ignored) {
-            }
-        });
-        return socket;
-    }
-
-    @Async
-    private static native TeaSocket connect(String server, int port);
-    private static void connect(String server, int port, AsyncCallback<TeaSocket>callback){
-        WebSocket ws = WebSocket.create("ws://" + server + ":" + port, "binary");
-        ws.setBinaryType("arraybuffer");
-        TeaSocket s = new TeaSocket(ws);
-        ws.onOpen( e -> callback.complete(s));
-        ws.onError(e -> callback.error(new IOException("Unable to open socket")));
     }
 }

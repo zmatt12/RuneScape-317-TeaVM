@@ -1,26 +1,26 @@
 package ui;
 
-public final class ImmutableFont implements IFont{
+public final class ImmutableFont implements IFont {
 
     private final String name;
     private final int style;
     private final int size;
 
-    public ImmutableFont(String name, int style, int size){
+    public ImmutableFont(String name, int style, int size) {
         this.name = name;
         this.style = style;
         this.size = size;
     }
 
-    public boolean isBold(){
+    public boolean isBold() {
         return (style & BOLD) != 0;
     }
 
-    public boolean isPlain(){
+    public boolean isPlain() {
         return style == PLAIN;
     }
 
-    public boolean isItalics(){
+    public boolean isItalics() {
         return (style & ITALIC) != 0;
     }
 
@@ -36,12 +36,12 @@ public final class ImmutableFont implements IFont{
         return size;
     }
 
-    public String toHtml(){
+    public String toHtml() {
         StringBuilder sb = new StringBuilder(size + "px ");
-        if(isBold()){
+        if (isBold()) {
             sb.append("bold ");
         }
-        if(isItalics()) {
+        if (isItalics()) {
             sb.append("italics ");
         }
 

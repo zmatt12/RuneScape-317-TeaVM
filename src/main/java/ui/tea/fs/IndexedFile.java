@@ -5,7 +5,7 @@ import org.teavm.classlib.fs.VirtualFileAccessor;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class IndexedFile extends AbstractIndexedFile{
+public class IndexedFile extends AbstractIndexedFile {
     byte[] data = new byte[0];
     int size;
 

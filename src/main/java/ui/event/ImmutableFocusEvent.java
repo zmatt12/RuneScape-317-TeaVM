@@ -1,10 +1,10 @@
 package ui.event;
 
-public final class ImmutableFocusEvent extends FocusEvent{
+public final class ImmutableFocusEvent extends FocusEvent {
 
     private final int type;
 
-    public ImmutableFocusEvent(int type){
+    public ImmutableFocusEvent(int type) {
         this.type = type;
     }
 

@@ -10,7 +10,7 @@ import org.teavm.jso.websocket.WebSocket;
 
 public final class JSMethods {
 
-    private JSMethods(){
+    private JSMethods() {
 
     }
 

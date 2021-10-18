@@ -1,12 +1,12 @@
 package ui.event;
 
-public class ImmutableKeyEvent extends KeyEvent{
+public class ImmutableKeyEvent extends KeyEvent {
 
     private final int type;
     private final int code;
     private final char key;
 
-    public ImmutableKeyEvent(int type, int code, char key){
+    public ImmutableKeyEvent(int type, int code, char key) {
         this.type = type;
         this.code = code;
         this.key = key;
