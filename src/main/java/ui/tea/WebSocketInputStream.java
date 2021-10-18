@@ -45,6 +45,15 @@ public class WebSocketInputStream extends InputStream {
     }
 
     @Override
+    public int available() throws IOException {
+        int i = curr != null ? curr.getLength() - index : 0;
+        for(int j = 0; j < buffers.size(); j++) {
+            i += buffers.get(i).getLength();
+        }
+        return i;
+    }
+
+    @Override
     public int read() throws IOException {
         if(closed){
             return -1;
@@ -59,7 +68,37 @@ public class WebSocketInputStream extends InputStream {
         }
         CallbackResult result = awaitBuffer();
         if(result == CallbackResult.READ) {
-            return read(); // new buffer recived, re-try again
+            return read(); // new buffer received, re-try again
+        }
+        //TODO throw error if result == ERROR
+        return -1; // socket closed
+    }
+
+    @Override
+    public int read(byte[] b) throws IOException {
+        return read(b, 0, b.length);
+    }
+
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        if(closed){
+            return -1;
+        }
+        if(curr != null && index < curr.getLength()){
+            int count = Math.min(curr.getLength() - index, len);
+            for(int i = 0; i < count; i++){
+                b[off + i] = (byte) curr.get(index++);
+            }
+            return count;
+        }
+        if(!buffers.isEmpty()) {
+            curr = buffers.remove(0);
+            index = 0;
+            return read(b, off, len); // re try the read with the new buffer
+        }
+        CallbackResult result = awaitBuffer();
+        if(result == CallbackResult.READ) {
+            return read(b, off, len); // new buffer received, re-try again
         }
         //TODO throw error if result == ERROR
         return -1; // socket closed
