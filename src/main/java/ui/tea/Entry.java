@@ -12,7 +12,11 @@ public class Entry {
 //        }else{
 //            System.err.println("IDB not supported, you'll be downloading the whole game every start!");
 //        }
-        TeaEngine.init(args[0]);
+        if(args.length > 1){
+            TeaEngine.init(args[0], Integer.parseInt(args[1]));
+        }else {
+            TeaEngine.init(args[0]);
+        }
         client.Game.main(new String[]{"0", "0", "highmem", "free", "10"});
     }
 }

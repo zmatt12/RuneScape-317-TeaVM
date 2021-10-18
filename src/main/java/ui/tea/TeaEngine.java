@@ -23,7 +23,7 @@ public class TeaEngine extends WindowEngine {
         init(canvasId, 10000);
     }
 
-    public static void init(String canvasId, int portOffset){
+    public static void init(String canvasId, int offset){
         if(component != null){
             return;
         }
@@ -32,7 +32,7 @@ public class TeaEngine extends WindowEngine {
         double bsr = JSMethods.getBackingStoreRatio(context);
         double pr = Window.current().getDevicePixelRatio();
         component = new HtmlComponent(canvas, context, pr/bsr);
-        portOffset = portOffset;
+        portOffset = offset;
     }
 
     @Override
