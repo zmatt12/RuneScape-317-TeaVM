@@ -654,8 +654,11 @@ public class Game extends GameShell {
 			FileArchive archiveWordenc = loadArchive(7, "chat system", "wordenc", archiveChecksum[7], 50);
 			FileArchive archiveSounds = loadArchive(8, "sound effects", "sounds", archiveChecksum[8], 55);
 
-			planeTileFlags = new byte[4][104][104];
-			planeHeightmap = new int[4][105][105];
+			planeTileFlags = WindowEngine.getDefault().alloc().byteArray(4, 104, 104);
+
+			planeHeightmap = WindowEngine.getDefault().alloc().intArray(4, 105, 105);
+
+
 			scene = new Scene(104, 104, planeHeightmap, 4);
 
 			for (int plane = 0; plane < 4; plane++) {
@@ -1786,91 +1789,88 @@ public class Game extends GameShell {
 	}
 
 	public void createMinimap(int plane) {
-		int[] pixels = imageMinimap.pixels;
+			int[] pixels = imageMinimap.pixels;
 
-		Arrays.fill(pixels, 0);
+			Arrays.fill(pixels, 0);
+			for (int z = 1; z < 103; z++) {
+				int offset = (52 + (48 * 512)) + ((103 - z) * 512 * 4);
 
-		for (int z = 1; z < 103; z++) {
-			int offset = (52 + (48 * 512)) + ((103 - z) * 512 * 4);
+				for (int x = 1; x < 103; x++) {
 
-			for (int x = 1; x < 103; x++) {
-				if ((planeTileFlags[plane][x][z] & 0x18) == 0) {
-					scene.drawMinimapTile(pixels, offset, 512, plane, x, z);
-				}
-
-				if ((plane < 3) && ((planeTileFlags[plane + 1][x][z] & 8) != 0)) {
-					scene.drawMinimapTile(pixels, offset, 512, plane + 1, x, z);
-				}
-
-				offset += 4;
-			}
-		}
-
-		int wall = 0xEEEEEE;
-		int door = 0xEE0000;
-
-		imageMinimap.bind();
-
-		for (int z = 1; z < 103; z++) {
-			for (int x = 1; x < 103; x++) {
-				if ((planeTileFlags[plane][x][z] & 0x18) == 0) {
-					drawMinimapLoc(z, wall, x, door, plane);
-				}
-
-				if ((plane < 3) && ((planeTileFlags[plane + 1][x][z] & 8) != 0)) {
-					drawMinimapLoc(z, wall, x, door, plane + 1);
+					if ((planeTileFlags[plane][x][z] & 0x18) == 0) {
+						scene.drawMinimapTile(pixels, offset, 512, plane, x, z);
+					}
+					if ((plane < 3) && ((planeTileFlags[plane + 1][x][z] & 8) != 0)) {
+						scene.drawMinimapTile(pixels, offset, 512, plane + 1, x, z);
+					}
+					offset += 4;
 				}
 			}
-		}
+			int wall = 0xEEEEEE;
+			int door = 0xEE0000;
 
-		areaViewport.bind();
-		activeMapFunctionCount = 0;
+			imageMinimap.bind();
 
-		for (int x = 0; x < 104; x++) {
-			for (int z = 0; z < 104; z++) {
-				int bitset = scene.getGroundDecorationBitset(currentPlane, x, z);
+			for (int z = 1; z < 103; z++) {
+				for (int x = 1; x < 103; x++) {
+					if ((planeTileFlags[plane][x][z] & 0x18) == 0) {
+						drawMinimapLoc(z, wall, x, door, plane);
+					}
 
-				if (bitset == 0) {
-					continue;
-				}
-
-				bitset = (bitset >> 14) & 0x7fff;
-
-				int func = LocType.get(bitset).mapfunctionIcon;
-
-				if (func < 0) {
-					continue;
-				}
-
-				int stx = x;
-				int stz = z;
-
-				if ((func != 22) && (func != 29) && (func != 34) && (func != 36) && (func != 46) && (func != 47) && (func != 48)) {
-					byte byte0 = 104;
-					byte byte1 = 104;
-					int[][] flags = collisions[currentPlane].flags;
-					for (int i4 = 0; i4 < 10; i4++) {
-						int j4 = (int) (Math.random() * 4D);
-						if ((j4 == 0) && (stx > 0) && (stx > (x - 3)) && ((flags[stx - 1][stz] & 0x1280108) == 0)) {
-							stx--;
-						}
-						if ((j4 == 1) && (stx < (byte0 - 1)) && (stx < (x + 3)) && ((flags[stx + 1][stz] & 0x1280180) == 0)) {
-							stx++;
-						}
-						if ((j4 == 2) && (stz > 0) && (stz > (z - 3)) && ((flags[stx][stz - 1] & 0x1280102) == 0)) {
-							stz--;
-						}
-						if ((j4 == 3) && (stz < (byte1 - 1)) && (stz < (z + 3)) && ((flags[stx][stz + 1] & 0x1280120) == 0)) {
-							stz++;
-						}
+					if ((plane < 3) && ((planeTileFlags[plane + 1][x][z] & 8) != 0)) {
+						drawMinimapLoc(z, wall, x, door, plane + 1);
 					}
 				}
-				activeMapFunctions[activeMapFunctionCount] = imageMapfunction[func];
-				activeMapFunctionX[activeMapFunctionCount] = stx;
-				activeMapFunctionZ[activeMapFunctionCount] = stz;
-				activeMapFunctionCount++;
 			}
-		}
+
+			areaViewport.bind();
+			activeMapFunctionCount = 0;
+
+			for (int x = 0; x < 104; x++) {
+				for (int z = 0; z < 104; z++) {
+					int bitset = scene.getGroundDecorationBitset(currentPlane, x, z);
+
+					if (bitset == 0) {
+						continue;
+					}
+
+					bitset = (bitset >> 14) & 0x7fff;
+
+					int func = LocType.get(bitset).mapfunctionIcon;
+
+					if (func < 0) {
+						continue;
+					}
+
+					int stx = x;
+					int stz = z;
+
+					if ((func != 22) && (func != 29) && (func != 34) && (func != 36) && (func != 46) && (func != 47) && (func != 48)) {
+						byte byte0 = 104;
+						byte byte1 = 104;
+						int[][] flags = collisions[currentPlane].flags;
+						for (int i4 = 0; i4 < 10; i4++) {
+							int j4 = (int) (Math.random() * 4D);
+							if ((j4 == 0) && (stx > 0) && (stx > (x - 3)) && ((flags[stx - 1][stz] & 0x1280108) == 0)) {
+								stx--;
+							}
+							if ((j4 == 1) && (stx < (byte0 - 1)) && (stx < (x + 3)) && ((flags[stx + 1][stz] & 0x1280180) == 0)) {
+								stx++;
+							}
+							if ((j4 == 2) && (stz > 0) && (stz > (z - 3)) && ((flags[stx][stz - 1] & 0x1280102) == 0)) {
+								stz--;
+							}
+							if ((j4 == 3) && (stz < (byte1 - 1)) && (stz < (z + 3)) && ((flags[stx][stz + 1] & 0x1280120) == 0)) {
+								stz++;
+							}
+						}
+					}
+					activeMapFunctions[activeMapFunctionCount] = imageMapfunction[func];
+					activeMapFunctionX[activeMapFunctionCount] = stx;
+					activeMapFunctionZ[activeMapFunctionCount] = stz;
+					activeMapFunctionCount++;
+				}
+			}
 	}
 
 	public void method25(int x, int z) {
@@ -1900,8 +1900,7 @@ public class Game extends GameShell {
 				stack0 = stack;
 			}
 		}
-
-		list.pushFront(stack0);
+		list.pushBack(stack0);
 
 		for (ObjStackEntity stack = (ObjStackEntity) list.peekFront(); stack != null; stack = (ObjStackEntity) list.prev()) {
 			if ((stack.id != stack0.id) && (stack1 == null)) {
@@ -3864,6 +3863,7 @@ public class Game extends GameShell {
 				anInt1246 = 0;
 			}
 		}
+
 		if (objDragArea != 0) {
 			objDragCycles++;
 
@@ -3985,7 +3985,6 @@ public class Game extends GameShell {
 		if (heartbeatTimer > 50) {
 			out.putOp(0);
 		}
-
 		try {
 			if ((connection != null) && (out.position > 0)) {
 				connection.write(out.data, 0, out.position);

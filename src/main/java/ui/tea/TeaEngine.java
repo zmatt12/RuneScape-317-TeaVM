@@ -13,10 +13,12 @@ import ui.*;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
-public class TeaEngine extends WindowEngine {
+public final class TeaEngine extends WindowEngine {
 
     private static HtmlComponent component;
+    private static final TeaAllocator alloc = new TeaAllocator();
     private static int portOffset;
 
     public static void init(String canvasId) {
@@ -83,5 +85,10 @@ public class TeaEngine extends WindowEngine {
     public ISocket openSocket(String server, int port) throws IOException {
         port -= portOffset;
         return TeaSocket.open(server, port);
+    }
+
+    @Override
+    public IAllocator alloc() {
+        return alloc;
     }
 }

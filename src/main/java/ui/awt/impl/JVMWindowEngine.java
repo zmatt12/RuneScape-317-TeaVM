@@ -12,6 +12,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 public class JVMWindowEngine extends WindowEngine {
+
+    private static final JVMAllocator alloc = new JVMAllocator();
+
     @Override
     public IComponent createComponent() {
         Canvas res = new Canvas();
@@ -64,4 +67,8 @@ public class JVMWindowEngine extends WindowEngine {
         return new JVMSocket(new Socket(InetAddress.getByName(server), port));
     }
 
+    @Override
+    public IAllocator alloc() {
+        return alloc;
+    }
 }

@@ -2,6 +2,8 @@ package client;/* Class7 - Decompiled by JODE
  * Visit http://jode.sourceforge.net/
  */
 
+import ui.WindowEngine;
+
 public class SceneBuilder {
 
 	public static final int[] anIntArray137 = {1, 0, -1, 0};
@@ -372,12 +374,12 @@ public class SceneBuilder {
 		this.maxTileZ = maxTileZ;
 		this.planeHeightmap = planeHeightmap;
 		this.planeTileFlags = planeTileFlags;
-		aByteArrayArrayArray142 = new byte[4][this.maxTileX][this.maxTileZ];
-		aByteArrayArrayArray130 = new byte[4][this.maxTileX][this.maxTileZ];
-		aByteArrayArrayArray136 = new byte[4][this.maxTileX][this.maxTileZ];
-		aByteArrayArrayArray148 = new byte[4][this.maxTileX][this.maxTileZ];
-		anIntArrayArrayArray135 = new int[4][this.maxTileX + 1][this.maxTileZ + 1];
-		aByteArrayArrayArray134 = new byte[4][this.maxTileX + 1][this.maxTileZ + 1];
+		aByteArrayArrayArray142 = WindowEngine.getDefault().alloc().byteArray(4, this.maxTileX, this.maxTileZ);
+		aByteArrayArrayArray130 = WindowEngine.getDefault().alloc().byteArray(4, this.maxTileX, this.maxTileZ);
+		aByteArrayArrayArray136 = WindowEngine.getDefault().alloc().byteArray(4, this.maxTileX, this.maxTileZ);
+		aByteArrayArrayArray148 = WindowEngine.getDefault().alloc().byteArray(4, this.maxTileX, this.maxTileZ);
+		anIntArrayArrayArray135 = WindowEngine.getDefault().alloc().intArray(4, this.maxTileX + 1, this.maxTileZ + 1);
+		aByteArrayArrayArray134 = WindowEngine.getDefault().alloc().byteArray(4, this.maxTileX + 1, this.maxTileZ + 1);
 		anIntArrayArray139 = new int[this.maxTileX + 1][this.maxTileZ + 1];
 		anIntArray124 = new int[this.maxTileZ];
 		anIntArray125 = new int[this.maxTileZ];

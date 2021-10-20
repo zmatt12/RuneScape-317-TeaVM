@@ -37,4 +37,6 @@ public abstract class WindowEngine {
     public abstract IImage createImage(int width, int height, int type);
 
     public abstract ISocket openSocket(String server, int port) throws IOException;
+
+    public abstract IAllocator alloc();
 }
