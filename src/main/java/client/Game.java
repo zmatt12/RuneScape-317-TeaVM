@@ -6190,7 +6190,8 @@ public class Game extends GameShell {
 				out.put4(seed[1]);
 				out.put4(seed[2]);
 				out.put4(seed[3]);
-				out.put4(Signlink.uid);
+				out.put4(314268572); //TODO change back to uid
+				//out.put4(Signlink.uid);
 				out.put(username);
 				out.put(password);
 				out.encrypt(RSA_EXPONENT, RSA_MODULUS);

@@ -196,8 +196,7 @@ public class Signlink implements Runnable {
 		active = true;
 		String s = findcachedir();
 		System.out.println(s);
-		//uid = getuid(s);
-		uid = 314268572; //TODO fix this
+		uid = getuid(s);
 		try {
 			File file = new File(s + "main_file_cache.dat");
 			if (file.exists() && (file.length() > 0x3200000L)) {
