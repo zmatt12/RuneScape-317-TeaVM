@@ -1,17 +1,14 @@
 package ui.tea;
 
-import org.teavm.classlib.java.util.TTimerTask;
-import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
-import org.teavm.jso.dom.events.EventListener;
-import org.teavm.jso.dom.events.MouseEvent;
 import org.teavm.jso.dom.html.HTMLAnchorElement;
 import org.teavm.jso.dom.html.HTMLElement;
+import org.teavm.jso.dom.html.HTMLInputElement;
 import org.teavm.jso.dom.xml.NodeList;
+import org.teavm.jso.typedarrays.Uint8Array;
 import ui.poly.InputStreamPolyFill;
-import ui.tea.fs.bfs.Buffer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,29 +19,28 @@ public class FileSystemViewer implements TimerHandler{
 
     private final HTMLElement table;
     private final HTMLAnchorElement downloadAnchor;
+    private final HTMLInputElement numberInput;
     private String currentId;
 
-    public static final int UPDATE_INTERVAL = 100;
+    private static final String PREFIX = "fileIndex";
 
-    private static final String PREFIX = "file_view_" + ((int)Math.random() * 100000);
+    private File[] files;
 
-    public FileSystemViewer(String tableId){
+    public FileSystemViewer(String tableId, String numberId){
         this.table = Objects.requireNonNull(getElementById(tableId));
+        this.numberInput = Objects.requireNonNull(getElementById(numberId)).cast();
         this.downloadAnchor = Window.current().getDocument().createElement("a").cast();
         Window.current().getDocument().getBody().appendChild(downloadAnchor);
         downloadAnchor.getStyle().setProperty("display", "hidden");
-
-        HTMLElement elem = findElementWithDataType("th", "file-refresh");
-        if(elem != null){
-            elem.listenClick(e -> refresh());
-        }
         Window.setTimeout(this, 0);
     }
 
     public void download(File f){
         try {
             byte[] data = InputStreamPolyFill.readAllBytes(new FileInputStream(f));
-            JSObject blob = JSMethods.blobify(Buffer.from(data).cast(), "application/x-binary");
+            Uint8Array wrapped = Uint8Array.create(data.length);
+            wrapped.set(data);
+            JSObject blob = JSMethods.blobify(wrapped, "application/x-binary");
             downloadAnchor.setHref(JSMethods.createObjectUrl(blob));
             downloadAnchor.setDownload(f.getName());
             downloadAnchor.click();
@@ -67,22 +63,25 @@ public class FileSystemViewer implements TimerHandler{
 
     public void refresh(){
         File f = new File(getCurrentPath());
-        File[] children = f.listFiles();
-        if(children == null){
-            //TODO delete the files
-            return;
-        }
-        HTMLElement e;
-        for(int row = 0;(e = getFileRow(row)) != null; row++)
-        {
-            table.removeChild(e);
+        files = f.listFiles();
+        if(files == null){
+            files = new File[0];
         }
         int row = 0;
         if(f.getParentFile() != null) {
-            updateRow(row++, new File(f, ".."));
+            File[] tmp = new File[files.length + 1];
+            System.arraycopy(files, 0, tmp, 1, files.length);
+            tmp[0] = new File(f, "..");
+            this.files = tmp;
         }
-        for(int i = 0; i < children.length; i++) {
-            updateRow(row++, children[i]);
+        for(int i = 0; i < files.length; i++) {
+            updateRow(row++);
+        }
+
+        HTMLElement e;
+        for(;(e = getFileRow(row)) != null; row++)
+        {
+            table.removeChild(e);
         }
     }
 
@@ -91,14 +90,27 @@ public class FileSystemViewer implements TimerHandler{
         return findElementWithDataType("tr", dataId);
     }
 
-    public void updateRow(int index, File file){
+    public void updateRow(int index){
         HTMLElement row = getFileRow(index);
         if(row == null){
             row = Window.current().getDocument().createElement("tr");
             row.setAttribute("data-id", PREFIX + index);
             row.setInnerHTML("<td/><td/><td/>");
             table.appendChild(row);
+            if(files[index].isDirectory()){
+                row.listenClick(event -> {
+                    try {
+                        setCurrentPath(files[index].getCanonicalPath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    refresh();
+                });
+            }else{
+                row.listenClick(e -> download((files[index])));
+            }
         }
+        File file = files[index];
         NodeList<HTMLElement> children = row.getChildNodes().cast();
         HTMLElement name = children.item(0);
         HTMLElement type = children.item(1);
@@ -107,18 +119,6 @@ public class FileSystemViewer implements TimerHandler{
         type.setInnerHTML(file.isDirectory() ? "Dir" : "File");
         row.setAttribute("class", file.isDirectory() ? "dir" : "file");
         size.setInnerHTML(String.valueOf(file.length()));
-        if(file.isDirectory()){
-            row.listenClick(event -> {
-                try {
-                    setCurrentPath(file.getCanonicalPath());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                refresh();
-            });
-        }else{
-            row.listenClick(e -> download((file)));
-        }
     }
 
     private HTMLElement findElementWithDataType(String tag, String dataId){
@@ -143,7 +143,7 @@ public class FileSystemViewer implements TimerHandler{
     @Override
     public void onTimer() {
         refresh();
-        Window.setTimeout(this, UPDATE_INTERVAL);
+        Window.setTimeout(this, Integer.parseInt(numberInput.getValue()));
     }
 
     private interface  HTMLFilter {
