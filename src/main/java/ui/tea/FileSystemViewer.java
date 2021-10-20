@@ -62,6 +62,13 @@ public class FileSystemViewer implements TimerHandler{
     }
 
     public void refresh(){
+
+        HTMLElement e;
+        for(int row = 0;(e = getFileRow(row)) != null; row++)
+        {
+            table.removeChild(e);
+        }
+
         File f = new File(getCurrentPath());
         files = f.listFiles();
         if(files == null){
@@ -76,12 +83,6 @@ public class FileSystemViewer implements TimerHandler{
         }
         for(int i = 0; i < files.length; i++) {
             updateRow(row++);
-        }
-
-        HTMLElement e;
-        for(;(e = getFileRow(row)) != null; row++)
-        {
-            table.removeChild(e);
         }
     }
 

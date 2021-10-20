@@ -2,6 +2,7 @@ package ui.tea;
 
 
 import client.Game;
+import client.Signlink;
 import org.teavm.classlib.fs.VirtualFileSystemProvider;
 import ui.poly.InputStreamPolyFill;
 import ui.tea.fs.BrowserFsFileSystem;
@@ -30,6 +31,9 @@ public class Entry {
         //We need to do this due to a bug in TeaVM, where randomaccess files aren't created when opened
         File cacheDir = new File("/tmp/.file_store_32");
         createCache(cacheDir);
+
+        Signlink.storeid = 32;
+        Signlink.startpriv("127.0.0.1");
 
         Game g = new Game();
         g.init(765, 503);
