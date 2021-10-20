@@ -70,12 +70,9 @@ public class VirtualFileImpl implements VirtualFile {
         if(isDirectory()){
             return null;
         }
-        String flag = "rw+";
-        if(append){
-            flag = "a+";
-        }
+        String flag = "a+";
         //TODO not hardcode flags
-        return new FileAccessor(fs.getFs().openSync(path, flag), fs.getFs());
+        return new FileAccessor(fs.getFs().openSync(path, flag), fs.getFs(), append ? length() : 0);
     }
 
     @Override
@@ -148,11 +145,6 @@ public class VirtualFileImpl implements VirtualFile {
     @Override
     public int length() {
         Stats s = stats();
-        if(s != null && s.isFile()){
-            int i = fs.getFs().readFileSync(path).length;
-            System.out.println(i);
-            return i;
-        }
         return s != null ? s.getSize() : -1;
     }
 }

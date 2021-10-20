@@ -56,23 +56,23 @@ public abstract class BrowserFileSystem implements JSObject {
 
     public abstract void readFile(String name, BFSCallback<Uint8Array> callback);
 
-    public abstract byte[] readFileSync(String name);
+    public abstract Buffer readFileSync(String name);
 
     public abstract void writeFile(String name, String data, OneArgCallback<JSError> callback);
 
-    public abstract void writeFile(String name, byte[] data, OneArgCallback<JSError> callback);
+    public abstract void writeFile(String name, Buffer data, OneArgCallback<JSError> callback);
 
     public abstract void writeFileSync(String name, String data);
 
-    public abstract void writeFileSync(String name, byte[] data);
+    public abstract void writeFileSync(String name, Buffer data);
 
     public abstract void appendFile(String name, String data, OneArgCallback<JSError> callback);
 
-    public abstract void appendFile(String name, byte[] data, OneArgCallback<JSError> callback);
+    public abstract void appendFile(String name, Buffer data, OneArgCallback<JSError> callback);
 
     public abstract void appendFileSync(String name, String data);
 
-    public abstract void appendFileSync(String name, byte[] data);
+    public abstract void appendFileSync(String name, Buffer data);
 
     public abstract void fstat(JSNumber fd, BFSCallback<Stats> callback);
 
@@ -100,15 +100,15 @@ public abstract class BrowserFileSystem implements JSObject {
 
     //TODO non-sync writes
 
-    public abstract int writeSync(JSNumber fd, byte[] buffer, int offset, int length);
+    public abstract int writeSync(JSNumber fd, Buffer buffer, int offset, int length);
 
-    public abstract int writeSync(JSNumber fd, byte[] buffer, int offset, int length, int pos);
+    public abstract int writeSync(JSNumber fd, Buffer buffer, int offset, int length, int pos);
 
     //TODO non-sync reads
 
-    public abstract int readSync(JSNumber fd, byte[] buffer, int offset, int length);
+    public abstract int readSync(JSNumber fd, Buffer buffer, int offset, int length);
 
-    public abstract int readSync(JSNumber fd, byte[] buffer, int offset, int length, int position);
+    public abstract int readSync(JSNumber fd, Buffer buffer, int offset, int length, int position);
 
     public abstract void fchown(JSNumber fd, int uid, int gid, OneArgCallback<JSError> callback);
 

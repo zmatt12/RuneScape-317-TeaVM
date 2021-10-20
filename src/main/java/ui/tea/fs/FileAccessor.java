@@ -3,6 +3,7 @@ package ui.tea.fs;
 import org.teavm.classlib.fs.VirtualFileAccessor;
 import org.teavm.jso.core.JSNumber;
 import ui.tea.fs.bfs.BrowserFileSystem;
+import ui.tea.fs.bfs.Buffer;
 
 import java.io.IOException;
 
@@ -12,24 +13,23 @@ final class FileAccessor implements VirtualFileAccessor {
     private final BrowserFileSystem fs;
     private int pos;
 
-    public FileAccessor(JSNumber fd, BrowserFileSystem fs){
+    public FileAccessor(JSNumber fd, BrowserFileSystem fs, int pos){
         this.fs = fs;
         this.fd = fd;
-        this.pos = 0;
+        this.pos = pos;
     }
 
     @Override
     public int read(byte[] bytes, int off, int len) throws IOException {
-        int i = fs.readSync(fd, bytes, off, len, pos);
+        int i = fs.readSync(fd, Buffer.from(bytes), off, len, pos);
         pos += i;
         return i;
     }
 
     @Override
     public void write(byte[] bytes, int off, int len) throws IOException {
-        int i = fs.writeSync(fd, bytes, off, len, pos);
+        int i = fs.writeSync(fd, Buffer.from(bytes), off, len, pos);
         pos += i;
-        flush();
     }
 
     @Override

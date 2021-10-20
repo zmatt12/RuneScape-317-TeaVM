@@ -2,6 +2,9 @@ package ui.tea.fs;
 
 import org.teavm.classlib.fs.VirtualFile;
 import org.teavm.classlib.fs.VirtualFileSystem;
+import org.teavm.jso.JSBody;
+import org.teavm.jso.JSObject;
+import ui.tea.JSMethods;
 import ui.tea.fs.bfs.BrowserFileSystem;
 import ui.tea.fs.bfs.Stats;
 
@@ -16,6 +19,7 @@ public class BrowserFsFileSystem implements VirtualFileSystem {
             throw new UnsupportedOperationException("BrowserFS needs to be installed!");
         }
         this.fs = BrowserFileSystem.getRootFileSystem();
+        JSMethods.export("root", this.fs);
     }
 
     public BrowserFileSystem getFs(){
