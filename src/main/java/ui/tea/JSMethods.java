@@ -21,9 +21,6 @@ public final class JSMethods {
             "ctx.backingStorePixelRatio || 1")
     public static native double getBackingStoreRatio(CanvasRenderingContext2D ctx);
 
-    @JSBody(params = {"arr"}, script = "return arr;")
-    public static native int[] unwrap(Uint8ClampedArray arr);
-
     @JSBody(params = {"canvas", "width", "height"}, script = "canvas.width = width; canvas.height=height;")
     public static native void setSize(HTMLCanvasElement canvas, double width, double height);
 

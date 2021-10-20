@@ -1,4 +1,4 @@
-BrowserFS.install(window);
+//BrowserFS.install(window);
 
 BrowserFS.configure({
     fs: "MountableFileSystem",

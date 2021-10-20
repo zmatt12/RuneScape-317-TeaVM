@@ -7,16 +7,21 @@ import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.MouseEvent;
+import org.teavm.jso.dom.html.HTMLAnchorElement;
 import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.dom.xml.NodeList;
+import ui.poly.InputStreamPolyFill;
+import ui.tea.fs.bfs.Buffer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Objects;
 
 public class FileSystemViewer implements TimerHandler{
 
     private final HTMLElement table;
+    private final HTMLAnchorElement downloadAnchor;
     private String currentId;
 
     public static final int UPDATE_INTERVAL = 100;
@@ -25,11 +30,27 @@ public class FileSystemViewer implements TimerHandler{
 
     public FileSystemViewer(String tableId){
         this.table = Objects.requireNonNull(getElementById(tableId));
+        this.downloadAnchor = Window.current().getDocument().createElement("a").cast();
+        Window.current().getDocument().getBody().appendChild(downloadAnchor);
+        downloadAnchor.getStyle().setProperty("display", "hidden");
+
         HTMLElement elem = findElementWithDataType("th", "file-refresh");
         if(elem != null){
             elem.listenClick(e -> refresh());
         }
         Window.setTimeout(this, 0);
+    }
+
+    public void download(File f){
+        try {
+            byte[] data = InputStreamPolyFill.readAllBytes(new FileInputStream(f));
+            JSObject blob = JSMethods.blobify(Buffer.from(data).cast(), "application/x-binary");
+            downloadAnchor.setHref(JSMethods.createObjectUrl(blob));
+            downloadAnchor.setDownload(f.getName());
+            downloadAnchor.click();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setCurrentId(String id){
@@ -51,17 +72,17 @@ public class FileSystemViewer implements TimerHandler{
             //TODO delete the files
             return;
         }
+        HTMLElement e;
+        for(int row = 0;(e = getFileRow(row)) != null; row++)
+        {
+            table.removeChild(e);
+        }
         int row = 0;
         if(f.getParentFile() != null) {
             updateRow(row++, new File(f, ".."));
         }
         for(int i = 0; i < children.length; i++) {
             updateRow(row++, children[i]);
-        }
-        HTMLElement e;
-        for(;(e = getFileRow(row)) != null; row++)
-        {
-            table.removeChild(e);
         }
     }
 
@@ -95,6 +116,8 @@ public class FileSystemViewer implements TimerHandler{
                 }
                 refresh();
             });
+        }else{
+            row.listenClick(e -> download((file)));
         }
     }
 
