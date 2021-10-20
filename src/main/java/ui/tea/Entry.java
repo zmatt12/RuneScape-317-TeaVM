@@ -1,15 +1,13 @@
 package ui.tea;
 
 
+import client.Game;
 import org.teavm.classlib.fs.VirtualFileSystemProvider;
 import ui.poly.InputStreamPolyFill;
 import ui.tea.fs.BrowserFsFileSystem;
 import ui.tea.fs.bfs.BrowserFileSystem;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.RandomAccessFile;
-import java.util.Arrays;
 
 public class Entry {
 
@@ -22,20 +20,19 @@ public class Entry {
             System.out.println("Using teavm fs, no data will be saved");
         }
         if (args.length > 1) {
-            FileSystemViewer viewer = new FileSystemViewer(args[1]);
-            viewer.setCurrentId(args[2]);
+            FileSystemViewer viewer = new FileSystemViewer(args[1], args[2]);
+            viewer.setCurrentId(args[3]);
             viewer.refresh();
-            TeaEngine.init(args[0], Integer.parseInt(args[3]));
+            TeaEngine.init(args[0], Integer.parseInt(args[4]));
         } else {
             TeaEngine.init(args[0]);
         }
         //We need to do this due to a bug in TeaVM, where randomaccess files aren't created when opened
         File cacheDir = new File("/tmp/.file_store_32");
         createCache(cacheDir);
-        for(File s : cacheDir.listFiles()){
-            System.out.println(s.getName() + " - " + s.length());
-        }
-        client.Game.main(new String[]{"0", "0", "highmem", "free", "0"});
+
+        Game g = new Game();
+        g.init(765, 503);
     }
 
     private static void createCache(File cacheDir) throws Exception {
