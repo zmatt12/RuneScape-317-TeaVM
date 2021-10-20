@@ -24,17 +24,7 @@ public class VirtualFileImpl implements VirtualFile {
 
     private Stats stats(){
         try {
-            Stats s = fs.getFs().statSync(path);
-            System.out.println("-------");
-            System.out.println(path);
-            System.out.println("isFile:" + s.isFile() + " - isDir:" + s.isDirectory());
-            System.out.println("uid:" + s.getUid());
-            System.out.println("gid:" + s.getGid());
-            System.out.println("atime:" + s.getAtime());
-            System.out.println("mtime:" + s.getMtime());
-            System.out.println("ctime:" + s.getCtime());
-            System.out.println("size:" + s.getSize());
-            return s;
+            return fs.getFs().statSync(path);
         }catch (Exception e){
             return null;
         }

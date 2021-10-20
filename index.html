@@ -6,11 +6,25 @@
     <script type="text/javascript" charset="utf-8" src="js/browserfs.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/filesystem.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/classes.js"></script>
+    <style type="text/css">
+      .pointer {cursor: pointer;}
+      .dir {cursor: pointer;}
+    </style>
   </head>
   <body>
-  <canvas id="web-client" width="765" height="503" tabindex="-1"></canvas>
+  <canvas id="web-client" width="765" height="503" tabindex="-1" style="float:left"></canvas>
+  <table border="1" id="file-view">
+    <tr>
+      <th colspan="3" data-id="file-refresh" class="pointer" title ="Click to refresh">Current File:<span id="file-id">/</span></th>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Size</th>
+    </tr>
+  </table>
   <script type="text/javascript">
-    main(['web-client']);
+    main(['web-client', 'file-view', 'file-id', '10000']);
   </script>
   </body>
 </html>

@@ -22,7 +22,10 @@ public class Entry {
             System.out.println("Using teavm fs, no data will be saved");
         }
         if (args.length > 1) {
-            TeaEngine.init(args[0], Integer.parseInt(args[1]));
+            FileSystemViewer viewer = new FileSystemViewer(args[1]);
+            viewer.setCurrentId(args[2]);
+            viewer.refresh();
+            TeaEngine.init(args[0], Integer.parseInt(args[3]));
         } else {
             TeaEngine.init(args[0]);
         }
