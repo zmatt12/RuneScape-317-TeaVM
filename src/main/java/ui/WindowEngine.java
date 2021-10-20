@@ -16,7 +16,7 @@ public abstract class WindowEngine {
         text = "java.awt.Component";
         try {
             Class.forName(text);
-            text = "stuff.awt.impl.JVMWindowEngine";
+            text = "ui.awt.impl.JVMWindowEngine";
             return (WindowEngine) Class.forName(text).getDeclaredConstructor().newInstance();
         } catch (Throwable t) {
 
