@@ -2,18 +2,24 @@ package ui.tea.fs;
 
 import org.teavm.classlib.fs.VirtualFile;
 import org.teavm.classlib.fs.VirtualFileSystem;
-import org.teavm.jso.indexeddb.IDBDatabase;
+import ui.tea.fs.bfs.BrowserFileSystem;
+import ui.tea.fs.bfs.Stats;
 
-public class VirtualIndexedFileSystem implements VirtualFileSystem {
+public class BrowserFsFileSystem implements VirtualFileSystem {
 
-    private final IDBDatabase db;
-
-    IndexedDirectory root = new IndexedDirectory("");
+    private final BrowserFileSystem fs;
 
     private String userDir = "/";
 
-    public VirtualIndexedFileSystem(IDBDatabase db) {
-        this.db = db;
+    public BrowserFsFileSystem() {
+        if (!BrowserFileSystem.isSupported()) {
+            throw new UnsupportedOperationException("BrowserFS needs to be installed!");
+        }
+        this.fs = BrowserFileSystem.getRootFileSystem();
+    }
+
+    public BrowserFileSystem getFs(){
+        return fs;
     }
 
     @Override
@@ -27,7 +33,6 @@ public class VirtualIndexedFileSystem implements VirtualFileSystem {
 
     @Override
     public VirtualFile getFile(String path) {
-        System.out.println(path);
         return new VirtualFileImpl(this, path);
     }
 

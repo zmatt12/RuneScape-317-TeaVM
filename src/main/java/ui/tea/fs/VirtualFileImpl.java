@@ -2,16 +2,42 @@ package ui.tea.fs;
 
 import org.teavm.classlib.fs.VirtualFile;
 import org.teavm.classlib.fs.VirtualFileAccessor;
+import org.teavm.interop.Async;
+import org.teavm.interop.AsyncCallback;
+import org.teavm.jso.JSObject;
+import org.teavm.jso.core.*;
+import ui.tea.fs.bfs.BFSCallback;
+import ui.tea.fs.bfs.OneArgCallback;
+import ui.tea.fs.bfs.Stats;
 
 import java.io.IOException;
+import java.util.function.Supplier;
 
 public class VirtualFileImpl implements VirtualFile {
-    private final VirtualIndexedFileSystem fs;
+    private final BrowserFsFileSystem fs;
     private final String path;
 
-    public VirtualFileImpl(VirtualIndexedFileSystem fs, String path) {
+    public VirtualFileImpl(BrowserFsFileSystem fs, String path) {
         this.fs = fs;
         this.path = path;
+    }
+
+    private Stats stats(){
+        try {
+            Stats s = fs.getFs().statSync(path);
+            System.out.println("-------");
+            System.out.println(path);
+            System.out.println("isFile:" + s.isFile() + " - isDir:" + s.isDirectory());
+            System.out.println("uid:" + s.getUid());
+            System.out.println("gid:" + s.getGid());
+            System.out.println("atime:" + s.getAtime());
+            System.out.println("mtime:" + s.getMtime());
+            System.out.println("ctime:" + s.getCtime());
+            System.out.println("size:" + s.getSize());
+            return s;
+        }catch (Exception e){
+            return null;
+        }
     }
 
     @Override
@@ -21,119 +47,112 @@ public class VirtualFileImpl implements VirtualFile {
 
     @Override
     public boolean isDirectory() {
-        AbstractIndexedFile inMemory = findInMemory();
-        return inMemory != null && inMemory.isDirectory();
+        Stats s = stats();
+        return s != null && s.isDirectory();
     }
 
     @Override
     public boolean isFile() {
-        AbstractIndexedFile inMemory = findInMemory();
-        return inMemory != null && inMemory.isFile();
+        Stats s = stats();
+        return s != null && s.isFile();
     }
 
     @Override
     public String[] listFiles() {
-        AbstractIndexedFile inMemory = findInMemory();
-        return inMemory != null ? inMemory.listFiles() : null;
+        if(!isDirectory()){
+            return null;
+        }
+        return fs.getFs().readdirSync(this.path);
     }
 
     @Override
     public VirtualFileAccessor createAccessor(boolean readable, boolean writable, boolean append) {
-        AbstractIndexedFile inMemory = findInMemory();
-        return inMemory != null ? inMemory.createAccessor(readable, writable, append) : null;
+        if(isDirectory()){
+            return null;
+        }
+        String flag = "rw+";
+        if(append){
+            flag = "a+";
+        }
+        //TODO not hardcode flags
+        return new FileAccessor(fs.getFs().openSync(path, flag), fs.getFs());
     }
 
     @Override
     public boolean createFile(String fileName) throws IOException {
-        AbstractIndexedFile inMemory = findInMemory();
-        if (inMemory == null) {
-            throw new IOException("Directory does not exist");
+        if(!path.endsWith("/") && !fileName.startsWith("/")) {
+            fileName = "/" + fileName;
         }
-        return inMemory.createFile(fileName) != null;
+        String p = this.path + fileName;
+        JSNumber fd = fs.getFs().openSync(p, "w");
+        if(fd.intValue() != -1) {
+            fs.getFs().closeSync(fd);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean createDirectory(String fileName) {
-        AbstractIndexedFile inMemory = findInMemory();
-        return inMemory != null && inMemory.createDirectory(fileName) != null;
+        if(!fileName.endsWith("/")) {
+            fileName = fileName + "/";
+        }
+        System.out.println(path + fileName);
+        fs.getFs().mkdirSync(path + fileName);
+        return true;
     }
 
     @Override
     public boolean delete() {
-        AbstractIndexedFile inMemory = findInMemory();
-        return inMemory != null && inMemory.delete();
+        fs.getFs().unlinkSync(this.path);
+        return true;
     }
 
     @Override
     public boolean adopt(VirtualFile file, String fileName) {
-        AbstractIndexedFile inMemory = findInMemory();
-        if (inMemory == null) {
-            return false;
-        }
-        AbstractIndexedFile fileInMemory = ((VirtualFileImpl) file).findInMemory();
-        if (fileInMemory == null) {
-            return false;
-        }
-        return inMemory.adopt(fileInMemory, fileName);
+        throw new UnsupportedOperationException("unimplemented");
     }
 
     @Override
     public boolean canRead() {
-        AbstractIndexedFile inMemory = findInMemory();
-        return inMemory != null && inMemory.canRead();
+        return true;
     }
 
     @Override
     public boolean canWrite() {
-        AbstractIndexedFile inMemory = findInMemory();
-        return inMemory != null && inMemory.canWrite();
+        return true;
     }
 
     @Override
     public long lastModified() {
-        AbstractIndexedFile inMemory = findInMemory();
-        return inMemory != null ? inMemory.lastModified() : 0;
+        Stats s = stats();
+        return s != null ? s.getMtime() : -1;
     }
 
     @Override
     public boolean setLastModified(long lastModified) {
-        AbstractIndexedFile inMemory = findInMemory();
-        return inMemory != null && inMemory.setLastModified(lastModified);
+        Stats s = stats();
+        if(s == null){
+            return false;
+        }
+        fs.getFs().utimesSync(this.path, s.getAtime(), (int) lastModified);
+        return true;
     }
 
     @Override
     public boolean setReadOnly(boolean readOnly) {
-        AbstractIndexedFile inMemory = findInMemory();
-        return inMemory != null && inMemory.setReadOnly(readOnly);
+        //throw new UnsupportedOperationException("unimplemented");
+        return false;
     }
 
     @Override
     public int length() {
-        AbstractIndexedFile inMemory = findInMemory();
-        return inMemory != null ? inMemory.length() : 0;
-    }
-
-    AbstractIndexedFile findInMemory() {
-        AbstractIndexedFile file = fs.root;
-        int i = 0;
-        if (path.startsWith("/")) {
-            i++;
+        Stats s = stats();
+        if(s != null && s.isFile()){
+            int i = fs.getFs().readFileSync(path).length;
+            System.out.println(i);
+            return i;
         }
-
-        while (i < path.length()) {
-            int next = path.indexOf('/', i);
-            if (next < 0) {
-                next = path.length();
-            }
-
-            file = file.getChildFile(path.substring(i, next));
-            if (file == null) {
-                break;
-            }
-
-            i = next + 1;
-        }
-
-        return file;
+        return s != null ? s.getSize() : -1;
     }
 }

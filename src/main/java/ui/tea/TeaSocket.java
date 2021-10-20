@@ -21,7 +21,6 @@ public final class TeaSocket implements ISocket {
     }
 
     public static TeaSocket open(String server, int port) {
-        System.out.println("TeaSocket.open(" + server + "," + port + ")");
         TeaSocket socket = connect(server, port);
         socket.socket.onClose(e -> {
             try {
@@ -51,12 +50,12 @@ public final class TeaSocket implements ISocket {
 
     @Override
     public void setSoTimeout(int timeout) throws IOException {
-        System.out.println("setSoTimeout(" + timeout + ")");
+
     }
 
     @Override
     public void setTcpNoDelay(boolean nodelay) throws IOException {
-        System.out.println("setTcpNoDelay(" + nodelay + ")");
+
     }
 
     @Override
@@ -80,6 +79,5 @@ public final class TeaSocket implements ISocket {
         if (closeUnderlying) {
             socket.close();
         }
-        System.out.println("close(" + socket.getUrl() + ")");
     }
 }
