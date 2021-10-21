@@ -62,13 +62,6 @@ public class FileSystemViewer implements TimerHandler{
     }
 
     public void refresh(){
-
-        HTMLElement e;
-        for(int row = 0;(e = getFileRow(row)) != null; row++)
-        {
-            table.removeChild(e);
-        }
-
         File f = new File(getCurrentPath());
         files = f.listFiles();
         if(files == null){
@@ -84,6 +77,12 @@ public class FileSystemViewer implements TimerHandler{
         for(int i = 0; i < files.length; i++) {
             updateRow(row++);
         }
+
+        HTMLElement e;
+        for(;(e = getFileRow(row)) != null; row++)
+        {
+            table.removeChild(e);
+        }
     }
 
     private HTMLElement getFileRow(int index){
@@ -98,18 +97,20 @@ public class FileSystemViewer implements TimerHandler{
             row.setAttribute("data-id", PREFIX + index);
             row.setInnerHTML("<td/><td/><td/>");
             table.appendChild(row);
-            if(files[index].isDirectory()){
-                row.listenClick(event -> {
+            row.listenClick(event ->{
+                event.preventDefault();
+                File f= files[index];
+                if(f.isDirectory()){
                     try {
-                        setCurrentPath(files[index].getCanonicalPath());
+                        setCurrentPath(f.getCanonicalPath());
+                        refresh();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    refresh();
-                });
-            }else{
-                row.listenClick(e -> download((files[index])));
-            }
+                }else{
+                    download(f);
+                }
+            });
         }
         File file = files[index];
         NodeList<HTMLElement> children = row.getChildNodes().cast();
