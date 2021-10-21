@@ -8462,11 +8462,12 @@ public class Game extends GameShell {
 			}
 			fontPlain12.drawStringRight("Fps:" + super.fps, c, k, i1);
 			k += 15;
-			Runtime runtime = Runtime.getRuntime();
-			int j1 = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
-			if ((j1 > 0x2000000) && lowmem) {
-			}
-			fontPlain12.drawStringRight("Mem:" + j1 + "k", c, k, 0xffff00);
+//			Runtime runtime = Runtime.getRuntime();
+//			int j1 = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
+//			if ((j1 > 0x2000000) && lowmem) {
+//			}
+			//fontPlain12.drawStringRight("Mem:" + j1 + "k", c, k, 0xffff00);
+			fontPlain12.drawStringRight("Loop:" + loopCycle, c, k, 0xffff00);
 		}
 		if (systemUpdateTimer != 0) {
 			int j = systemUpdateTimer / 50;
@@ -8982,7 +8983,8 @@ public class Game extends GameShell {
 		if (menuSize > 2) {
 			s = s + "@whi@ / " + (menuSize - 2) + " more options";
 		}
-		fontBold12.drawStringTooltip(s, 4, 15, 0xffffff, true, loopCycle / 1000);
+		fontBold12.drawStringTaggable(s, 4, 15, 0xffffff, true);
+		//fontBold12.drawStringTooltip(s, 4, 15, 0xffffff, true, loopCycle / 1000);
 	}
 
 	public void drawMinimap() {
