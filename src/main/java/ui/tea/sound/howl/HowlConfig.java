@@ -14,9 +14,6 @@ public abstract class HowlConfig implements JSObject {
     public abstract void setHtml5(boolean html5);
 
     @JSProperty
-    public abstract boolean getHtml5();
-
-    @JSProperty
     public abstract void setLoop(boolean loop);
 
     @JSProperty("preload")
