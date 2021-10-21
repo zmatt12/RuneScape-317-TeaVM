@@ -1,4 +1,4 @@
-package ui.tea.sound;
+package ui.tea.sound.howl;
 
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
@@ -13,6 +13,8 @@ public abstract class Howl implements JSObject {
     public abstract int play(int id);
 
     public abstract void pause(int id);
+
+    public abstract void stop();
 
     public abstract void stop(int id);
 

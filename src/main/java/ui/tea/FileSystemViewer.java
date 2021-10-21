@@ -41,9 +41,11 @@ public class FileSystemViewer implements TimerHandler{
             Uint8Array wrapped = Uint8Array.create(data.length);
             wrapped.set(data);
             JSObject blob = JSMethods.blobify(wrapped, "application/x-binary");
-            downloadAnchor.setHref(JSMethods.createObjectUrl(blob));
+            String url = JSMethods.createObjectUrl(blob);
+            downloadAnchor.setHref(url);
             downloadAnchor.setDownload(f.getName());
             downloadAnchor.click();
+            JSMethods.revokeObjectURL(url);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -69,6 +69,7 @@ public final class TeaEngine extends WindowEngine {
         CanvasRenderingContext2D ctx = c.getContext("2d").cast();
         ctx.drawImage(img, 0, 0);
         ImageData iData = ctx.getImageData(0, 0, img.getWidth(), img.getHeight());
+        JSMethods.revokeObjectURL(objUrl);
         return new ImageDataImage(iData);
     }
 

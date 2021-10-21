@@ -33,6 +33,9 @@ public final class JSMethods {
     @JSBody(params = {"blob"}, script = "return (window.URL || window.webkitURL).createObjectURL(blob);")
     public static native String createObjectUrl(JSObject blob);
 
+    @JSBody(params = {"url"}, script = "return (window.URL || window.webkitURL).revokeObjectURL(url);")
+    public static native void revokeObjectURL(String url);
+
     @JSBody(params = { "name", "value"}, script = "return window[name] = value")
     public static native void export(String name, JSObject value);
 }
