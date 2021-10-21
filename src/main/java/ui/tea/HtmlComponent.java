@@ -32,6 +32,13 @@ class HtmlComponent extends AbstractComponent {
         initEvents();
     }
 
+    @Override
+    public void dispatch(ui.event.Event e) {
+        //TODO hooks for external tools to get events
+        System.out.println(e);
+        super.dispatch(e);
+    }
+
     private void initEvents() {
         //add even listeners
 
@@ -47,9 +54,8 @@ class HtmlComponent extends AbstractComponent {
         canvas.addEventListener("mouseenter", createMouseListener(ui.event.MouseEvent.TYPE_ENTERED));
 
         //keyboard events
-        canvas.addEventListener("keypress", createKeyListener(KeyEvent.TYPE_PRESSED));
         canvas.addEventListener("keyup", createKeyListener(KeyEvent.TYPE_RELEASED));
-        //canvas.addEventListener("keydown", createKeyListener(KeyEvent.TYPE_TYPED));
+        canvas.addEventListener("keydown", createKeyListener(KeyEvent.TYPE_PRESSED));
 
         //focus events
         canvas.addEventListener("focus", createFocusListener(FocusEvent.TYPE_GAINED));
