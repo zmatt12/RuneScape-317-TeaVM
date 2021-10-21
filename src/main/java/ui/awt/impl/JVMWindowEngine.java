@@ -71,4 +71,9 @@ public class JVMWindowEngine extends WindowEngine {
     public IAllocator alloc() {
         return alloc;
     }
+
+    @Override
+    public void schedule(Runnable r, int updateInterval) {
+        throw new UnsupportedOperationException("Unimplemented");
+    }
 }

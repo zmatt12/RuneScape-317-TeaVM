@@ -60,6 +60,7 @@ public class VirtualFileImpl implements VirtualFile {
         if(isDirectory()){
             return null;
         }
+        System.out.println(path + "," + readable + "," + writable + "," + append);
         String flag = "a+";
         //TODO not hardcode flags
         return new FileAccessor(fs.getFs().openSync(path, flag), fs.getFs(), append ? length() : 0);

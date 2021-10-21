@@ -91,4 +91,9 @@ public final class TeaEngine extends WindowEngine {
     public IAllocator alloc() {
         return alloc;
     }
+
+    @Override
+    public void schedule(Runnable r, int updateInterval) {
+        Window.setTimeout(r::run, updateInterval);
+    }
 }

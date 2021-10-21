@@ -4,9 +4,11 @@ package ui.tea;
 import client.Game;
 import client.Signlink;
 import org.teavm.classlib.fs.VirtualFileSystemProvider;
-import ui.poly.InputStreamPolyFill;
+import ui.SoundEngine;
 import ui.tea.fs.BrowserFsFileSystem;
 import ui.tea.fs.bfs.BrowserFileSystem;
+import ui.tea.sound.Howl;
+import ui.tea.sound.HowlSoundEngine;
 
 import java.io.File;
 
@@ -28,6 +30,13 @@ public class Entry {
         } else {
             TeaEngine.init(args[0]);
         }
+
+        if(Howl.isSupported()){
+            System.out.println("Howler is installed! You get sound!");
+            SoundEngine engine = new HowlSoundEngine();
+            engine.start();
+        }
+
         //We need to do this due to a bug in TeaVM, where randomaccess files aren't created when opened
         File cacheDir = new File("/tmp/.file_store_32");
         createCache(cacheDir);

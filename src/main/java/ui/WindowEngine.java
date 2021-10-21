@@ -39,4 +39,6 @@ public abstract class WindowEngine {
     public abstract ISocket openSocket(String server, int port) throws IOException;
 
     public abstract IAllocator alloc();
+
+    public abstract void schedule(Runnable r, int updateInterval);
 }
