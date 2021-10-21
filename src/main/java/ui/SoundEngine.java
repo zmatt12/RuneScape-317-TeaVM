@@ -16,7 +16,12 @@ public abstract class SoundEngine {
     }
 
     public final void start(){
+        init();
         WindowEngine.getDefault().schedule(this::run, 0);
+    }
+
+    protected void init(){
+
     }
 
     public final void run() {

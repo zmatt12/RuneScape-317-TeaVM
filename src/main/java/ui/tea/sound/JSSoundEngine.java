@@ -7,11 +7,14 @@ import ui.SoundEngine;
 import ui.tea.JSMethods;
 import ui.tea.sound.howl.Howl;
 import ui.tea.sound.howl.HowlConfig;
-import ui.tea.sound.midi.MIDIPlayer;
+import ui.tea.sound.midi.Timidity;
 
 public class JSSoundEngine extends SoundEngine {
 
-    private final Howl[] cache = new Howl[5];
+    private final Howl[] wavCache = new Howl[5];
+    private final String[] midiCache = new String[5];
+
+    private Timidity timidity;
 
     public JSSoundEngine(){
         this(DEFAULT_UPDATE_INTERVAL);
@@ -19,6 +22,15 @@ public class JSSoundEngine extends SoundEngine {
 
     public JSSoundEngine(int interval){
         super(interval);
+    }
+
+    @Override
+    protected void init() {
+        System.out.println("Howl:" + Howl.isSupported());
+        System.out.println("Timidity:" + Timidity.isSupported());
+        if(Timidity.isSupported()){
+            timidity = Timidity.get();
+        }
     }
 
     @Override
@@ -40,14 +52,27 @@ public class JSSoundEngine extends SoundEngine {
             Howl sound = getSound();
             sound.play();
         }
-        if(Signlink.midiplay && MIDIPlayer.isSupported()){
+        if(Signlink.midiplay && Timidity.isSupported()){
             Signlink.midiplay = false;
-            System.err.println("TODO:Midi");
+            System.out.println("Playing:" + Signlink.midi);
+            String url;
+            if(Signlink.savebuf != null){
+                url = getAudioUrl(false);
+                int index = Signlink.midipos;
+                if(midiCache[index] != null){
+                    JSMethods.revokeObjectURL(midiCache[index]);
+                }
+                midiCache[index] = url;
+            }else{
+                url = midiCache[Signlink.midipos];
+            }
+            timidity.load(url);
+            timidity.play();
         }
     }
 
     private Howl getSound(){
-        Howl cached = cache[Signlink.wavepos];
+        Howl cached = wavCache[Signlink.wavepos];
         if(Signlink.savebuf == null){
             return cached;
         }
@@ -64,6 +89,6 @@ public class JSSoundEngine extends SoundEngine {
             JSMethods.revokeObjectURL(url);
         });
         Howl sound = Howl.create(config);
-        return cache[Signlink.wavepos] = sound;
+        return wavCache[Signlink.wavepos] = sound;
     }
 }
