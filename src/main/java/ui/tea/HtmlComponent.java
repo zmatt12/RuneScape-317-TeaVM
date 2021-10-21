@@ -32,13 +32,6 @@ class HtmlComponent extends AbstractComponent {
         initEvents();
     }
 
-    @Override
-    public void dispatch(ui.event.Event e) {
-        //TODO hooks for external tools to get events
-        System.out.println(e);
-        super.dispatch(e);
-    }
-
     private void initEvents() {
         //add even listeners
 
