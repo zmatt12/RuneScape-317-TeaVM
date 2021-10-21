@@ -12,7 +12,7 @@ import ui.tea.sound.midi.Timidity;
 public class JSSoundEngine extends SoundEngine {
 
     private final Howl[] wavCache = new Howl[5];
-    private final String[] midiCache = new String[5];
+    private final Uint8Array[] midiCache = new Uint8Array[5];
 
     private Timidity timidity;
 
@@ -55,18 +55,15 @@ public class JSSoundEngine extends SoundEngine {
         if(Signlink.midiplay && Timidity.isSupported()){
             Signlink.midiplay = false;
             System.out.println("Playing:" + Signlink.midi);
-            String url;
+            Uint8Array buf;
             if(Signlink.savebuf != null){
-                url = getAudioUrl(false);
-                int index = Signlink.midipos;
-                if(midiCache[index] != null){
-                    JSMethods.revokeObjectURL(midiCache[index]);
-                }
-                midiCache[index] = url;
+                buf = Uint8Array.create(Signlink.savebuf.length);
+                buf.set(Signlink.savebuf);
+                midiCache[Signlink.midipos] = buf;
             }else{
-                url = midiCache[Signlink.midipos];
+                buf = midiCache[Signlink.midipos];
             }
-            timidity.load(url);
+            timidity.load(buf);
             timidity.play();
         }
     }
