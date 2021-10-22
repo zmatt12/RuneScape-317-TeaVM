@@ -68,7 +68,7 @@ public class ImageDataImage implements IImage {
             int r = (pixel >> 16) & 0xFF;
             int g = (pixel >> 8) & 0xFF;
             int b = (pixel) & 0xFF;
-            int a = 0xFF; // TODO see if this needs to be hardcoded or not
+            int a = 0xFF;
             arr.set(i, r);
             arr.set(i + 1, g);
             arr.set(i + 2, b);
