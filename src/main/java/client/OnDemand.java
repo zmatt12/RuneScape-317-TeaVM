@@ -2,7 +2,7 @@ package client;
 
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import ui.ISocket;
-import ui.poly.InputStreamPolyFill;
+import ui.util.InputStreamPolyFill;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

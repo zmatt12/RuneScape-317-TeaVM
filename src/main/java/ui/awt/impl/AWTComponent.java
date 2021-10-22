@@ -38,12 +38,12 @@ public class AWTComponent extends AbstractComponent {
     }
 
     @Override
-    public ui.poly.Dimension getSize() {
+    public ui.util.Dimension getSize() {
         return AWTUtils.fromAwt(component.getSize());
     }
 
     @Override
-    public void setPreferredSize(ui.poly.Dimension dimensions) {
+    public void setPreferredSize(ui.util.Dimension dimensions) {
         component.setPreferredSize(AWTUtils.toAwt(dimensions));
     }
 

@@ -1,7 +1,7 @@
 package ui;
 
 
-import ui.poly.Color;
+import ui.util.Color;
 
 public interface IGraphics {
     void setColor(Color color);

@@ -2,7 +2,7 @@ package ui;
 
 import ui.event.Event;
 import ui.event.EventListener;
-import ui.poly.Dimension;
+import ui.util.Dimension;
 
 public interface IComponent {
 

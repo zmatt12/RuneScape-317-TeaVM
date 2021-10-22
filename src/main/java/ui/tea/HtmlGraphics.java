@@ -6,7 +6,7 @@ import ui.IFont;
 import ui.IGraphics;
 import ui.IImage;
 import ui.ImmutableFont;
-import ui.poly.Color;
+import ui.util.Color;
 
 public class HtmlGraphics implements IGraphics {
 
@@ -36,7 +36,6 @@ public class HtmlGraphics implements IGraphics {
 
     @Override
     public void setFont(IFont font) {
-        //TODO scale the font size based on resolution, right now we just use the size as a pixel value
         ImmutableFont f = (ImmutableFont) font;
         context.setFont(f.toHtml());
     }

@@ -8,7 +8,7 @@ import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.dom.html.HTMLInputElement;
 import org.teavm.jso.dom.xml.NodeList;
 import org.teavm.jso.typedarrays.Uint8Array;
-import ui.poly.InputStreamPolyFill;
+import ui.util.InputStreamPolyFill;
 
 import java.io.File;
 import java.io.FileInputStream;

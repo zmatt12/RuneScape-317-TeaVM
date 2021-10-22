@@ -37,10 +37,7 @@ public final class ImmutableFont implements IFont {
     }
 
     public String toHtml() {
-        int size = this.size * 100;
-        size /= 72;
-        double s = ((double)size) / 100;
-        StringBuilder sb = new StringBuilder(s + "in ");
+        StringBuilder sb = new StringBuilder(size + "pt ");
         if (isBold()) {
             sb.append("bold ");
         }
@@ -49,7 +46,6 @@ public final class ImmutableFont implements IFont {
         }
 
         sb.append(getName());
-        System.out.println(sb.toString());
         return sb.toString();
     }
 

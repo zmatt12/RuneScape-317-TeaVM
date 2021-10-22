@@ -12,7 +12,7 @@ import ui.IFont;
 import ui.IFontMetrics;
 import ui.IGraphics;
 import ui.event.*;
-import ui.poly.Dimension;
+import ui.util.Dimension;
 
 
 class HtmlComponent extends AbstractComponent {

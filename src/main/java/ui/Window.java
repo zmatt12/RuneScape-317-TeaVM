@@ -1,7 +1,7 @@
 package ui;
 
 
-import ui.poly.Dimension;
+import ui.util.Dimension;
 
 public class Window {
 

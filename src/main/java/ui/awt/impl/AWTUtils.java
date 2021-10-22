@@ -1,7 +1,7 @@
 package ui.awt.impl;
 
-import ui.poly.Color;
-import ui.poly.Dimension;
+import ui.util.Color;
+import ui.util.Dimension;
 
 public final class AWTUtils {
 

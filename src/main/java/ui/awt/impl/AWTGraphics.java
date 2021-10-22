@@ -3,7 +3,7 @@ package ui.awt.impl;
 import ui.IFont;
 import ui.IGraphics;
 import ui.IImage;
-import ui.poly.Color;
+import ui.util.Color;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
