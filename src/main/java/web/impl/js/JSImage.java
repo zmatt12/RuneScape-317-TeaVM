@@ -10,24 +10,13 @@ import web.impl.jvm.impl.JVMComponent;
 
 public class JSImage implements IImage<JVMComponent> {
 
-    private final HTMLCanvasElement renderCanvas;
-    private final CanvasRenderingContext2D context;
     private final ImageData data;
     private final int[] pixels;
 
     public JSImage(ImageData data) {
-        renderCanvas = org.teavm.jso.browser.Window.current().getDocument().createElement("canvas").cast();
-        renderCanvas.setHeight(data.getHeight());
-        renderCanvas.setWidth(data.getWidth());
-        this.context = renderCanvas.getContext("2d").cast();
-        this.context.putImageData(data, 0, 0);
         this.data = data;
         this.pixels = new int[data.getData().getByteLength() / 4];
         getPixels();
-    }
-
-    public HTMLCanvasElement getRenderCanvas() {
-        return renderCanvas;
     }
 
     public ImageData getData() {
@@ -80,6 +69,5 @@ public class JSImage implements IImage<JVMComponent> {
 
     public void updateData() {
         setPixels();
-        context.putImageData(data, 0, 0);
     }
 }

@@ -15,10 +15,9 @@ public abstract class Platform {
         text = "java.awt.Component";
         try {
             Class.forName(text);
-            text = "web.impl.jvm.JVMWindowEngine";
+            text = "web.impl.jvm.impl.JVMPlatform";
             return (Platform) Class.forName(text).getDeclaredConstructor().newInstance();
-        } catch (Throwable t) {
-
+        } catch (Throwable ignored) {
         }
         return new JSPlatform();
     }

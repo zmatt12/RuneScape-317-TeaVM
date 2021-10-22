@@ -53,7 +53,7 @@ public class JVMPlatform extends Platform {
     @Override
     public IImage createImage(int width, int height, int type) {
         int t = 0;
-        switch (type) {
+        switch (t) {
             case IImage.TYPE_INT_RGB:
                 t = BufferedImage.TYPE_INT_RGB;
                 break;

@@ -49,8 +49,7 @@ public class JSGraphics implements IGraphics {
     @Override
     public void drawImage(IImage img, int x, int y, Object observer) {
         JSImage i = (JSImage) img;
-        HTMLCanvasElement canvas = i.getRenderCanvas();
         i.updateData();
-        context.drawImage(canvas, x, y, img.getWidth(), img.getHeight());
+        context.putImageData(i.getData(), x, y);
     }
 }
