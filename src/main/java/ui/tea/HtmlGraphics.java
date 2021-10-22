@@ -43,7 +43,7 @@ public class HtmlGraphics implements IGraphics {
 
     @Override
     public void drawString(String str, int x, int y) {
-        context.strokeText(str, x, y);
+        context.fillText(str, x, y);
     }
 
 
