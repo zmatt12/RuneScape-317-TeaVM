@@ -10,6 +10,7 @@ import web.ISocket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -158,12 +159,22 @@ public final class JSSocket implements ISocket {
 
         @Override
         public void write(int b) throws IOException {
+            write(new byte[]{(byte) b});
+        }
+
+        @Override
+        public void write(byte[] b) throws IOException {
             if(socket.getReadyState() > 1){
                 throw new IOException("Closed socket");
             }
-            Uint8Array arr = Uint8Array.create(1);
-            arr.set(0, (short)b);
+            Uint8Array arr = Uint8Array.create(b.length);
+            arr.set(b);
             JSMethods.send(socket, arr);
+        }
+
+        @Override
+        public void write(byte[] b, int off, int len) throws IOException {
+            write(Arrays.copyOfRange(b, off, len + off));
         }
     }
 
