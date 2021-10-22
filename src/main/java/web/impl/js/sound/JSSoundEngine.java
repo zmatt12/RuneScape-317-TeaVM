@@ -63,6 +63,20 @@ public class JSSoundEngine extends SoundEngine {
         }
     }
 
+    @Override
+    public void pause() {
+        if(Timidity.isSupported()){
+            timidity.pause();
+        }
+    }
+
+    @Override
+    public void play() {
+        if(Timidity.isSupported()){
+            timidity.play();
+        }
+    }
+
     private Howl getSound(){
         Howl cached = wavCache[Signlink.wavepos];
         if(Signlink.savebuf == null){

@@ -22,6 +22,8 @@ public abstract class Timidity implements JSObject {
 
     public abstract void play();
 
+    public abstract void pause();
+
     @JSFunctor
     public interface Callback extends JSObject{
         void run();

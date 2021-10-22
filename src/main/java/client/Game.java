@@ -702,7 +702,7 @@ public class Game extends GameShell {
 					}
 				}
 			}
-
+			Platform.getDefault().sound().pause();
 			showProgress(65, "Requesting animations");
 
 			int total = ondemand.getFileCount(1);
@@ -732,7 +732,6 @@ public class Game extends GameShell {
 					return;
 				}
 			}
-
 			showProgress(70, "Requesting models");
 
 			total = ondemand.getFileCount(0);
@@ -759,10 +758,8 @@ public class Game extends GameShell {
 				} catch (Exception ignored) {
 				}
 			}
-
 			if (filestores[0] != null) {
 				showProgress(75, "Requesting maps");
-
 				ondemand.request(3, ondemand.getMapFile(0, 47, 48));
 				ondemand.request(3, ondemand.getMapFile(1, 47, 48));
 				ondemand.request(3, ondemand.getMapFile(0, 48, 48));
@@ -822,7 +819,6 @@ public class Game extends GameShell {
 				}
 			}
 			ondemand.prefetchMaps(members);
-
 			if (!lowmem) {
 				int l = ondemand.getFileCount(2);
 				for (int i3 = 1; i3 < l; i3++) {
@@ -926,7 +922,7 @@ public class Game extends GameShell {
 					imageMapscene[i].translate(red + value, green + value, blue + value);
 				}
 			}
-
+			Platform.getDefault().sound().play();
 			showProgress(83, "Unpacking textures");
 			Draw3D.unpackTextures(archiveTextures);
 			Draw3D.setBrightness(0.80000000000000004D);

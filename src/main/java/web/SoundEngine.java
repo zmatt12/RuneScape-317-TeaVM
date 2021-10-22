@@ -8,4 +8,8 @@ public abstract class SoundEngine {
     }
 
     public abstract void update();
+
+    public abstract void pause();
+
+    public abstract void play();
 }

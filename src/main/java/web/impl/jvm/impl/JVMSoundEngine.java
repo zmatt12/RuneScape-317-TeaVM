@@ -7,4 +7,14 @@ class JVMSoundEngine extends SoundEngine {
     public void update() {
 
     }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void play() {
+
+    }
 }

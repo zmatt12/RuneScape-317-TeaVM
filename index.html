@@ -7,6 +7,7 @@
     <script type="text/javascript" charset="utf-8" src="js/howler.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/classes.js"></script>
     <style type="text/css">
+      .pointer {cursor: pointer;}
       .dir {cursor: pointer;}
       .file {cursor: pointer;}
 
@@ -24,8 +25,7 @@
     </style>
 </head>
 <body>
-<canvas id="web-client" class="game" width="765" height="503" tabindex="-1" style="float:left"></canvas>
-<button onclick = "init()" id="startGame">Start game</button>
+<canvas id="web-client" class="game pointer" width="765" height="503" tabindex="-1" style="float:left"></canvas>
 <fieldset>
     <legend>FileSystem</legend>
     <label for="file-update-interval">Update:</label>
@@ -45,15 +45,27 @@
     </table>
 </fieldset>
 <script type="text/javascript">
-    let canvas = document.getElementById("web-client");
-    let ctx = canvas.getContext("2d");
-    ctx.fillColor = "#FFFFFF";
-    ctx.fillRect(0,0, 765, 503);
+    canvas = document.getElementById("web-client");
+    let font = "Helvetica";
+    let width = canvas.width;
+    let height = canvas.height;
+    canvas.onclick = init;
+    ctx = canvas.getContext("2d");
+    ctx.fillColor = "black";
+    ctx.fillRect(0,0, width, height);
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.font = "15pt " + font;
+    ctx.fillText("Click here to load the game!", width / 2, height / 2);
+    ctx.font = "10px " + font;
+    ctx.fillText("(To play audio from JavaScript you have to have had a user interact with the webpage in some way)", width / 2, height - 12);
+    ctx.textAlign = "start";
 
     //User input is required for audio to play on a webpage, so we require them to press a button to start the game
     function init(){
+        canvas.onclick = undefined;
+        canvas.classList.remove("pointer");
         window.Timidity  = new timidity("http://localhost:63342/RuneScape-317-TeaVM/317/js/mid/");
-        document.getElementById("startGame").setAttribute("disabled", true);
         main(['web-client', 'file-view', 'file-update-interval', 'file-id', '10000']);
     }
 </script>
