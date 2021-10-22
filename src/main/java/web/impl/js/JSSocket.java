@@ -131,6 +131,30 @@ public final class JSSocket implements ISocket {
             return -1; // socket closed
         }
 
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException {
+            if(socket.getReadyState() > 1){
+                return -1;
+            }
+            if (curr != null && index < curr.getLength()) {
+                int count = Math.min(curr.getLength() - index, len);
+                for(int i = 0; i < count;i++){
+                    b[i + off] = (byte) curr.get(index++);
+                }
+                return count;
+            }
+            if (!buffers.isEmpty()) {
+                curr = buffers.remove(0);
+                index = 0;
+                return read(b, off, len); // re try the read with the new buffer
+            }
+            CallbackResult result = awaitBuffer();
+            if (result == CallbackResult.READ) {
+                return read(b, off, len); // new buffer received, re-try again
+            }
+            return -1; // socket closed
+        }
+
         @Async
         private native CallbackResult awaitBuffer() throws IOException;
 
