@@ -127,7 +127,6 @@ public final class TeaSocket implements ISocket {
             if (result == CallbackResult.READ) {
                 return read(); // new buffer received, re-try again
             }
-            //TODO throw error if result == ERROR
             return -1; // socket closed
         }
 
