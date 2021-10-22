@@ -94,7 +94,7 @@
                             <targetDirectory>js</targetDirectory>
 
                             <!-- Main class, containing static void main(String[]) -->
-                            <mainClass>ui.tea.Entry</mainClass>
+                            <mainClass>web.impl.js.Entry</mainClass>
                             <!-- Whether TeaVM should produce minified JavaScript. Can reduce JavaScript file size more than
                                  two times -->
                             <minifying>false</minifying>

@@ -1,6 +1,6 @@
 package client;
 
-import ui.*;
+import web.*;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class Image24 extends DoublyLinkedList.Node {
 
 	public Image24(byte[] abyte0, Window component) {
 		try {
-			IImage img = WindowEngine.getDefault().createImage(abyte0);
+			IImage<?> img = Platform.getDefault().createImage(abyte0);
 			width = img.getWidth(component);
 			height = img.getHeight(component);
 			cropW = width;

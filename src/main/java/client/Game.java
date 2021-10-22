@@ -3,8 +3,8 @@ package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 // Decompiler options: packimports(3)
 
 import org.apache.commons.math3.random.ISAACRandom;
-import ui.*;
-import ui.util.Color;
+import web.*;
+import web.util.Color;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -654,9 +654,9 @@ public class Game extends GameShell {
 			FileArchive archiveWordenc = loadArchive(7, "chat system", "wordenc", archiveChecksum[7], 50);
 			FileArchive archiveSounds = loadArchive(8, "sound effects", "sounds", archiveChecksum[8], 55);
 
-			planeTileFlags = WindowEngine.getDefault().alloc().byteArray(4, 104, 104);
+			planeTileFlags = Platform.getDefault().alloc().byteArray(4, 104, 104);
 
-			planeHeightmap = WindowEngine.getDefault().alloc().intArray(4, 105, 105);
+			planeHeightmap = Platform.getDefault().alloc().intArray(4, 105, 105);
 
 
 			scene = new Scene(104, 104, planeHeightmap, 4);
@@ -1488,7 +1488,7 @@ public class Game extends GameShell {
 	static String server = "localhost";
 
 	public ISocket openSocket(int port) throws IOException {
-		return WindowEngine.getDefault().openSocket(server, port);
+		return Platform.getDefault().openSocket(server, port);
 	}
 
 	public void updateMouseInput() {

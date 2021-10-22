@@ -4,9 +4,6 @@
     <title>Main page</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <script type="text/javascript" charset="utf-8" src="js/timidity.js"></script>
-    <script type="text/javascript">
-        Timidity  = new timidity("http://localhost:63342/RuneScape-317-TeaVM/317/js/mid/")
-    </script>
     <script type="text/javascript" charset="utf-8" src="js/howler.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/classes.js"></script>
     <style type="text/css">
@@ -55,6 +52,7 @@
 
     //User input is required for audio to play on a webpage, so we require them to press a button to start the game
     function init(){
+        window.Timidity  = new timidity("http://localhost:63342/RuneScape-317-TeaVM/317/js/mid/");
         document.getElementById("startGame").setAttribute("disabled", true);
         main(['web-client', 'file-view', 'file-update-interval', 'file-id', '10000']);
     }

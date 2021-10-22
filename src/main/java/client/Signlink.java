@@ -3,8 +3,8 @@ package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 // Decompiler options: packimports(3) 
 // Source File Name:   signlink.java
 
-import ui.ISocket;
-import ui.WindowEngine;
+import web.ISocket;
+import web.Platform;
 
 import java.applet.Applet;
 import java.io.*;
@@ -212,7 +212,7 @@ public class Signlink implements Runnable {
 		for (int i = threadliveid; threadliveid == i; ) {
 			if (socketreq != 0) {
 				try {
-					socket = WindowEngine.getDefault().openSocket(socketip, socketreq);
+					socket = Platform.getDefault().openSocket(socketip, socketreq);
 				} catch (Exception _ex) {
 					socket = null;
 				}
@@ -241,6 +241,7 @@ public class Signlink implements Runnable {
 					} catch (Exception ignored) {
 					}
 				}
+				Platform.getDefault().sound().update();
 				if (waveplay) {
 					wave = s + savereq;
 					waveplay = false;
