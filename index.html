@@ -12,11 +12,25 @@
     <style type="text/css">
       .dir {cursor: pointer;}
       .file {cursor: pointer;}
+
+      .game {
+        margin: 5px;
+      }
+
+      #startGame {
+        width:125px;
+      }
+
+      fieldset{
+        width: 250px;
+      }
     </style>
 </head>
 <body>
-<canvas id="web-client" width="765" height="503" tabindex="-1" style="float:left"></canvas>
-<div>
+<canvas id="web-client" class="game" width="765" height="503" tabindex="-1" style="float:left"></canvas>
+<button onclick = "init()" id="startGame">Start game</button>
+<fieldset>
+    <legend>FileSystem</legend>
     <label for="file-update-interval">Update:</label>
     <input type="number" value="100" min="100" id="file-update-interval"
            style="width:5em;"/>
@@ -32,9 +46,18 @@
             <th>Size</th>
         </tr>
     </table>
-</div>
+</fieldset>
 <script type="text/javascript">
-    main(['web-client', 'file-view', 'file-update-interval', 'file-id', '10000']);
+    let canvas = document.getElementById("web-client");
+    let ctx = canvas.getContext("2d");
+    ctx.fillColor = "#FFFFFF";
+    ctx.fillRect(0,0, 765, 503);
+
+    //User input is required for audio to play on a webpage, so we require them to press a button to start the game
+    function init(){
+        document.getElementById("startGame").setAttribute("disabled", true);
+        main(['web-client', 'file-view', 'file-update-interval', 'file-id', '10000']);
+    }
 </script>
 </body>
 </html>
