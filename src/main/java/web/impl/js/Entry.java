@@ -3,24 +3,26 @@ package web.impl.js;
 
 import client.Game;
 import client.Signlink;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teavm.classlib.fs.VirtualFileSystemProvider;
-import web.SoundEngine;
+import org.teavm.jso.browser.Window;
 import web.impl.js.fs.BrowserFsFileSystem;
 import web.impl.js.fs.bfs.BrowserFileSystem;
-import web.impl.js.sound.JSSoundEngine;
 
 import java.io.File;
 
 public class Entry {
 
+    private static final Logger logger = LoggerFactory.getLogger(Entry.class);
+
     //Don't actually try to run this, you'd be in for a bad time.
     public static void main(String[] args) throws Exception {
         if(BrowserFileSystem.isSupported()){
-            System.out.println("Using browser fs!");
+            logger.info("Using BrowserFS Virtual FileSystem");
             VirtualFileSystemProvider.setInstance(new BrowserFsFileSystem());
-        }else{
-            System.out.println("Using teavm fs, no data will be saved");
         }
+
         if (args.length > 1) {
             FileSystemViewer viewer = new FileSystemViewer(args[1], args[2]);
             viewer.setCurrentId(args[3]);
@@ -35,7 +37,9 @@ public class Entry {
         createCache(cacheDir);
 
         Signlink.storeid = 32;
-        Signlink.startpriv("127.0.0.1");
+        String server = Window.current().getLocation().getHostName();
+        logger.info("Setting server to '{}'", server);
+        Signlink.startpriv(server);
 
         Game g = new Game();
         g.init(765, 503);
