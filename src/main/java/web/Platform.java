@@ -46,4 +46,6 @@ public abstract class Platform {
     public abstract IAllocator alloc();
 
     public abstract SoundEngine sound();
+
+    public abstract String getCodeBase();
 }

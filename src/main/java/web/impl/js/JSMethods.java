@@ -4,6 +4,7 @@ import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
+import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.typedarrays.Uint8Array;
 import org.teavm.jso.websocket.WebSocket;
 
@@ -21,6 +22,12 @@ public final class JSMethods {
 
     @JSBody(params = {"arr", "type"}, script = "return new Blob([arr], {type:type});")
     public static native JSObject blobify(Uint8Array arr, String type);
+
+    @JSBody(params = {"elem", "prop"}, script = "return typeof elem.dataset[prop] != 'undefined'")
+    public static native boolean hasData(HTMLElement elem, String prop);
+
+    @JSBody(params = {"elem", "prop"}, script = "elem.dataset[prop]")
+    public static native JSObject getData(HTMLElement elem, String prop);
 
     @JSBody(params = {"blob"}, script = "return (window.URL || window.webkitURL).createObjectURL(blob);")
     public static native String createObjectUrl(JSObject blob);

@@ -148,4 +148,8 @@ class JSComponent extends AbstractComponent {
     public IFontMetrics getFontMetrics(IFont font) {
         return new JSFontMetrics(font);
     }
+
+    public HTMLCanvasElement getCanvas() {
+        return canvas;
+    }
 }

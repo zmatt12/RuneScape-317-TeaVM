@@ -1,5 +1,6 @@
 package web.impl.jvm.impl;
 
+import client.Game;
 import web.*;
 import web.impl.jvm.event.AWTEventAdapter;
 
@@ -76,6 +77,11 @@ public class JVMPlatform extends Platform {
     @Override
     public SoundEngine sound() {
         return sound;
+    }
+
+    @Override
+    public String getCodeBase() {
+        return "http://" + Game.server + ":" + (80 + Game.portOffset) + "/";
     }
 
 

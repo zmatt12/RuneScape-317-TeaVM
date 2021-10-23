@@ -10,19 +10,20 @@ public abstract class JSConfig implements JSObject {
     private JSConfig() {
 
     }
-    public static boolean exists(){
+
+    public static boolean exists() {
         return JSMethods.has(Window.current(), "config317");
     }
 
-    public boolean logEvents(){
+    @JSBody(script = "return window.config317;")
+    public static native JSConfig get();
+
+    public boolean logEvents() {
         return JSMethods.has(this, "logEvents") && _logEvents();
     }
 
     @JSProperty("logEvents")
     private native boolean _logEvents();
-
-    @JSBody(script = "return window.config317;")
-    public static native JSConfig get();
 
     @JSProperty("timidity")
     public native TimidityConfig timidity();
@@ -36,17 +37,24 @@ public abstract class JSConfig implements JSObject {
     @JSProperty
     public abstract int getPortOffset();
 
-    public boolean hasFile(){
+    public boolean hasFile() {
         return JSMethods.has(this, "file");
     }
 
-    public boolean hasServer(){
+    public boolean hasServer() {
         return JSMethods.has(this, "server");
     }
 
-    public boolean hasPortOffset(){
+    public boolean hasPortOffset() {
         return JSMethods.has(this, "portOffset");
     }
+
+    public boolean hasCodebase() {
+        return JSMethods.has(this, "codebase");
+    }
+
+    @JSProperty
+    public abstract String getCodebase();
 
     @JSProperty
     public abstract String getServer();

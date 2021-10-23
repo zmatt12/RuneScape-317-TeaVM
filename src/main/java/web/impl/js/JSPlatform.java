@@ -3,9 +3,11 @@ package web.impl.js;
 import org.teavm.interop.Async;
 import org.teavm.interop.AsyncCallback;
 import org.teavm.jso.JSObject;
+import org.teavm.jso.browser.Location;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
 import org.teavm.jso.canvas.ImageData;
+import org.teavm.jso.core.JSString;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLImageElement;
 import org.teavm.jso.typedarrays.Uint8Array;
@@ -20,6 +22,7 @@ public final class JSPlatform extends Platform {
     private static final JSAllocator alloc = new JSAllocator();
     private static final JSSoundEngine sound = new JSSoundEngine();
     private static int portOffset;
+    private static String codebase;
 
     public static void init(String canvasId) {
         init(canvasId, 10000);
@@ -34,7 +37,23 @@ public final class JSPlatform extends Platform {
         component = new JSComponent(canvas, context);
         portOffset = offset;
 
+        initCodebase();
+
         sound.init();
+    }
+
+    private static void initCodebase(){
+        HTMLCanvasElement canvas = component.getCanvas();
+        Location location = Window.current().getLocation();
+        codebase = location.getProtocol() + "//" + location.getHost();
+        if(JSMethods.hasData(canvas,"codebase")) {
+            codebase  += ((JSString)JSMethods.getData(canvas, "codebase")).stringValue();
+        }else if(JSConfig.get().hasCodebase()){
+            codebase += JSConfig.get().getCodebase();
+        }else{
+            codebase = location.getFullURL();
+            codebase = codebase.substring(0, codebase.lastIndexOf('/')) + "/";
+        }
     }
 
     @Async
@@ -96,6 +115,11 @@ public final class JSPlatform extends Platform {
     @Override
     public SoundEngine sound() {
         return sound;
+    }
+
+    @Override
+    public String getCodeBase() {
+        return codebase;
     }
 
 

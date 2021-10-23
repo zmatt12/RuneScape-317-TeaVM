@@ -602,14 +602,6 @@ public class Game extends GameShell {
 		}
 	}
 
-	public URL getCodeBase() {
-		try {
-			return new URL("http://" + server + ":" + (80 + portOffset));
-		} catch (Exception ignored) {
-		}
-		return null;
-	}
-
 	public String getParameter(String s) {
 		throw new UnsupportedOperationException();
 	}
@@ -1481,7 +1473,7 @@ public class Game extends GameShell {
 		Draw2D.drawLineX(0, 77, 479, 0);
 	}
 
-	static String server = "localhost";
+	public static String server = "localhost";
 
 	public ISocket openSocket(int port) throws IOException {
 		return Platform.getDefault().openSocket(server, port);

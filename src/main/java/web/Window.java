@@ -3,16 +3,14 @@ package web;
 
 import web.util.Dimension;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class Window<T extends IComponent> {
 
     private final T component = (T) Platform.getDefault().createComponent();
 
-
-    public IMediaTracker createTracker() {
-        return null;
-    }
-
-    public T getComponent() {
+    public final T getComponent() {
         return component;
     }
 
@@ -48,7 +46,11 @@ public class Window<T extends IComponent> {
         component.repaint();
     }
 
-    public IFontMetrics getFontMetrics(IFont font) {
+    public final IFontMetrics getFontMetrics(IFont font) {
         return component.getFontMetrics(font);
+    }
+
+    public final URL getCodeBase() throws MalformedURLException {
+        return new URL(Platform.getDefault().getCodeBase());
     }
 }

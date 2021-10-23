@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teavm.classlib.fs.VirtualFileSystemProvider;
 import org.teavm.jso.browser.Window;
+import web.Platform;
 import web.impl.js.fs.BrowserFsFileSystem;
 import web.impl.js.fs.bfs.BrowserFileSystem;
 
@@ -51,6 +52,9 @@ public class Entry {
 
         logger.info("Setting server to '{}'", server);
         Signlink.startpriv(server);
+        Game.server = server;
+
+        logger.info("Codebase:{}", Platform.getDefault().getCodeBase());
 
         Game g = new Game();
         g.init(765, 503);
