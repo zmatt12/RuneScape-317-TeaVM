@@ -1,6 +1,8 @@
 package web.impl.js.sound;
 
 import client.Signlink;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.typedarrays.Uint8Array;
 import web.SoundEngine;
@@ -11,6 +13,7 @@ import web.impl.js.sound.midi.Timidity;
 
 public class JSSoundEngine extends SoundEngine {
 
+    private Logger logger = LoggerFactory.getLogger(JSSoundEngine.class);
     private final Howl[] wavCache = new Howl[5];
     private final Uint8Array[] midiCache = new Uint8Array[5];
     private int currentWav = -1, currentMidi = -1;
@@ -19,15 +22,14 @@ public class JSSoundEngine extends SoundEngine {
 
     @Override
     public void init() {
-        System.out.println("Howl:" + Howl.isSupported());
-        System.out.println("Timidity:" + Timidity.isSupported());
+        logger.info("Howl:{} Timidity:{}", Howl.isSupported(), Timidity.isSupported());
         if(Timidity.isSupported()){
             timidity = Timidity.get();
             timidity.on("playing", () ->{
-                System.out.println("Playing track");
+                logger.info("Playback started");
             });
             timidity.on("ended", () ->{
-                System.out.println("Looping");
+                logger.info("Re-playing track");
                 timidity.play();
             });
         }
@@ -83,7 +85,6 @@ public class JSSoundEngine extends SoundEngine {
             return cached;
         }
         if(cached != null){
-            System.out.println("unload");
             cached.stop();
             cached.unload();
         }
@@ -91,7 +92,6 @@ public class JSSoundEngine extends SoundEngine {
         HowlConfig config = HowlConfig.create(url);
         config.setFormat("wav");
         config.setOnStop(event -> {
-            System.out.println("Cleaning up..");
             JSMethods.revokeObjectURL(url);
         });
         Howl sound = Howl.create(config);

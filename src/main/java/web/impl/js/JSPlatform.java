@@ -31,9 +31,7 @@ public final class JSPlatform extends Platform {
         }
         HTMLCanvasElement canvas = Window.current().getDocument().getElementById(canvasId).cast();
         CanvasRenderingContext2D context = (CanvasRenderingContext2D) canvas.getContext("2d");
-        double bsr = JSMethods.getBackingStoreRatio(context);
-        double pr = Window.current().getDevicePixelRatio();
-        component = new JSComponent(canvas, context, pr / bsr);
+        component = new JSComponent(canvas, context);
         portOffset = offset;
 
         sound.init();

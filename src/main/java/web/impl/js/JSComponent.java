@@ -1,5 +1,7 @@
 package web.impl.js;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
 import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
@@ -17,19 +19,25 @@ import web.util.Dimension;
 
 class JSComponent extends AbstractComponent {
 
+    private static final Logger logger = LoggerFactory.getLogger(JSComponent.class);
+
     private final HTMLCanvasElement canvas;
     private final CanvasRenderingContext2D context;
-    private final double ratio;
     private final JSGraphics graphics;
     private final Dimension dim;
 
-    public JSComponent(HTMLCanvasElement canvas, CanvasRenderingContext2D context, double ratio) {
+    public JSComponent(HTMLCanvasElement canvas, CanvasRenderingContext2D context) {
         this.canvas = canvas;
         this.context = context;
-        this.ratio = ratio;
         this.dim = new Dimension(canvas.getWidth(), canvas.getHeight());
         this.graphics = new JSGraphics(context);
         initEvents();
+    }
+
+    @Override
+    public void dispatch(web.event.Event e) {
+        logger.info("Client event:" + e);
+        super.dispatch(e);
     }
 
     private void initEvents() {
@@ -78,14 +86,10 @@ class JSComponent extends AbstractComponent {
     private EventListener<MouseEvent> createMouseListener(int type) {
         return evt -> {
             TextRectangle bounds = canvas.getBoundingClientRect();
-            double sX = canvas.getWidth() / bounds.getWidth();
-            double sY = canvas.getHeight() / bounds.getHeight();
 
             int x = evt.getClientX() - bounds.getLeft();
             int y = evt.getClientY() - bounds.getTop();
 
-            //x *= sX;
-            //y *= sY;
 
             dispatch(new ImmutableMouseEvent(type,
                     x, y, evt.getButton() == 2));
@@ -103,10 +107,8 @@ class JSComponent extends AbstractComponent {
 
     @Override
     public void setSize(int width, int height) {
-        JSMethods.setSize(canvas, width, height);
-        //canvas.getStyle().setProperty("width", width + "px");
-        //canvas.getStyle().setProperty("height", height + "px");
-        //context.setTransform(ratio, 0, 0, ratio, 0, 0);
+        canvas.setWidth(width);
+        canvas.setHeight(height);
         dim.setSize(width, height);
     }
 

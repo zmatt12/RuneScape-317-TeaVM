@@ -1,16 +1,15 @@
 package web.impl.js;
 
+import org.teavm.jso.browser.Window;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
-import web.IFont;
-import web.IGraphics;
-import web.IImage;
-import web.ImmutableFont;
+import web.*;
 import web.util.Color;
 
 public class JSGraphics implements IGraphics {
 
     private final CanvasRenderingContext2D context;
+
 
     public JSGraphics(CanvasRenderingContext2D context) {
         this.context = context;
@@ -45,11 +44,11 @@ public class JSGraphics implements IGraphics {
         context.fillText(str, x, y);
     }
 
-
     @Override
     public void drawImage(IImage img, int x, int y, Object observer) {
         JSImage i = (JSImage) img;
         i.updateData();
         context.putImageData(i.getData(), x, y);
     }
+
 }

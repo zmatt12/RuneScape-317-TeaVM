@@ -13,16 +13,6 @@ public final class JSMethods {
 
     }
 
-    @JSBody(params = {"ctx"}, script = "return ctx.webkitBackingStorePixelRatio ||\n" +
-            "ctx.mozBackingStorePixelRatio ||\n" +
-            "ctx.msBackingStorePixelRatio ||\n" +
-            "ctx.oBackingStorePixelRatio ||\n" +
-            "ctx.backingStorePixelRatio || 1")
-    public static native double getBackingStoreRatio(CanvasRenderingContext2D ctx);
-
-    @JSBody(params = {"canvas", "width", "height"}, script = "canvas.width = width; canvas.height=height;")
-    public static native void setSize(HTMLCanvasElement canvas, double width, double height);
-
     @JSBody(params = {"ws", "data"}, script = "return ws.send(data);")
     public static native void send(WebSocket ws, Uint8Array data);
 

@@ -1,5 +1,7 @@
 package web.impl.js;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teavm.interop.Async;
 import org.teavm.interop.AsyncCallback;
 import org.teavm.jso.typedarrays.Uint8Array;
@@ -15,6 +17,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public final class JSSocket implements ISocket {
+
+    private static final Logger logger = LoggerFactory.getLogger(JSSocket.class);
+
     private final WebSocket socket;
     private final SocketOutputStream out;
     private final SocketInputStream in;
@@ -46,6 +51,7 @@ public final class JSSocket implements ISocket {
     }
 
     public static JSSocket open(String server, int port) {
+        logger.info("open('{}',{})",server, port);
         JSSocket socket = connect(server, port);
         socket.init();
         return socket;
@@ -64,12 +70,12 @@ public final class JSSocket implements ISocket {
 
     @Override
     public void setSoTimeout(int timeout) throws IOException {
-
+        logger.info("setSoTimeout({})", timeout);
     }
 
     @Override
     public void setTcpNoDelay(boolean nodelay) throws IOException {
-
+        logger.info("setTcpNoDelay({})", nodelay);
     }
 
     @Override
@@ -88,6 +94,7 @@ public final class JSSocket implements ISocket {
     }
 
     public void close(boolean closeUnderlying) throws IOException {
+        logger.info("close({})", closeUnderlying);
         in.completeAndDelete(CallbackResult.CLOSED);
         if (closeUnderlying) {
             socket.close();
