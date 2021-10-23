@@ -45,14 +45,17 @@ public final class JSPlatform extends Platform {
     private static void initCodebase(){
         HTMLCanvasElement canvas = component.getCanvas();
         Location location = Window.current().getLocation();
-        codebase = location.getProtocol() + "//" + location.getHost();
+        codebase = location.getProtocol() + "//" + location.getHost() + "/";
         if(JSMethods.hasData(canvas,"codebase")) {
-            codebase  += ((JSString)JSMethods.getData(canvas, "codebase")).stringValue();
+            codebase += JSMethods.getData(canvas, "codebase");
         }else if(JSConfig.get().hasCodebase()){
             codebase += JSConfig.get().getCodebase();
         }else{
             codebase = location.getFullURL();
-            codebase = codebase.substring(0, codebase.lastIndexOf('/')) + "/";
+            codebase = codebase.substring(0, codebase.lastIndexOf('/'));
+        }
+        if(!codebase.endsWith("/")) {
+            codebase = codebase + "/";
         }
     }
 

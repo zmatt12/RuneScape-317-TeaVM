@@ -26,8 +26,8 @@ public final class JSMethods {
     @JSBody(params = {"elem", "prop"}, script = "return typeof elem.dataset[prop] != 'undefined'")
     public static native boolean hasData(HTMLElement elem, String prop);
 
-    @JSBody(params = {"elem", "prop"}, script = "elem.dataset[prop]")
-    public static native JSObject getData(HTMLElement elem, String prop);
+    @JSBody(params = {"elem", "prop"}, script = "return elem.dataset[prop]")
+    public static native String getData(HTMLElement elem, String prop);
 
     @JSBody(params = {"blob"}, script = "return (window.URL || window.webkitURL).createObjectURL(blob);")
     public static native String createObjectUrl(JSObject blob);
