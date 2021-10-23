@@ -6,6 +6,7 @@
     <script type="text/javascript" charset="utf-8" src="js/timidity.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/howler.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/classes.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/config.js"></script>
     <style type="text/css">
       .pointer {cursor: pointer;}
       .dir {cursor: pointer;}
@@ -65,8 +66,7 @@
     function init(){
         canvas.onclick = undefined;
         canvas.classList.remove("pointer");
-        window.Timidity  = new timidity("/RuneScape-317-TeaVM/317/js/mid/");
-        main(['web-client', 'file-view', 'file-update-interval', 'file-id', '10000']);
+        main();
     }
 </script>
 </body>

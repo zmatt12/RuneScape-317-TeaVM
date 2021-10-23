@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.typedarrays.Uint8Array;
 import web.SoundEngine;
+import web.impl.js.JSConfig;
 import web.impl.js.JSMethods;
 import web.impl.js.sound.howl.Howl;
 import web.impl.js.sound.howl.HowlConfig;
@@ -24,7 +25,7 @@ public class JSSoundEngine extends SoundEngine {
     public void init() {
         logger.info("Howl:{} Timidity:{}", Howl.isSupported(), Timidity.isSupported());
         if(Timidity.isSupported()){
-            timidity = Timidity.get();
+            timidity = Timidity.create(JSConfig.get().timidity().getBaseUrl());
             timidity.on("playing", () ->{
                 logger.info("Playback started");
             });
