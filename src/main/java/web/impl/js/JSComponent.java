@@ -41,7 +41,7 @@ class JSComponent extends AbstractComponent {
     }
 
     private void initEvents() {
-        //add even listeners
+        //add event listeners
 
         //context menu (stops system one from appearing)
         canvas.addEventListener("contextmenu", Event::preventDefault);
@@ -129,17 +129,17 @@ class JSComponent extends AbstractComponent {
 
     @Override
     public void update(IGraphics g) {
-        System.out.println("update");
+        logger.info("update({})", g);
     }
 
     @Override
     public void paint(IGraphics g) {
-        System.out.println("paint");
+        logger.info("paint({})", g);
     }
 
     @Override
     public void repaint() {
-        System.out.println("repaint");
+        logger.info("repaint()");
     }
 
     @Override

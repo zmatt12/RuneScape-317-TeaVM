@@ -2,7 +2,6 @@ package web.impl.js.fs;
 
 import org.teavm.classlib.fs.VirtualFile;
 import org.teavm.classlib.fs.VirtualFileSystem;
-import web.impl.js.JSMethods;
 import web.impl.js.fs.bfs.BrowserFileSystem;
 
 public class BrowserFsFileSystem implements VirtualFileSystem {
@@ -16,7 +15,6 @@ public class BrowserFsFileSystem implements VirtualFileSystem {
             throw new UnsupportedOperationException("BrowserFS needs to be installed!");
         }
         this.fs = BrowserFileSystem.getRootFileSystem();
-        JSMethods.export("root", this.fs);
     }
 
     public BrowserFileSystem getFs(){
