@@ -18,26 +18,37 @@ public class Entry {
 
     //Don't actually try to run this, you'd be in for a bad time.
     public static void main(String[] args) throws Exception {
+        if(!JSConfig.exists()){
+            Window.alert("No webclient config exists! Please create it!");
+            return;
+        }
+        JSConfig config = JSConfig.get();
         if(BrowserFileSystem.isSupported()){
             logger.info("Using BrowserFS Virtual FileSystem");
             VirtualFileSystemProvider.setInstance(new BrowserFsFileSystem());
         }
 
-        if (args.length > 1) {
-            FileSystemViewer viewer = new FileSystemViewer(args[1], args[2]);
-            viewer.setCurrentId(args[3]);
-            viewer.refresh();
-            JSPlatform.init(args[0], Integer.parseInt(args[4]));
-        } else {
-            JSPlatform.init(args[0]);
+        if (config.hasFile()) {
+            JSConfig.FileViewerConfig file = config.file();
+            FileSystemViewer viewer = new FileSystemViewer(file.getTableId(), file.getNumberId());
+            viewer.setCurrentId(file.getCurrentId());
         }
+
+        JSPlatform.init(config.getCanvasId(), config.hasPortOffset() ? config.getPortOffset() : 0);
 
         //We need to do this due to a bug in TeaVM, where randomaccess files aren't created when opened
         File cacheDir = new File("/tmp/.file_store_32");
         createCache(cacheDir);
 
         Signlink.storeid = 32;
-        String server = Window.current().getLocation().getHostName();
+
+        String server;
+        if(config.hasServer()){
+            server = config.getServer();
+        }else{
+            server = Window.current().getLocation().getHostName();
+        }
+
         logger.info("Setting server to '{}'", server);
         Signlink.startpriv(server);
 

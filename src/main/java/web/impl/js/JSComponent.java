@@ -36,7 +36,9 @@ class JSComponent extends AbstractComponent {
 
     @Override
     public void dispatch(web.event.Event e) {
-        logger.info("Client event:" + e);
+        if(JSConfig.get().logEvents()) {
+            logger.info("Client event:" + e);
+        }
         super.dispatch(e);
     }
 

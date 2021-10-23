@@ -7,11 +7,11 @@ import org.teavm.jso.typedarrays.Uint8Array;
 
 public abstract class Timidity implements JSObject {
 
-    @JSBody(script = "return typeof Timidity != 'undefined'")
+    @JSBody(script = "return typeof timidity != 'undefined'")
     public static native boolean isSupported();
 
-    @JSBody(script = "return Timidity")
-    public static native Timidity get();
+    @JSBody(params = {"baseUrl"}, script = "return new timidity(baseUrl)")
+    public static native Timidity create(String baseUrl);
 
     @JSBody(params = {"event", "cb"}, script = "return this.on(event, cb);")
     public abstract void on(String event, Callback cb);

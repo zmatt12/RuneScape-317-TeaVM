@@ -13,6 +13,9 @@ public final class JSMethods {
 
     }
 
+    @JSBody(params = {"obj", "propertyName"}, script = "return typeof obj[propertyName] != 'undefined'")
+    public static native boolean has(JSObject obj, String propertyName);
+
     @JSBody(params = {"ws", "data"}, script = "return ws.send(data);")
     public static native void send(WebSocket ws, Uint8Array data);
 
