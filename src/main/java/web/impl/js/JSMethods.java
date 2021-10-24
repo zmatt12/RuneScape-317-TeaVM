@@ -5,6 +5,7 @@ import org.teavm.jso.JSObject;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLElement;
+import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Uint8Array;
 import org.teavm.jso.websocket.WebSocket;
 
@@ -37,4 +38,7 @@ public final class JSMethods {
 
     @JSBody(params = { "name", "value"}, script = "return window[name] = value")
     public static native void export(String name, JSObject value);
+
+    @JSBody(params = {"arr"}, script = "return arr;")
+    public static native ArrayBuffer wrap(byte[] data);
 }

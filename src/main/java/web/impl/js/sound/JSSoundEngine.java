@@ -3,8 +3,15 @@ package web.impl.js.sound;
 import client.Signlink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teavm.interop.Async;
+import org.teavm.interop.AsyncCallback;
 import org.teavm.jso.JSObject;
+import org.teavm.jso.typedarrays.Int8Array;
 import org.teavm.jso.typedarrays.Uint8Array;
+import org.teavm.jso.webaudio.AudioBuffer;
+import org.teavm.jso.webaudio.AudioBufferSourceNode;
+import org.teavm.jso.webaudio.AudioContext;
+import org.teavm.jso.webaudio.AudioDestinationNode;
 import web.SoundEngine;
 import web.impl.js.JSConfig;
 import web.impl.js.JSMethods;
@@ -15,14 +22,22 @@ import web.impl.js.sound.midi.Timidity;
 public class JSSoundEngine extends SoundEngine {
 
     private final Logger logger = LoggerFactory.getLogger(JSSoundEngine.class);
-    private final Howl[] wavCache = new Howl[5];
+
+    private AudioDestinationNode dest;
+
+    private final AudioBufferSourceNode[] wavCache = new AudioBufferSourceNode[5];
     private final Uint8Array[] midiCache = new Uint8Array[5];
     private int currentWav = -1, currentMidi = -1;
+
+    private AudioContext context;
 
     private Timidity timidity;
 
     @Override
     public void init() {
+        context = AudioContext.create();
+        dest = context.getDestination();
+
         logger.info("Howl:{} Timidity:{}", Howl.isSupported(), Timidity.isSupported());
         if(Timidity.isSupported()){
             timidity = Timidity.create(JSConfig.get().timidity().getBaseUrl());
@@ -35,6 +50,23 @@ public class JSSoundEngine extends SoundEngine {
                 timidity.play();
             });
         }
+    }
+
+    private AudioBufferSourceNode createAndConnect(byte[] data){
+        AudioBufferSourceNode res = context.createBufferSource();
+        res.setBuffer(decode(data));
+        res.connect(dest);
+        return res;
+    }
+
+    @Async
+    private native AudioBuffer decode(byte[] data);
+    private void decode(byte[] data, AsyncCallback<AudioBuffer> callback){
+        Int8Array arr = Int8Array.create(data.length);
+        arr.set(data);
+        context.decodeAudioData(arr.getBuffer(), callback::complete, err ->{
+            callback.error(new Exception(err.toString()));
+        });
     }
 
     private String getWavUrl(){
@@ -54,12 +86,24 @@ public class JSSoundEngine extends SoundEngine {
     }
 
     private void updateSounds(){
-        if(Signlink.waveplay && Howl.isSupported() && currentWav != Signlink.wavepos){
+        if(Signlink.waveplay && currentWav != Signlink.wavepos){
             currentWav = Signlink.wavepos;
-            System.out.println("Playing:" + Signlink.savereq + " - " + Signlink.wavepos);
-            Howl sound = getSound();
+            if(wavCache[currentWav] != null){
+                wavCache[currentWav].stop();
+                wavCache[currentWav].disconnect();
+            }
+            wavCache[currentWav] = createAndConnect(Signlink.savebuf);
+            wavCache[currentWav].start();
         }
     }
+
+//    private void updateSounds(){
+//        if(Signlink.waveplay && Howl.isSupported() && currentWav != Signlink.wavepos){
+//            currentWav = Signlink.wavepos;
+//            System.out.println("Playing:" + Signlink.savereq + " - " + Signlink.wavepos);
+//            Howl sound = getSound();
+//        }
+//    }
 
     private void updateMusic(){
         if(Signlink.midiplay && Timidity.isSupported() && currentMidi != Signlink.midipos){
@@ -87,8 +131,8 @@ public class JSSoundEngine extends SoundEngine {
         if(Timidity.isSupported()){
             timidity.pause();
         }
-        if(Howl.isSupported() && currentWav != -1){
-            wavCache[currentWav].pause();
+        if(currentWav != -1){
+            wavCache[currentWav].stop();
         }
     }
 
@@ -97,8 +141,8 @@ public class JSSoundEngine extends SoundEngine {
         if(Timidity.isSupported()){
             timidity.play();
         }
-        if(Howl.isSupported() && currentWav != -1){
-            wavCache[currentWav].play();
+        if(currentWav != -1){
+            wavCache[currentWav].stop();
         }
     }
 
@@ -107,25 +151,25 @@ public class JSSoundEngine extends SoundEngine {
         return res / 10000.0f;
     }
 
-    private Howl getSound(){
-        Howl cached = wavCache[Signlink.wavepos];
-        if(Signlink.savebuf == null){
-            return cached;
-        }
-        if(cached != null){
-            cached.stop();
-            cached.unload();
-        }
-        String url = getWavUrl();
-        HowlConfig config = HowlConfig.create(url);
-        config.setHtml5(true);
-        config.setAutoplay(true);
-        config.setFormat("wav");
-        config.setVolume(convertVol(Signlink.wavevol));
-        config.setOnStop(event -> {
-            JSMethods.revokeObjectURL(url);
-        });
-        Howl sound = Howl.create(config);
-        return wavCache[Signlink.wavepos] = sound;
-    }
+//    private Howl getSound(){
+//        Howl cached = wavCache[Signlink.wavepos];
+//        if(Signlink.savebuf == null){
+//            return cached;
+//        }
+//        if(cached != null){
+//            cached.stop();
+//            cached.unload();
+//        }
+//        String url = getWavUrl();
+//        HowlConfig config = HowlConfig.create(url);
+//        config.setHtml5(true);
+//        config.setAutoplay(true);
+//        config.setFormat("wav");
+//        config.setVolume(convertVol(Signlink.wavevol));
+//        config.setOnStop(event -> {
+//            JSMethods.revokeObjectURL(url);
+//        });
+//        Howl sound = Howl.create(config);
+//        return wavCache[Signlink.wavepos] = sound;
+//    }
 }
