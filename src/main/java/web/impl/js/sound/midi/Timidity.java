@@ -27,8 +27,11 @@ public abstract class Timidity implements JSObject {
 
     public abstract void pause();
 
-    @JSBody(script = "return this._gain;")
-    public abstract GainNode getGainNode();
+    @JSProperty
+    public abstract void setVolume(float vol);
+
+    @JSProperty
+    public abstract float getVolume();
 
     @JSFunctor
     public interface Callback extends JSObject{

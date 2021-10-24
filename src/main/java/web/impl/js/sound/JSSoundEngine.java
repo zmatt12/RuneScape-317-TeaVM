@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.teavm.interop.Async;
 import org.teavm.interop.AsyncCallback;
 import org.teavm.jso.JSObject;
+import org.teavm.jso.browser.TimerHandler;
+import org.teavm.jso.browser.Window;
 import org.teavm.jso.typedarrays.Int8Array;
 import org.teavm.jso.typedarrays.Uint8Array;
 import org.teavm.jso.webaudio.AudioBuffer;
@@ -18,14 +20,17 @@ import web.impl.js.JSMethods;
 import web.impl.js.sound.howl.Howl;
 import web.impl.js.sound.howl.HowlConfig;
 import web.impl.js.sound.midi.Timidity;
+import web.impl.js.sound.wav.WavPlayer;
 
-public class JSSoundEngine extends SoundEngine {
+public class JSSoundEngine extends SoundEngine implements TimerHandler {
+
+    private static final int UPDATE_INTERVAL = 50;
 
     private final Logger logger = LoggerFactory.getLogger(JSSoundEngine.class);
 
     private AudioDestinationNode dest;
 
-    private final AudioBufferSourceNode[] wavCache = new AudioBufferSourceNode[5];
+    private final WavPlayer[] wavCache = new WavPlayer[5];
     private final Uint8Array[] midiCache = new Uint8Array[5];
     private int currentWav = -1, currentMidi = -1;
 
@@ -50,23 +55,7 @@ public class JSSoundEngine extends SoundEngine {
                 timidity.play();
             });
         }
-    }
-
-    private AudioBufferSourceNode createAndConnect(byte[] data){
-        AudioBufferSourceNode res = context.createBufferSource();
-        res.setBuffer(decode(data));
-        res.connect(dest);
-        return res;
-    }
-
-    @Async
-    private native AudioBuffer decode(byte[] data);
-    private void decode(byte[] data, AsyncCallback<AudioBuffer> callback){
-        Int8Array arr = Int8Array.create(data.length);
-        arr.set(data);
-        context.decodeAudioData(arr.getBuffer(), callback::complete, err ->{
-            callback.error(new Exception(err.toString()));
-        });
+        Window.setTimeout(this, 0);
     }
 
     private String getWavUrl(){
@@ -92,8 +81,8 @@ public class JSSoundEngine extends SoundEngine {
                 wavCache[currentWav].stop();
                 wavCache[currentWav].disconnect();
             }
-            wavCache[currentWav] = createAndConnect(Signlink.savebuf);
-            wavCache[currentWav].start();
+            wavCache[currentWav] = WavPlayer.load(context, Signlink.savebuf);
+            wavCache[currentWav].play();
         }
     }
 
@@ -121,7 +110,7 @@ public class JSSoundEngine extends SoundEngine {
             timidity.load(buf);
             float vol = convertVol(Signlink.midivol);
             logger.info("Timidity vol:{}", vol);
-            timidity.getGainNode().getGain().setValue(vol);
+            timidity.setVolume(vol);
             timidity.play();
         }
     }
@@ -149,6 +138,20 @@ public class JSSoundEngine extends SoundEngine {
     private float convertVol(int vol){
         float res = vol + 10000;
         return res / 10000.0f;
+    }
+
+    @Override
+    public void onTimer() {
+
+        if(Timidity.isSupported()){
+            timidity.setVolume(Signlink.midivol);
+        }
+
+        if(currentWav != -1){
+            wavCache[currentWav].setVolume(convertVol(Signlink.wavevol));
+        }
+
+        Window.setTimeout(this, UPDATE_INTERVAL);
     }
 
 //    private Howl getSound(){

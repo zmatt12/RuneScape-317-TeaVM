@@ -13,6 +13,14 @@ class GainTimidity extends origTim{
         //reconnect using the gain
         this._node.connect(this._gain);
     }
+
+    get volume() {
+        return this._gain.gain.value;
+    }
+
+    set volume(volume) {
+        this._gain.gain.value = volume;
+    }
 }
 
 timidity = GainTimidity
