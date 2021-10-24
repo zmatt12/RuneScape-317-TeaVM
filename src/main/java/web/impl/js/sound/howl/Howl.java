@@ -12,6 +12,8 @@ public abstract class Howl implements JSObject {
 
     public abstract int play(int id);
 
+    public abstract void pause();
+
     public abstract void pause(int id);
 
     public abstract void stop();

@@ -14,7 +14,7 @@ import web.impl.js.sound.midi.Timidity;
 
 public class JSSoundEngine extends SoundEngine {
 
-    private Logger logger = LoggerFactory.getLogger(JSSoundEngine.class);
+    private final Logger logger = LoggerFactory.getLogger(JSSoundEngine.class);
     private final Howl[] wavCache = new Howl[5];
     private final Uint8Array[] midiCache = new Uint8Array[5];
     private int currentWav = -1, currentMidi = -1;
@@ -26,6 +26,7 @@ public class JSSoundEngine extends SoundEngine {
         logger.info("Howl:{} Timidity:{}", Howl.isSupported(), Timidity.isSupported());
         if(Timidity.isSupported()){
             timidity = Timidity.create(JSConfig.get().timidity().getBaseUrl());
+            JSMethods.export("tim", timidity);
             timidity.on("playing", () ->{
                 logger.info("Playback started");
             });
@@ -44,15 +45,26 @@ public class JSSoundEngine extends SoundEngine {
     }
 
     public void update() {
+        try {
+            updateSounds();
+            updateMusic();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void updateSounds(){
         if(Signlink.waveplay && Howl.isSupported() && currentWav != Signlink.wavepos){
             currentWav = Signlink.wavepos;
             System.out.println("Playing:" + Signlink.savereq + " - " + Signlink.wavepos);
             Howl sound = getSound();
-            sound.play();
         }
+    }
+
+    private void updateMusic(){
         if(Signlink.midiplay && Timidity.isSupported() && currentMidi != Signlink.midipos){
             currentMidi = Signlink.midipos;
-            System.out.println("Playing:" + Signlink.midi);
+            logger.info("Playing:{}", Signlink.midi);
             Uint8Array buf;
             if(Signlink.savebuf != null){
                 buf = Uint8Array.create(Signlink.savebuf.length);
@@ -61,7 +73,11 @@ public class JSSoundEngine extends SoundEngine {
             }else{
                 buf = midiCache[Signlink.midipos];
             }
+            System.out.print(Signlink.midivol);
             timidity.load(buf);
+            float vol = convertVol(Signlink.midivol);
+            logger.info("Timidity vol:{}", vol);
+            timidity.getGainNode().getGain().setValue(vol);
             timidity.play();
         }
     }
@@ -71,6 +87,9 @@ public class JSSoundEngine extends SoundEngine {
         if(Timidity.isSupported()){
             timidity.pause();
         }
+        if(Howl.isSupported() && currentWav != -1){
+            wavCache[currentWav].pause();
+        }
     }
 
     @Override
@@ -78,6 +97,14 @@ public class JSSoundEngine extends SoundEngine {
         if(Timidity.isSupported()){
             timidity.play();
         }
+        if(Howl.isSupported() && currentWav != -1){
+            wavCache[currentWav].play();
+        }
+    }
+
+    private float convertVol(int vol){
+        float res = vol + 10000;
+        return res / 10000.0f;
     }
 
     private Howl getSound(){
@@ -91,7 +118,10 @@ public class JSSoundEngine extends SoundEngine {
         }
         String url = getWavUrl();
         HowlConfig config = HowlConfig.create(url);
+        config.setHtml5(true);
+        config.setAutoplay(true);
         config.setFormat("wav");
+        config.setVolume(convertVol(Signlink.wavevol));
         config.setOnStop(event -> {
             JSMethods.revokeObjectURL(url);
         });

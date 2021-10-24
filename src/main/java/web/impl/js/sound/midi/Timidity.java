@@ -3,7 +3,10 @@ package web.impl.js.sound.midi;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
+import org.teavm.jso.JSProperty;
 import org.teavm.jso.typedarrays.Uint8Array;
+import org.teavm.jso.webaudio.AudioContext;
+import org.teavm.jso.webaudio.GainNode;
 
 public abstract class Timidity implements JSObject {
 
@@ -23,6 +26,9 @@ public abstract class Timidity implements JSObject {
     public abstract void play();
 
     public abstract void pause();
+
+    @JSBody(script = "return this._gain;")
+    public abstract GainNode getGainNode();
 
     @JSFunctor
     public interface Callback extends JSObject{
