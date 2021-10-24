@@ -2,6 +2,7 @@ package web.impl.js;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teavm.jso.browser.Window;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
 import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
@@ -109,9 +110,13 @@ class JSComponent extends AbstractComponent {
 
     @Override
     public void setSize(int width, int height) {
+        if(canvas.getWidth() == width && canvas.getHeight() == height){
+            return;
+        }
         canvas.setWidth(width);
         canvas.setHeight(height);
         dim.setSize(width, height);
+        canvas.dispatchEvent(JSMethods.createEvent("resize"));
     }
 
     @Override

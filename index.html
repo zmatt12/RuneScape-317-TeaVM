@@ -63,6 +63,10 @@
     ctx.fillText("(To play audio from JavaScript you have to have had a user interact with the webpage in some way)", width / 2, height - 12);
     ctx.textAlign = "start";
 
+    canvas.addEventListener('resize', data =>{
+        console.log("This is an example resize event!");
+    });
+
     //User input is required for audio to play on a webpage, so we require them to press a button to start the game
     function init(){
         canvas.onclick = undefined;

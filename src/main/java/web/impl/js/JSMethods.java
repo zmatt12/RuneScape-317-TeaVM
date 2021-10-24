@@ -3,6 +3,7 @@ package web.impl.js;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
+import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.typedarrays.ArrayBuffer;
@@ -27,7 +28,7 @@ public final class JSMethods {
     @JSBody(params = {"elem", "prop"}, script = "return typeof elem.dataset[prop] != 'undefined'")
     public static native boolean hasData(HTMLElement elem, String prop);
 
-    @JSBody(params = {"elem", "prop"}, script = "return elem.dataset[prop]")
+    @JSBody(params = {"elem", "prop"}, script = "return elem.dataset[prop];")
     public static native String getData(HTMLElement elem, String prop);
 
     @JSBody(params = {"blob"}, script = "return (window.URL || window.webkitURL).createObjectURL(blob);")
@@ -36,9 +37,15 @@ public final class JSMethods {
     @JSBody(params = {"url"}, script = "return (window.URL || window.webkitURL).revokeObjectURL(url);")
     public static native void revokeObjectURL(String url);
 
-    @JSBody(params = { "name", "value"}, script = "return window[name] = value")
+    @JSBody(params = { "name", "value"}, script = "return window[name] = value;")
     public static native void export(String name, JSObject value);
 
     @JSBody(params = {"arr"}, script = "return arr;")
     public static native ArrayBuffer wrap(byte[] data);
+
+    @JSBody(params = {"name"}, script = "return new Event(name);")
+    public static native Event createEvent(String name);
+
+    @JSBody(params = {"name", "detail"}, script = "return new CustomEvent(name, {detail: detail});")
+    public static native Event createEvent(String name, JSObject detail);
 }
