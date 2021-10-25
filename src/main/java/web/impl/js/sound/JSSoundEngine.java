@@ -92,6 +92,11 @@ public class JSSoundEngine extends SoundEngine implements TimerHandler {
         String midi = Signlink.midi;
         int vol = Signlink.midivol;
         float fVol = convertVol(vol);
+        if(Signlink.midiplay){
+            Signlink.midiplay = false;
+            timidity.play();
+            return;
+        }
         if (midi == null || !Timidity.isSupported()) {
             return;
         }
@@ -105,11 +110,10 @@ public class JSSoundEngine extends SoundEngine implements TimerHandler {
         }
         if (!midi.equals(currentMidi)) {
             logger.info("Midi:{} play:{}", Signlink.midi, Signlink.midiplay);
-            byte[] buffer = Signlink.savebuf;
+            byte[] buffer = getFile(midi);
             Uint8Array buf = Uint8Array.create(buffer.length);
             buf.set(buffer);
             timidity.load(buf);
-            timidity.play();
             currentMidi = midi;
         }
     }
