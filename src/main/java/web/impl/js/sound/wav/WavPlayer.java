@@ -9,16 +9,23 @@ import org.teavm.jso.webaudio.AudioBufferSourceNode;
 import org.teavm.jso.webaudio.AudioContext;
 import org.teavm.jso.webaudio.GainNode;
 
+import java.util.Arrays;
+
 public class WavPlayer{
 
-    private AudioContext context;
-    private AudioBufferSourceNode node;
-    private GainNode gain;
+    private final AudioContext context;
+    private final AudioBufferSourceNode node;
+    private final GainNode gain;
+
+    private boolean playing = false;
 
     private WavPlayer(AudioContext context){
         this.context = context;
         this.node = context.createBufferSource();
         this.gain = context.createGain();
+        node.setOnEnded(evt ->{
+            playing = false;
+        });
     }
 
     public float getVolume(){
@@ -41,6 +48,7 @@ public class WavPlayer{
 
     public static WavPlayer load(AudioContext context, byte[] data){
         WavPlayer res = new WavPlayer(context);
+        res.connect();
         res.node.setBuffer(decode(context, data));
         return res;
     }
@@ -50,9 +58,7 @@ public class WavPlayer{
     private static void decode(AudioContext context, byte[] data, AsyncCallback<AudioBuffer> callback){
         Int8Array arr = Int8Array.create(data.length);
         arr.set(data);
-        context.decodeAudioData(arr.getBuffer(), callback::complete, err ->{
-            callback.error(new Exception(err.toString()));
-        });
+        context.decodeAudioData(arr.getBuffer(), callback::complete, err -> callback.error(err.cast()));
     }
 
     public void stop() {
@@ -61,5 +67,10 @@ public class WavPlayer{
 
     public void play() {
         node.start();
+        playing = true;
+    }
+
+    public boolean isPlaying() {
+        return playing;
     }
 }

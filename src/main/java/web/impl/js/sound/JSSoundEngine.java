@@ -10,17 +10,17 @@ import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.typedarrays.Int8Array;
 import org.teavm.jso.typedarrays.Uint8Array;
-import org.teavm.jso.webaudio.AudioBuffer;
-import org.teavm.jso.webaudio.AudioBufferSourceNode;
-import org.teavm.jso.webaudio.AudioContext;
-import org.teavm.jso.webaudio.AudioDestinationNode;
+import org.teavm.jso.webaudio.*;
 import web.SoundEngine;
 import web.impl.js.JSConfig;
 import web.impl.js.JSMethods;
 import web.impl.js.sound.howl.Howl;
-import web.impl.js.sound.howl.HowlConfig;
 import web.impl.js.sound.midi.Timidity;
-import web.impl.js.sound.wav.WavPlayer;
+import web.util.InputStreamPolyFill;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class JSSoundEngine extends SoundEngine implements TimerHandler {
 
@@ -28,37 +28,31 @@ public class JSSoundEngine extends SoundEngine implements TimerHandler {
 
     private final Logger logger = LoggerFactory.getLogger(JSSoundEngine.class);
 
+    private GainNode gain;
+    private AudioBufferSourceNode wav;
+    private String currentWav = null;
+
     private AudioDestinationNode dest;
-
-    private final WavPlayer[] wavCache = new WavPlayer[5];
-    private final Uint8Array[] midiCache = new Uint8Array[5];
-    private int currentWav = -1, currentMidi = -1;
-
     private AudioContext context;
 
     private Timidity timidity;
+    private String currentMidi = null;
 
     @Override
     public void init() {
         context = AudioContext.create();
-        dest = context.getDestination();
+        gain = context.createGain();
+        dest = gain.cast();
+        gain.connect(context.getDestination());
 
         logger.info("Howl:{} Timidity:{}", Howl.isSupported(), Timidity.isSupported());
-        if(Timidity.isSupported()){
+        if (Timidity.isSupported()) {
             timidity = Timidity.create(JSConfig.get().timidity().getBaseUrl());
-            JSMethods.export("tim", timidity);
-            timidity.on("playing", () ->{
-                logger.info("Playback started");
-            });
-            timidity.on("ended", () ->{
-                logger.info("Re-playing track");
-                timidity.play();
-            });
         }
-        Window.setTimeout(this, 0);
+        Window.setInterval(this, UPDATE_INTERVAL);
     }
 
-    private String getWavUrl(){
+    private String getWavUrl() {
         Uint8Array wrapped = Uint8Array.create(Signlink.savebuf.length);
         wrapped.set(Signlink.savebuf);
         JSObject blob = JSMethods.blobify(wrapped, "audio/wav");
@@ -66,113 +60,131 @@ public class JSSoundEngine extends SoundEngine implements TimerHandler {
     }
 
     public void update() {
-        try {
-            updateSounds();
-            updateMusic();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
-    private void updateSounds(){
-        if(Signlink.waveplay && currentWav != Signlink.wavepos){
-            currentWav = Signlink.wavepos;
-            if(wavCache[currentWav] != null){
-                wavCache[currentWav].stop();
-                wavCache[currentWav].disconnect();
-            }
-            wavCache[currentWav] = WavPlayer.load(context, Signlink.savebuf);
-            wavCache[currentWav].play();
-        }
-    }
-
-//    private void updateSounds(){
-//        if(Signlink.waveplay && Howl.isSupported() && currentWav != Signlink.wavepos){
-//            currentWav = Signlink.wavepos;
-//            System.out.println("Playing:" + Signlink.savereq + " - " + Signlink.wavepos);
-//            Howl sound = getSound();
-//        }
-//    }
-
-    private void updateMusic(){
-        if(Signlink.midiplay && Timidity.isSupported() && currentMidi != Signlink.midipos){
-            currentMidi = Signlink.midipos;
-            logger.info("Playing:{}", Signlink.midi);
-            Uint8Array buf;
-            if(Signlink.savebuf != null){
-                buf = Uint8Array.create(Signlink.savebuf.length);
-                buf.set(Signlink.savebuf);
-                midiCache[Signlink.midipos] = buf;
-            }else{
-                buf = midiCache[Signlink.midipos];
-            }
-            System.out.print(Signlink.midivol);
-            timidity.load(buf);
-            float vol = convertVol(Signlink.midivol);
-            logger.info("Timidity vol:{}", vol);
-            timidity.setVolume(vol);
-            timidity.play();
-        }
     }
 
     @Override
     public void pause() {
-        if(Timidity.isSupported()){
-            timidity.pause();
-        }
-        if(currentWav != -1){
-            wavCache[currentWav].stop();
-        }
+//        if(Timidity.isSupported()){
+//            timidity.pause();
+//        }
+//        if(wav != null){
+//            wav.stop();
+//        }
     }
 
     @Override
     public void play() {
-        if(Timidity.isSupported()){
-            timidity.play();
+//        if (Timidity.isSupported()) {
+//            timidity.play();
+//        }
+//        if (wav != null) {
+//            wav.play();
+//        }
+    }
+
+    private float convertVol(int vol) {
+        float res = vol + 1500;
+        return res / 1500.0f;
+    }
+
+    private void updateMidi() {
+        String midi = Signlink.midi;
+        int vol = Signlink.midivol;
+        float fVol = convertVol(vol);
+        if (midi == null || !Timidity.isSupported()) {
+            return;
         }
-        if(currentWav != -1){
-            wavCache[currentWav].stop();
+        if (midi.equals("voladjust")) {
+            timidity.setVolume(fVol);
+            return;
+        }
+        if (midi.equals("stop")) {
+            timidity.pause();
+            return;
+        }
+        if (!midi.equals(currentMidi)) {
+            logger.info("Midi:{} play:{}", Signlink.midi, Signlink.midiplay);
+            byte[] buffer = Signlink.savebuf;
+            Uint8Array buf = Uint8Array.create(buffer.length);
+            buf.set(buffer);
+            timidity.load(buf);
+            timidity.play();
+            currentMidi = midi;
         }
     }
 
-    private float convertVol(int vol){
-        float res = vol + 10000;
-        return res / 10000.0f;
+    private void updateWav() {
+        String wave = Signlink.wave;
+        if(Signlink.waveplay && wav != null){
+            Signlink.waveplay = false;
+            wav.stop();
+            wav.disconnect();
+            wav = createAndConnect(getFile(wave));
+            return;
+        }
+        if (wave == null) {
+            return;
+        }
+        if (wave.equals("voladjust") && wav != null) {
+            gain.getGain().setValue(convertVol(Signlink.wavevol));
+            //wav.setVolume(convertVol(Signlink.wavevol));
+            return;
+        }
+        if (Signlink.wave.equals("stop") && wav != null) {
+            wav.stop();
+            return;
+        }
+        if(!wave.equals(currentWav) || wav == null) {
+            logger.info("Wav:{} Play:{}", Signlink.wave, Signlink.waveplay);
+            wav = createAndConnect(getFile(wave));
+            currentWav = wave;
+        }
+    }
+
+
+    private byte[] getFile(String path){
+        File f = new File(path);
+        try(FileInputStream fin = new FileInputStream(f)) {
+            return InputStreamPolyFill.readAllBytes(fin);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new byte[0];
+    }
+
+    private AudioBufferSourceNode createAndConnect(byte[] data){
+        AudioBufferSourceNode res = context.createBufferSource();
+        Int8Array arr = Int8Array.create(data.length);
+        arr.set(data);
+        context.decodeAudioData(arr.getBuffer(), b ->{
+            res.setBuffer(b);
+            res.connect(dest);
+            res.start();
+        }, err ->{
+            logger.info("Error:{}", err);
+        });
+        return res;
+    }
+
+    @Async
+    private native AudioBuffer decode(byte[] data);
+    private void decode(byte[] data, AsyncCallback<AudioBuffer> callback){
+        Int8Array arr = Int8Array.create(data.length);
+        arr.set(data);
+        context.decodeAudioData(arr.getBuffer(), callback::complete, err ->{
+            callback.error(new Exception(err.toString()));
+        });
     }
 
     @Override
     public void onTimer() {
-
-        if(Timidity.isSupported()){
-            timidity.setVolume(Signlink.midivol);
+        try {
+            updateMidi();
+            updateWav();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
         }
-
-        if(currentWav != -1){
-            wavCache[currentWav].setVolume(convertVol(Signlink.wavevol));
-        }
-
-        Window.setTimeout(this, UPDATE_INTERVAL);
     }
-
-//    private Howl getSound(){
-//        Howl cached = wavCache[Signlink.wavepos];
-//        if(Signlink.savebuf == null){
-//            return cached;
-//        }
-//        if(cached != null){
-//            cached.stop();
-//            cached.unload();
-//        }
-//        String url = getWavUrl();
-//        HowlConfig config = HowlConfig.create(url);
-//        config.setHtml5(true);
-//        config.setAutoplay(true);
-//        config.setFormat("wav");
-//        config.setVolume(convertVol(Signlink.wavevol));
-//        config.setOnStop(event -> {
-//            JSMethods.revokeObjectURL(url);
-//        });
-//        Howl sound = Howl.create(config);
-//        return wavCache[Signlink.wavepos] = sound;
-//    }
 }

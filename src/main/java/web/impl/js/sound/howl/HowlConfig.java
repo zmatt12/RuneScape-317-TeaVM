@@ -7,6 +7,12 @@ import org.teavm.jso.dom.events.EventListener;
 
 public abstract class HowlConfig implements JSObject {
 
+    @JSProperty("src")
+    public abstract void setSource(String source);
+
+    @JSProperty("src")
+    public abstract void setSource(String[] source);
+
     @JSProperty
     public abstract void setVolume(double vol);
 

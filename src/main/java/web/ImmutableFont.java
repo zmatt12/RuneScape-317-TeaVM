@@ -1,5 +1,7 @@
 package web;
 
+import org.teavm.common.Promise;
+
 public final class ImmutableFont implements IFont {
 
     private final String name;
