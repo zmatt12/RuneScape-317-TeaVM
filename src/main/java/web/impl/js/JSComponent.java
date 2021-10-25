@@ -93,6 +93,18 @@ class JSComponent extends AbstractComponent {
             int x = evt.getClientX() - bounds.getLeft();
             int y = evt.getClientY() - bounds.getTop();
 
+            if(bounds.getWidth() != canvas.getWidth()){
+                double scale = canvas.getWidth();
+                scale /= bounds.getWidth();
+                x *= scale;
+            }
+
+            if(bounds.getHeight() != canvas.getHeight()){
+                double scale = canvas.getHeight();
+                scale /= bounds.getHeight();
+                y *= scale;
+            }
+
 
             dispatch(new ImmutableMouseEvent(type,
                     x, y, evt.getButton() == 2));
