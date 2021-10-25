@@ -3,25 +3,17 @@ package web.impl.js.fs;
 import org.teavm.classlib.fs.VirtualFile;
 import org.teavm.classlib.fs.VirtualFileAccessor;
 import org.teavm.jso.core.*;
-import web.impl.js.fs.bfs.Stats;
+import web.impl.js.fs.generic.GenericFileSystem;
 
 import java.io.IOException;
 
 public class VirtualFileImpl implements VirtualFile {
-    private final BrowserFsFileSystem fs;
+    private final GenericFileSystem fs;
     private final String path;
 
-    public VirtualFileImpl(BrowserFsFileSystem fs, String path) {
+    public VirtualFileImpl(GenericFileSystem fs, String path) {
         this.fs = fs;
         this.path = path;
-    }
-
-    private Stats stats(){
-        try {
-            return fs.getFs().statSync(path);
-        }catch (Exception e){
-            return null;
-        }
     }
 
     @Override
@@ -31,14 +23,12 @@ public class VirtualFileImpl implements VirtualFile {
 
     @Override
     public boolean isDirectory() {
-        Stats s = stats();
-        return s != null && s.isDirectory();
+        return fs.isDirectory(path);
     }
 
     @Override
     public boolean isFile() {
-        Stats s = stats();
-        return s != null && s.isFile();
+        return fs.isFile(path);
     }
 
     @Override
@@ -46,7 +36,7 @@ public class VirtualFileImpl implements VirtualFile {
         if(!isDirectory()){
             return null;
         }
-        return fs.getFs().readdirSync(this.path);
+        return fs.readdir(path);
     }
 
     @Override
@@ -55,9 +45,9 @@ public class VirtualFileImpl implements VirtualFile {
             return null;
         }
         System.out.println(path + "," + readable + "," + writable + "," + append);
-        String flag = "a+";
+        String flag = "r+";
         //TODO not hardcode flags
-        return new FileAccessor(fs.getFs().openSync(path, flag), fs.getFs(), append ? length() : 0);
+        return new FileAccessor(fs.open(path, flag), fs, append ? length() : 0);
     }
 
     @Override
@@ -66,9 +56,9 @@ public class VirtualFileImpl implements VirtualFile {
             fileName = "/" + fileName;
         }
         String p = this.path + fileName;
-        JSNumber fd = fs.getFs().openSync(p, "w");
+        JSNumber fd = fs.open(p, "w");
         if(fd.intValue() != -1) {
-            fs.getFs().closeSync(fd);
+            fs.close(fd);
             return true;
         }
         return false;
@@ -80,13 +70,13 @@ public class VirtualFileImpl implements VirtualFile {
             fileName = fileName + "/";
         }
         System.out.println(path + fileName);
-        fs.getFs().mkdirSync(path + fileName);
+        fs.mkdir(path + fileName);
         return true;
     }
 
     @Override
     public boolean delete() {
-        fs.getFs().unlinkSync(this.path);
+        fs.unlink(this.path);
         return true;
     }
 
@@ -107,17 +97,12 @@ public class VirtualFileImpl implements VirtualFile {
 
     @Override
     public long lastModified() {
-        Stats s = stats();
-        return s != null ? s.getMtime() : -1;
+        return (long) fs.mtime(path).getTime();
     }
 
     @Override
     public boolean setLastModified(long lastModified) {
-        Stats s = stats();
-        if(s == null){
-            return false;
-        }
-        fs.getFs().utimesSync(this.path, s.getAtime(), (int) lastModified);
+        fs.mtime(path, (double) lastModified);
         return true;
     }
 
@@ -129,7 +114,6 @@ public class VirtualFileImpl implements VirtualFile {
 
     @Override
     public int length() {
-        Stats s = stats();
-        return s != null ? s.getSize() : -1;
+        return fs.length(path);
     }
 }

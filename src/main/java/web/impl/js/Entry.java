@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.teavm.classlib.fs.VirtualFileSystemProvider;
 import org.teavm.jso.browser.Window;
 import web.Platform;
-import web.impl.js.fs.BrowserFsFileSystem;
-import web.impl.js.fs.bfs.BrowserFileSystem;
+import web.impl.js.fs.GenericVirtualFileSystem;
+import web.impl.js.fs.generic.GenericFileSystem;
 
 import java.io.File;
 
@@ -24,9 +24,9 @@ public class Entry {
             return;
         }
         JSConfig config = JSConfig.get();
-        if(BrowserFileSystem.isSupported()){
-            logger.info("Using BrowserFS Virtual FileSystem");
-            VirtualFileSystemProvider.setInstance(new BrowserFsFileSystem());
+        if(GenericFileSystem.isSupported()){
+            logger.info("Using generic filesystem driver");
+            VirtualFileSystemProvider.setInstance(new GenericVirtualFileSystem());
         }
 
         if (config.hasFile()) {

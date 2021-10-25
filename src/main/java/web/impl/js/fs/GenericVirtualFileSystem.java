@@ -2,22 +2,19 @@ package web.impl.js.fs;
 
 import org.teavm.classlib.fs.VirtualFile;
 import org.teavm.classlib.fs.VirtualFileSystem;
-import web.impl.js.fs.bfs.BrowserFileSystem;
+import web.impl.js.fs.generic.GenericFileSystem;
 
-public class BrowserFsFileSystem implements VirtualFileSystem {
+public class GenericVirtualFileSystem implements VirtualFileSystem {
 
-    private final BrowserFileSystem fs;
+    private final GenericFileSystem fs;
 
     private String userDir = "/";
 
-    public BrowserFsFileSystem() {
-        if (!BrowserFileSystem.isSupported()) {
-            throw new UnsupportedOperationException("BrowserFS needs to be installed!");
-        }
-        this.fs = BrowserFileSystem.getRootFileSystem();
+    public GenericVirtualFileSystem() {
+        this.fs = GenericFileSystem.getRootFileSystem();
     }
 
-    public BrowserFileSystem getFs(){
+    public GenericFileSystem getFs(){
         return fs;
     }
 
@@ -32,7 +29,7 @@ public class BrowserFsFileSystem implements VirtualFileSystem {
 
     @Override
     public VirtualFile getFile(String path) {
-        return new VirtualFileImpl(this, path);
+        return new VirtualFileImpl(fs, path);
     }
 
     @Override
