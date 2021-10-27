@@ -7,7 +7,6 @@ import org.teavm.jso.browser.Location;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
 import org.teavm.jso.canvas.ImageData;
-import org.teavm.jso.core.JSString;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLImageElement;
 import org.teavm.jso.typedarrays.Uint8Array;
@@ -15,12 +14,14 @@ import web.*;
 import web.impl.js.sound.JSSoundEngine;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public final class JSPlatform extends Platform {
 
-    private static JSComponent component;
     private static final JSAllocator alloc = new JSAllocator();
     private static final JSSoundEngine sound = new JSSoundEngine();
+    private static JSComponent component;
     private static int portOffset;
     private static String codebase;
 
@@ -42,19 +43,19 @@ public final class JSPlatform extends Platform {
         sound.init();
     }
 
-    private static void initCodebase(){
+    private static void initCodebase() {
         HTMLCanvasElement canvas = component.getCanvas();
         Location location = Window.current().getLocation();
         codebase = location.getProtocol() + "//" + location.getHost() + "/";
-        if(JSMethods.hasData(canvas,"codebase")) {
-            codebase += JSMethods.getData(canvas, "codebase");
-        }else if(JSConfig.get().hasCodebase()){
-            codebase += JSConfig.get().getCodebase();
-        }else{
+        if (JSMethods.hasData(canvas, "codebase")) {
+            codebase = concatCodebase(codebase, JSMethods.getData(canvas, "codebase"));
+        } else if (JSConfig.get().hasCodebase()) {
+            codebase = concatCodebase(codebase, JSConfig.get().getCodebase());
+        } else {
             codebase = location.getFullURL();
             codebase = codebase.substring(0, codebase.lastIndexOf('/'));
         }
-        if(!codebase.endsWith("/")) {
+        if (!codebase.endsWith("/")) {
             codebase = codebase + "/";
         }
     }
@@ -66,6 +67,16 @@ public final class JSPlatform extends Platform {
         HTMLImageElement img = Window.current().getDocument().createElement("img").cast();
         img.addEventListener("load", evt -> callback.complete(img));
         img.setSrc(url);
+    }
+
+    private static String concatCodebase(String base, String codebase) {
+        try {
+            new URL(codebase);
+            return codebase;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return base + codebase;
+        }
     }
 
     @Override
