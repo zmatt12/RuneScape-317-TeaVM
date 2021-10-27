@@ -1,5 +1,9 @@
 package web.impl.js;
 
+import client.Entity;
+import client.Model;
+import client.ObjStackEntity;
+import client.ObjType;
 import org.teavm.interop.Async;
 import org.teavm.interop.AsyncCallback;
 import org.teavm.jso.JSObject;
@@ -134,6 +138,17 @@ public final class JSPlatform extends Platform {
     @Override
     public String getCodeBase() {
         return codebase;
+    }
+
+    @Override
+    public Model getModel(Entity entity) {
+        JSMethods.export("entity", (JSObject) entity);
+        JSObject obj = (JSObject) entity;
+        if(JSMethods.isStackEntity(obj)) {
+            ObjStackEntity e = (ObjStackEntity) entity;
+            return ObjType.get(e.id).getModel(e.amount);
+        }
+        return null;
     }
 
 

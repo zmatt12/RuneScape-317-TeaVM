@@ -1,6 +1,8 @@
 package web.impl.jvm.impl;
 
+import client.Entity;
 import client.Game;
+import client.Model;
 import web.*;
 import web.impl.jvm.event.AWTEventAdapter;
 
@@ -82,6 +84,11 @@ public class JVMPlatform extends Platform {
     @Override
     public String getCodeBase() {
         return "http://" + Game.server + ":" + (80 + Game.portOffset) + "/";
+    }
+
+    @Override
+    public Model getModel(Entity entity) {
+        return null;
     }
 
 

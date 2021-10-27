@@ -1,5 +1,7 @@
 package client;
 
+import web.Platform;
+
 public class Entity extends DoublyLinkedList.Node {
 
 	public VertexNormal[] vertexNormal;
@@ -18,7 +20,8 @@ public class Entity extends DoublyLinkedList.Node {
 	}
 
 	public Model getModel() {
-		return null;
+		//fixme hack to get grounditems to render
+		return Platform.getDefault().getModel(this);
 	}
 
 }

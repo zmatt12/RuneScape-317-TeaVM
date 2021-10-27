@@ -1,5 +1,7 @@
 package web;
 
+import client.Entity;
+import client.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import web.impl.js.JSPlatform;
@@ -48,4 +50,6 @@ public abstract class Platform {
     public abstract SoundEngine sound();
 
     public abstract String getCodeBase();
+
+    public abstract Model getModel(Entity entity);
 }

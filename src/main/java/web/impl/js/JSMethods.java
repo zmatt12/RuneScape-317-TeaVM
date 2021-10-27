@@ -1,5 +1,7 @@
 package web.impl.js;
 
+import client.Entity;
+import client.ObjStackEntity;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
@@ -48,4 +50,8 @@ public final class JSMethods {
 
     @JSBody(params = {"name", "detail"}, script = "return new CustomEvent(name, {detail: detail});")
     public static native Event createEvent(String name, JSObject detail);
+
+    @JSBody(params = {"object"}, script = "return typeof object == 'object' && object.constructor['name'] == 'c_ObjStackEntity'")
+    public static native boolean isStackEntity(JSObject object);
+
 }

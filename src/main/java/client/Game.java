@@ -254,7 +254,7 @@ public class Game extends GameShell {
 	public Image8 imageRedstone2hv;
 	public Image24 imageMapmarker0;
 	public Image24 imageMapmarker1;
-	public boolean jaggrabEnabled = true; // original value: false
+	public boolean jaggrabEnabled = false; // original value: false
 	public int lastWaveId = -1;
 	public int weightCarried;
 	public MouseRecorder mouseRecorder;
@@ -5176,7 +5176,8 @@ public class Game extends GameShell {
 			if (k1 == 3) {
 				DoublyLinkedList list = planeObjStacks[currentPlane][i1][j1];
 				if (list != null) {
-					for (ObjStackEntity objStack = (ObjStackEntity) list.peekBack(); objStack != null; objStack = (ObjStackEntity) list.next()) {
+					//fixme hack to get grounditems working in JS, need to fix
+					for (ObjStackEntity objStack = (ObjStackEntity) list.peekFront(); objStack != null; objStack = (ObjStackEntity) list.prev()) {
 						ObjType type = ObjType.get(objStack.id);
 						if (anInt1282 == 1) {
 							menuOption[menuSize] = "Use " + aString1286 + " with @lre@" + type.name;
