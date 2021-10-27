@@ -48,7 +48,11 @@ public class ObjType {
 		}
 		cachePos = (cachePos + 1) % 10;
 		ObjType type = cached[cachePos];
-		dat.position = typeOffset[id];
+		if(id < typeOffset.length) {
+			dat.position = typeOffset[id];
+		}else{
+			System.err.println("Bad id:" + id);
+		}
 		type.id = id;
 		type.reset();
 		type.read(dat);
