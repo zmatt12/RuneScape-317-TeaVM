@@ -41,4 +41,8 @@ public abstract class GenericFileSystem implements JSObject {
     public abstract int write(JSNumber fd, Buffer from, int offset, int length, int pos);
 
     public abstract void ftruncate(JSNumber fd, int size);
+
+    public abstract boolean exists(String path);
+
+    public abstract void createFile(String path);
 }

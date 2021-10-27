@@ -45,9 +45,22 @@ public class VirtualFileImpl implements VirtualFile {
             return null;
         }
         System.out.println(path + "," + readable + "," + writable + "," + append);
-        String flag = "r+";
-        //TODO not hardcode flags
-        return new FileAccessor(fs.open(path, flag), fs, append ? length() : 0);
+        String flag;
+        if(readable && writable){
+            if(!fs.exists(path)){
+                fs.createFile(path);
+            }
+            flag = "r+";
+        }else if(readable){
+            flag = "r";
+        }else {
+            flag = "w";
+        }
+        if(append){
+            System.err.println("Append called");
+            throw new IllegalStateException("Append");
+        }
+        return new BufferedFileAccessor(fs.open(path, flag), fs);
     }
 
     @Override

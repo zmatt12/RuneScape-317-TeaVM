@@ -5,18 +5,18 @@ import org.teavm.jso.core.JSNumber;
 import web.impl.js.fs.generic.GenericFileSystem;
 import web.impl.js.fs.generic.Buffer;
 
-import java.io.IOException;
+import java.io.*;
 
-final class FileAccessor implements VirtualFileAccessor {
+class FileAccessor implements VirtualFileAccessor {
 
     private JSNumber fd;
     private final GenericFileSystem fs;
     private int pos;
 
-    public FileAccessor(JSNumber fd, GenericFileSystem fs, int pos){
+    public FileAccessor(JSNumber fd, GenericFileSystem fs){
         this.fs = fs;
         this.fd = fd;
-        this.pos = pos;
+        this.pos = 0;
     }
 
     @Override
@@ -39,11 +39,13 @@ final class FileAccessor implements VirtualFileAccessor {
 
     @Override
     public void seek(int i) throws IOException {
+        flush();
         pos = i;
     }
 
     @Override
     public void skip(int i) throws IOException {
+        flush();
         pos += i;
     }
 
@@ -59,11 +61,12 @@ final class FileAccessor implements VirtualFileAccessor {
 
     @Override
     public void close() throws IOException {
+        flush();
         fs.close(fd);
     }
 
     @Override
     public void flush() throws IOException {
-        //TODO unimplemented
+
     }
 }
