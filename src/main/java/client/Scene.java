@@ -295,7 +295,7 @@ public class Scene {
 		planeTiles[plane][stx][stz].groundDecoration = decor;
 	}
 
-	public void addObjStack(Entity entity0, Entity entity1, Entity entity2, int plane, int stx, int stz, int y, int bitset) {
+	public void addObjStack(ObjStackEntity entity0, ObjStackEntity entity1, ObjStackEntity entity2, int plane, int stx, int stz, int y, int bitset) {
 		SceneObjStack objStack = new SceneObjStack();
 		objStack.x = (stx * 128) + 64;
 		objStack.z = (stz * 128) + 64;
@@ -308,7 +308,6 @@ public class Scene {
 		int stackOffset = 0;
 
 		SceneTile tile = planeTiles[plane][stx][stz];
-
 		if (tile != null) {
 			for (int l = 0; l < tile.locCount; l++) {
 				if (!(tile.locs[l].entity instanceof Model)) {
