@@ -43,4 +43,8 @@ public final class Color {
         int rgba = toRGBA();
         return String.format("#%08X", rgba);
     }
+
+    public float[] asFloatArray() {
+        return new float[]{red / 255f, green / 255f, blue / 255f, alpha / 255f};
+    }
 }

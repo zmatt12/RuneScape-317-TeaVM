@@ -2,7 +2,6 @@ package web.impl.js;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teavm.jso.browser.Window;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
 import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.events.EventListener;
@@ -10,11 +9,13 @@ import org.teavm.jso.dom.events.KeyboardEvent;
 import org.teavm.jso.dom.events.MouseEvent;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.TextRectangle;
+import org.teavm.jso.webgl.WebGLRenderingContext;
 import web.AbstractComponent;
 import web.IFont;
 import web.IFontMetrics;
 import web.IGraphics;
 import web.event.*;
+import web.impl.js.webgl.WebGLOptions;
 import web.util.Dimension;
 
 
@@ -23,15 +24,28 @@ class JSComponent extends AbstractComponent {
     private static final Logger logger = LoggerFactory.getLogger(JSComponent.class);
 
     private final HTMLCanvasElement canvas;
-    private final CanvasRenderingContext2D context;
-    private final JSGraphics graphics;
+    private final IGraphics graphics;
     private final Dimension dim;
 
-    public JSComponent(HTMLCanvasElement canvas, CanvasRenderingContext2D context) {
+    public JSComponent(HTMLCanvasElement canvas) {
         this.canvas = canvas;
-        this.context = context;
         this.dim = new Dimension(canvas.getWidth(), canvas.getHeight());
-        this.graphics = new JSGraphics(context);
+
+        String renderer = "2d";
+        if(JSConfig.get().hasRenderer()) {
+            renderer = JSConfig.get().getRenderer();
+        }
+
+        if("webgl".equals(renderer)){
+            WebGLOptions options = WebGLOptions.create();
+            options.setPreserveDrawingBuffer(true);
+            WebGLRenderingContext context = (WebGLRenderingContext)canvas.getContext("webgl", options);
+            this.graphics = new JSGraphicsGL(canvas, context);
+        }else {
+            CanvasRenderingContext2D context = (CanvasRenderingContext2D) canvas.getContext("2d");
+            this.graphics = new JSGraphics2D(context);
+        }
+
         initEvents();
     }
 
@@ -109,10 +123,6 @@ class JSComponent extends AbstractComponent {
             dispatch(new ImmutableMouseEvent(type,
                     x, y, evt.getButton() == 2));
         };
-    }
-
-    public CanvasRenderingContext2D getContext() {
-        return context;
     }
 
     @Override

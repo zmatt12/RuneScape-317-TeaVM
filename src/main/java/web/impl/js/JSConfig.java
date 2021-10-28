@@ -59,6 +59,13 @@ public abstract class JSConfig implements JSObject {
     @JSProperty
     public abstract String getServer();
 
+    @JSProperty
+    public abstract String getRenderer();
+
+    public boolean hasRenderer() {
+        return JSMethods.has(this, "renderer");
+    }
+
     public static abstract class TimidityConfig implements JSObject {
         private TimidityConfig() {
 

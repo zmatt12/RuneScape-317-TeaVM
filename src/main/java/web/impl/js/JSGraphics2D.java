@@ -6,12 +6,11 @@ import org.teavm.jso.dom.html.HTMLCanvasElement;
 import web.*;
 import web.util.Color;
 
-public class JSGraphics implements IGraphics {
+public class JSGraphics2D implements IGraphics {
 
     private final CanvasRenderingContext2D context;
 
-
-    public JSGraphics(CanvasRenderingContext2D context) {
+    public JSGraphics2D(CanvasRenderingContext2D context) {
         this.context = context;
     }
 

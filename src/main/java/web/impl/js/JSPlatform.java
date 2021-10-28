@@ -29,6 +29,8 @@ public final class JSPlatform extends Platform {
     private static int portOffset;
     private static String codebase;
 
+    private static final HTMLCanvasElement imgCanvas = Window.current().getDocument().createElement("canvas").cast();
+
     public static void init(String canvasId) {
         init(canvasId, 10000);
     }
@@ -38,8 +40,7 @@ public final class JSPlatform extends Platform {
             return;
         }
         HTMLCanvasElement canvas = Window.current().getDocument().getElementById(canvasId).cast();
-        CanvasRenderingContext2D context = (CanvasRenderingContext2D) canvas.getContext("2d");
-        component = new JSComponent(canvas, context);
+        component = new JSComponent(canvas);
         portOffset = offset;
 
         initCodebase();
@@ -95,15 +96,14 @@ public final class JSPlatform extends Platform {
 
     @Override
     public IImage createImage(byte[] data) {
-        HTMLCanvasElement c = Window.current().getDocument().createElement("canvas").cast();
         Uint8Array arr = Uint8Array.create(data.length);
         arr.set(data);
         JSObject blob = JSMethods.blobify(arr, "image/png");
         String objUrl = JSMethods.createObjectUrl(blob);
         HTMLImageElement img = load(objUrl);
-        c.setWidth(img.getWidth());
-        c.setHeight(img.getHeight());
-        CanvasRenderingContext2D ctx = c.getContext("2d").cast();
+        imgCanvas.setWidth(img.getWidth());
+        imgCanvas.setHeight(img.getHeight());
+        CanvasRenderingContext2D ctx = imgCanvas.getContext("2d").cast();
         ctx.drawImage(img, 0, 0);
         ImageData iData = ctx.getImageData(0, 0, img.getWidth(), img.getHeight());
         JSMethods.revokeObjectURL(objUrl);
@@ -115,7 +115,8 @@ public final class JSPlatform extends Platform {
         if (type != IImage.TYPE_INT_RGB) {
             throw new RuntimeException("Bad image type");
         }
-        ImageData data = component.getContext().createImageData(width, height);
+        CanvasRenderingContext2D ctx = imgCanvas.getContext("2d").cast();
+        ImageData data = ctx.createImageData(width, height);
         return new JSImage(data);
     }
 
@@ -142,12 +143,12 @@ public final class JSPlatform extends Platform {
 
     @Override
     public Model getModel(Entity entity) {
-        JSMethods.export("entity", (JSObject) entity);
         JSObject obj = (JSObject) entity;
         if(JSMethods.isStackEntity(obj)) {
             ObjStackEntity e = (ObjStackEntity) entity;
             return ObjType.get(e.id).getModel(e.amount);
         }
+        JSMethods.export("entity", (JSObject) entity);
         return null;
     }
 

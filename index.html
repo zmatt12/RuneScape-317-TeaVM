@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <script type="text/javascript" charset="utf-8" src="js/timidity.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/gaintimidity.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/twgl-full.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/howler.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="target/javascript/classes.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/config.js"></script>
@@ -71,6 +72,9 @@
     function init(){
         canvas.onclick = undefined;
         canvas.classList.remove("pointer");
+        //replace the canvas with a new one, allows us to use a different rendering context later (if we want to)
+        let newCanvas = canvas.cloneNode();
+        canvas.parentNode.replaceChild(newCanvas, canvas);
         main();
     }
 </script>
