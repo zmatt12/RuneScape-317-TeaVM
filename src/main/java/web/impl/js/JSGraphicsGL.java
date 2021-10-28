@@ -7,6 +7,7 @@ import org.teavm.jso.webgl.*;
 import web.IFont;
 import web.IGraphics;
 import web.IImage;
+import web.impl.js.webgl.M4;
 import web.util.Color;
 
 public class JSGraphicsGL implements IGraphics {
@@ -14,7 +15,7 @@ public class JSGraphicsGL implements IGraphics {
     private final WebGLRenderingContext gl;
     private float[] color = Color.yellow.asFloatArray();
     private WebGLProgram fill_rect;
-    private WebGLProgram draw_rect;
+    private WebGLProgram program;
 
     private WebGLBuffer rect_buffer, indBuf;
 
@@ -49,14 +50,35 @@ public class JSGraphicsGL implements IGraphics {
         gl.attachShader(fill_rect, f_color_shader);
         gl.linkProgram(fill_rect);
 
-        draw_rect = gl.createProgram();
-        gl.attachShader(draw_rect, f_color_shader);
-        gl.linkProgram(draw_rect);
-
         indices.set(new short[]{0,1,2,3});
 
         rect_buffer = gl.createBuffer();
         indBuf = gl.createBuffer();
+
+        program = gl.createProgram();
+        WebGLShader tex_vertex = createAndCompile(gl.VERTEX_SHADER, "attribute vec4 a_position;\n" +
+                "attribute vec2 a_texcoord;\n" +
+                "\n" +
+                "uniform mat4 u_matrix;\n" +
+                "\n" +
+                "varying vec2 v_texcoord;\n" +
+                "\n" +
+                "void main() {\n" +
+                "   gl_Position = u_matrix * a_position;\n" +
+                "   v_texcoord = a_texcoord;\n" +
+                "}");
+        WebGLShader tex_fragment = createAndCompile(gl.FRAGMENT_SHADER, "precision mediump float;\n" +
+                "\n" +
+                "varying vec2 v_texcoord;\n" +
+                "\n" +
+                "uniform sampler2D u_texture;\n" +
+                "\n" +
+                "void main() {\n" +
+                "   gl_FragColor = texture2D(u_texture, v_texcoord);\n" +
+                "}");
+        gl.attachShader(program, tex_vertex);
+        gl.attachShader(program, tex_fragment);
+        gl.linkProgram(program);
     }
 
     private WebGLShader createAndCompile(int type, String source){
@@ -126,7 +148,7 @@ public class JSGraphicsGL implements IGraphics {
                 endX,endY,
                 startX, endY
         });
-        gl.useProgram(draw_rect);
+        gl.useProgram(fill_rect);
         WebGLUniformLocation uColor = gl.getUniformLocation(fill_rect, "uColor");
         gl.uniform4fv(uColor, color);
 
@@ -151,6 +173,78 @@ public class JSGraphicsGL implements IGraphics {
 
     @Override
     public void drawImage(IImage _img, int x, int y, Object observer) {
-        //TODO implement
+            JSImage img = (JSImage) _img;
+            WebGLTexture texture = img.getTexture(gl);
+
+        gl.useProgram(program);
+
+            // look up where the vertex data needs to go.
+            int positionLocation = gl.getAttribLocation(program, "a_position");
+            int texcoordLocation = gl.getAttribLocation(program, "a_texcoord");
+
+            // lookup uniforms
+            WebGLUniformLocation matrixLocation = gl.getUniformLocation(program, "u_matrix");
+            WebGLUniformLocation textureLocation = gl.getUniformLocation(program, "u_texture");
+
+            // Create a buffer.
+            WebGLBuffer positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            // Put a unit quad in the buffer
+            float[] positions = {
+                    0, 0,
+                    0, 1,
+                    1, 0,
+                    1, 0,
+                    0, 1,
+                    1, 1,
+            };
+            Float32Array arr = Float32Array.create(12);
+            arr.set(positions);
+            gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
+
+            WebGLBuffer texcoordBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+
+            // Put texcoords in the buffer
+            float[] texcoords = new float[]{
+                    0, 0,
+                    0, 1,
+                    1, 0,
+                    1, 0,
+                    0, 1,
+                    1, 1
+            };
+            arr = Float32Array.create(12);
+            arr.set(texcoords);
+            gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
+
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+
+
+            // Setup the attributes to pull data from our buffers
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.enableVertexAttribArray(positionLocation);
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+            gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+            gl.enableVertexAttribArray(texcoordLocation);
+            gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
+            // this matrix will convert from pixels to clip space
+        M4 m4 = M4.get();
+            float[] matrix = m4.orthographic(0, canvas.getWidth(), canvas.getHeight(), 0, -1, 1);
+
+            // this matrix will translate our quad to dstX, dstY
+            matrix = m4.translate(matrix, x, y, 0);
+            // this matrix will scale our 1 unit quad
+            // from 1 unit to texWidth, texHeight units
+            matrix = m4.scale(matrix, img.getWidth(), img.getHeight(), 1);
+            // Set the matrix.
+            gl.uniformMatrix4fv(matrixLocation, false, matrix);
+
+            // Tell the shader to get the texture from texture unit 0
+            gl.uniform1i(textureLocation, 0);
+
+            // draw the quad (2 triangles, 6 vertices)
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+
     }
 }

@@ -39,7 +39,7 @@ class JSComponent extends AbstractComponent {
         if("webgl".equals(renderer)){
             WebGLOptions options = WebGLOptions.create();
             options.setPreserveDrawingBuffer(true);
-            WebGLRenderingContext context = (WebGLRenderingContext)canvas.getContext("webgl", options);
+            WebGLRenderingContext context = (WebGLRenderingContext)canvas.getContext("webgl2", options);
             this.graphics = new JSGraphicsGL(canvas, context);
         }else {
             CanvasRenderingContext2D context = (CanvasRenderingContext2D) canvas.getContext("2d");

@@ -9,7 +9,9 @@ import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.typedarrays.ArrayBuffer;
+import org.teavm.jso.typedarrays.Int32Array;
 import org.teavm.jso.typedarrays.Uint8Array;
+import org.teavm.jso.typedarrays.Uint8ClampedArray;
 import org.teavm.jso.websocket.WebSocket;
 
 public final class JSMethods {
@@ -43,7 +45,10 @@ public final class JSMethods {
     public static native void export(String name, JSObject value);
 
     @JSBody(params = {"arr"}, script = "return arr;")
-    public static native ArrayBuffer wrap(byte[] data);
+    public static native Int32Array wrap(int[] arr);
+
+    @JSBody(params = {"arr"}, script = "return arr;")
+    public static native Uint8ClampedArray wrap(byte[] data);
 
     @JSBody(params = {"name"}, script = "return new Event(name);")
     public static native Event createEvent(String name);
@@ -54,4 +59,12 @@ public final class JSMethods {
     @JSBody(params = {"object"}, script = "return typeof object == 'object' && object.constructor['name'] == 'c_ObjStackEntity'")
     public static native boolean isStackEntity(JSObject object);
 
+    @JSBody(params = { "len"}, script = "return new ArrayBuffer(len);")
+    public static native ArrayBuffer createBuffer(int len);
+
+    @JSBody(params = { "buffer"}, script = "return new Int32Array(buffer);")
+    public static native int[] intFromBuffer(ArrayBuffer buffer);
+
+    @JSBody(params = { "buffer"}, script = "return new Uint8ClampedArray(buffer);")
+    public static native byte[] bytesFromBuffer(ArrayBuffer buffer);
 }
