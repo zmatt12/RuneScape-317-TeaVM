@@ -3,6 +3,8 @@ package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 // Decompiler options: packimports(3) 
 
 import client.textures.IndexedTexture;
+import client.textures.Renderer;
+import client.textures.software.SoftwareRenderer;
 
 public class Draw3D {
 
@@ -168,7 +170,7 @@ public class Draw3D {
 
 		for (int textureId = 0; textureId < 50; textureId++) {
 			try {
-				textures[textureId] = new IndexedTexture(archive, String.valueOf(textureId), 0);
+				textures[textureId] = Renderer.get().createIndexed(archive, String.valueOf(textureId), 0);
 
 				if (lowmem && (textures[textureId].getCropW() == 128)) {
 					textures[textureId].shrink();
@@ -245,13 +247,14 @@ public class Draw3D {
 
 		activeTexels[textureId] = texels;
 		IndexedTexture texture = textures[textureId];
+		byte[] indices = texture.getIndices();
 		int[] palette = texturePalette[textureId];
 
 		if (lowmem) {
 			textureTranslucent[textureId] = false;
 
 			for (int i = 0; i < 4096; i++) {
-				int rgb = texels[i] = palette[texture.pixels[i]] & 0xf8f8ff;
+				int rgb = texels[i] = palette[indices[i]] & 0xf8f8ff;
 
 				if (rgb == 0) {
 					textureTranslucent[textureId] = true;
@@ -266,12 +269,12 @@ public class Draw3D {
 			if (texture.getWidth() == 64) {
 				for (int y = 0; y < 128; y++) {
 					for (int x = 0; x < 128; x++) {
-						texels[x + (y << 7)] = palette[texture.pixels[(x >> 1) + ((y >> 1) << 6)]];
+						texels[x + (y << 7)] = palette[indices[(x >> 1) + ((y >> 1) << 6)]];
 					}
 				}
 			} else {
 				for (int i = 0; i < 16384; i++) {
-					texels[i] = palette[texture.pixels[i]];
+					texels[i] = palette[indices[i]];
 				}
 			}
 
@@ -386,7 +389,7 @@ public class Draw3D {
 				continue;
 			}
 
-			int[] palette = textures[textureId].palette;
+			int[] palette = textures[textureId].getPalette();
 			texturePalette[textureId] = new int[palette.length];
 
 			for (int i = 0; i < palette.length; i++) {

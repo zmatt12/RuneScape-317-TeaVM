@@ -3,6 +3,8 @@ package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 // Decompiler options: packimports(3) 
 
 import client.textures.RGBTexture;
+import client.textures.Renderer;
+import client.textures.software.SoftwareRenderer;
 import org.apache.commons.collections4.map.LRUMap;
 
 import java.io.IOException;
@@ -119,7 +121,7 @@ public class ObjType {
 			}
 		}
 
-		RGBTexture icon = RGBTexture.create(32, 32);
+		RGBTexture icon = Renderer.get().create(32, 32);
 
 		// store state
 		int _cx = Draw3D.centerX;
@@ -135,7 +137,8 @@ public class ObjType {
 
 		// set up drawing area
 		Draw3D.jagged = false;
-		Draw2D.bind(icon.getPixels(), 32, 32);
+		int[] pixels = icon.getPixels();
+		Draw2D.bind(pixels, 32, 32);
 		Draw2D.fillRect(0, 0, 32, 32, 0);
 		Draw3D.init2D();
 
@@ -157,17 +160,17 @@ public class ObjType {
 		// define outline
 		for (int x = 31; x >= 0; x--) {
 			for (int y = 31; y >= 0; y--) {
-				if (icon.getPixels()[x + (y * 32)] != 0) {
+				if (pixels[x + (y * 32)] != 0) {
 					continue;
 				}
-				if ((x > 0) && (icon.getPixels()[(x - 1) + (y * 32)] > 1)) {
-					icon.getPixels()[x + (y * 32)] = 1;
-				} else if ((y > 0) && (icon.getPixels()[x + ((y - 1) * 32)] > 1)) {
-					icon.getPixels()[x + (y * 32)] = 1;
-				} else if ((x < 31) && (icon.getPixels()[x + 1 + (y * 32)] > 1)) {
-					icon.getPixels()[x + (y * 32)] = 1;
-				} else if ((y < 31) && (icon.getPixels()[x + ((y + 1) * 32)] > 1)) {
-					icon.getPixels()[x + (y * 32)] = 1;
+				if ((x > 0) && (pixels[(x - 1) + (y * 32)] > 1)) {
+					pixels[x + (y * 32)] = 1;
+				} else if ((y > 0) && (pixels[x + ((y - 1) * 32)] > 1)) {
+					pixels[x + (y * 32)] = 1;
+				} else if ((x < 31) && (pixels[x + 1 + (y * 32)] > 1)) {
+					pixels[x + (y * 32)] = 1;
+				} else if ((y < 31) && (pixels[x + ((y + 1) * 32)] > 1)) {
+					pixels[x + (y * 32)] = 1;
 				}
 			}
 		}
@@ -176,15 +179,15 @@ public class ObjType {
 		if (outlineColor > 0) {
 			for (int x = 31; x >= 0; x--) {
 				for (int y = 31; y >= 0; y--) {
-					if (icon.getPixels()[x + (y * 32)] == 0) {
-						if ((x > 0) && (icon.getPixels()[(x - 1) + (y * 32)] == 1)) {
-							icon.getPixels()[x + (y * 32)] = outlineColor;
-						} else if ((y > 0) && (icon.getPixels()[x + ((y - 1) * 32)] == 1)) {
-							icon.getPixels()[x + (y * 32)] = outlineColor;
-						} else if ((x < 31) && (icon.getPixels()[x + 1 + (y * 32)] == 1)) {
-							icon.getPixels()[x + (y * 32)] = outlineColor;
-						} else if ((y < 31) && (icon.getPixels()[x + ((y + 1) * 32)] == 1)) {
-							icon.getPixels()[x + (y * 32)] = outlineColor;
+					if (pixels[x + (y * 32)] == 0) {
+						if ((x > 0) && (pixels[(x - 1) + (y * 32)] == 1)) {
+							pixels[x + (y * 32)] = outlineColor;
+						} else if ((y > 0) && (pixels[x + ((y - 1) * 32)] == 1)) {
+							pixels[x + (y * 32)] = outlineColor;
+						} else if ((x < 31) && (pixels[x + 1 + (y * 32)] == 1)) {
+							pixels[x + (y * 32)] = outlineColor;
+						} else if ((y < 31) && (pixels[x + ((y + 1) * 32)] == 1)) {
+							pixels[x + (y * 32)] = outlineColor;
 						}
 					}
 				}
@@ -194,8 +197,8 @@ public class ObjType {
 		else if (outlineColor == 0) {
 			for (int x = 31; x >= 0; x--) {
 				for (int y = 31; y >= 0; y--) {
-					if ((icon.getPixels()[x + (y * 32)] == 0) && (x > 0) && (y > 0) && (icon.getPixels()[(x - 1) + ((y - 1) * 32)] > 0)) {
-						icon.getPixels()[x + (y * 32)] = 0x302020;
+					if ((pixels[x + (y * 32)] == 0) && (x > 0) && (y > 0) && (pixels[(x - 1) + ((y - 1) * 32)] > 0)) {
+						pixels[x + (y * 32)] = 0x302020;
 					}
 				}
 			}

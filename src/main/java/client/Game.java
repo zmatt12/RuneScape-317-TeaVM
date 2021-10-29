@@ -4,6 +4,7 @@ package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 
 import client.textures.IndexedTexture;
 import client.textures.RGBTexture;
+import client.textures.Renderer;
 import org.apache.commons.math3.random.ISAACRandom;
 import web.*;
 import web.util.Color;
@@ -661,7 +662,7 @@ public class Game extends GameShell {
 				collisions[plane] = new SceneCollisionMap(104, 104);
 			}
 
-			imageMinimap = RGBTexture.create(512, 512);
+			imageMinimap = Renderer.get().create(512, 512);
 
 			FileArchive archiveVersionlist = loadArchive(5, "update list", "versionlist", archiveChecksum[5], 60);
 
@@ -825,85 +826,85 @@ public class Game extends GameShell {
 			}
 
 			showProgress(80, "Unpacking media");
-			imageInvback = new IndexedTexture(archiveMedia, "invback", 0);
-			imageChatback = new IndexedTexture(archiveMedia, "chatback", 0);
-			imageMapback = new IndexedTexture(archiveMedia, "mapback", 0);
-			imageBackbase1 = new IndexedTexture(archiveMedia, "backbase1", 0);
-			imageBackbase2 = new IndexedTexture(archiveMedia, "backbase2", 0);
-			imageBackhmid1 = new IndexedTexture(archiveMedia, "backhmid1", 0);
+			imageInvback = Renderer.get().createIndexed(archiveMedia, "invback", 0);
+			imageChatback = Renderer.get().createIndexed(archiveMedia, "chatback", 0);
+			imageMapback = Renderer.get().createIndexed(archiveMedia, "mapback", 0);
+			imageBackbase1 = Renderer.get().createIndexed(archiveMedia, "backbase1", 0);
+			imageBackbase2 = Renderer.get().createIndexed(archiveMedia, "backbase2", 0);
+			imageBackhmid1 = Renderer.get().createIndexed(archiveMedia, "backhmid1", 0);
 			for (int i = 0; i < 13; i++) {
-				imageSideicons[i] = new IndexedTexture(archiveMedia, "sideicons", i);
+				imageSideicons[i] = Renderer.get().createIndexed(archiveMedia, "sideicons", i);
 			}
-			imageCompass = RGBTexture.create(archiveMedia, "compass", 0);
-			imageMapedge = RGBTexture.create(archiveMedia, "mapedge", 0);
+			imageCompass = Renderer.get().create(archiveMedia, "compass", 0);
+			imageMapedge = Renderer.get().create(archiveMedia, "mapedge", 0);
 			imageMapedge.crop();
 			try {
 				for (int k3 = 0; k3 < 100; k3++) {
-					imageMapscene[k3] = new IndexedTexture(archiveMedia, "mapscene", k3);
+					imageMapscene[k3] = Renderer.get().createIndexed(archiveMedia, "mapscene", k3);
 				}
 			} catch (Exception ignored) {
 			}
 			try {
 				for (int l3 = 0; l3 < 100; l3++) {
-					imageMapfunction[l3] = RGBTexture.create(archiveMedia, "mapfunction", l3);
+					imageMapfunction[l3] = Renderer.get().create(archiveMedia, "mapfunction", l3);
 				}
 			} catch (Exception ignored) {
 			}
 			try {
 				for (int i4 = 0; i4 < 20; i4++) {
-					imageHitmarks[i4] = RGBTexture.create(archiveMedia, "hitmarks", i4);
+					imageHitmarks[i4] = Renderer.get().create(archiveMedia, "hitmarks", i4);
 				}
 			} catch (Exception ignored) {
 			}
 			try {
 				for (int j4 = 0; j4 < 20; j4++) {
-					imageHeadicons[j4] = RGBTexture.create(archiveMedia, "headicons", j4);
+					imageHeadicons[j4] = Renderer.get().create(archiveMedia, "headicons", j4);
 				}
 			} catch (Exception ignored) {
 			}
-			imageMapmarker0 = RGBTexture.create(archiveMedia, "mapmarker", 0);
-			imageMapmarker1 = RGBTexture.create(archiveMedia, "mapmarker", 1);
+			imageMapmarker0 = Renderer.get().create(archiveMedia, "mapmarker", 0);
+			imageMapmarker1 = Renderer.get().create(archiveMedia, "mapmarker", 1);
 			for (int k4 = 0; k4 < 8; k4++) {
-				imageCrosses[k4] = RGBTexture.create(archiveMedia, "cross", k4);
+				imageCrosses[k4] = Renderer.get().create(archiveMedia, "cross", k4);
 			}
-			imageMapdot0 = RGBTexture.create(archiveMedia, "mapdots", 0);
-			imageMapdot1 = RGBTexture.create(archiveMedia, "mapdots", 1);
-			imageMapdot2 = RGBTexture.create(archiveMedia, "mapdots", 2);
-			imageMapdot3 = RGBTexture.create(archiveMedia, "mapdots", 3);
-			imageMapdot4 = RGBTexture.create(archiveMedia, "mapdots", 4);
-			imageScrollbar0 = new IndexedTexture(archiveMedia, "scrollbar", 0);
-			imageScrollbar1 = new IndexedTexture(archiveMedia, "scrollbar", 1);
-			imageRedstone1 = new IndexedTexture(archiveMedia, "redstone1", 0);
-			imageRedstone2 = new IndexedTexture(archiveMedia, "redstone2", 0);
-			imageRedstone3 = new IndexedTexture(archiveMedia, "redstone3", 0);
-			imageRedstone1h = new IndexedTexture(archiveMedia, "redstone1", 0);
+			imageMapdot0 = Renderer.get().create(archiveMedia, "mapdots", 0);
+			imageMapdot1 = Renderer.get().create(archiveMedia, "mapdots", 1);
+			imageMapdot2 = Renderer.get().create(archiveMedia, "mapdots", 2);
+			imageMapdot3 = Renderer.get().create(archiveMedia, "mapdots", 3);
+			imageMapdot4 = Renderer.get().create(archiveMedia, "mapdots", 4);
+			imageScrollbar0 = Renderer.get().createIndexed(archiveMedia, "scrollbar", 0);
+			imageScrollbar1 = Renderer.get().createIndexed(archiveMedia, "scrollbar", 1);
+			imageRedstone1 = Renderer.get().createIndexed(archiveMedia, "redstone1", 0);
+			imageRedstone2 = Renderer.get().createIndexed(archiveMedia, "redstone2", 0);
+			imageRedstone3 = Renderer.get().createIndexed(archiveMedia, "redstone3", 0);
+			imageRedstone1h = Renderer.get().createIndexed(archiveMedia, "redstone1", 0);
 			imageRedstone1h.flipH();
-			imageRedstone2h = new IndexedTexture(archiveMedia, "redstone2", 0);
+			imageRedstone2h = Renderer.get().createIndexed(archiveMedia, "redstone2", 0);
 			imageRedstone2h.flipH();
-			imageRedstone1v = new IndexedTexture(archiveMedia, "redstone1", 0);
+			imageRedstone1v = Renderer.get().createIndexed(archiveMedia, "redstone1", 0);
 			imageRedstone1v.flipV();
-			imageRedstone2v = new IndexedTexture(archiveMedia, "redstone2", 0);
+			imageRedstone2v = Renderer.get().createIndexed(archiveMedia, "redstone2", 0);
 			imageRedstone2v.flipV();
-			imageRedstone3v = new IndexedTexture(archiveMedia, "redstone3", 0);
+			imageRedstone3v = Renderer.get().createIndexed(archiveMedia, "redstone3", 0);
 			imageRedstone3v.flipV();
-			imageRedstone1hv = new IndexedTexture(archiveMedia, "redstone1", 0);
+			imageRedstone1hv = Renderer.get().createIndexed(archiveMedia, "redstone1", 0);
 			imageRedstone1hv.flipH();
 			imageRedstone1hv.flipV();
-			imageRedstone2hv = new IndexedTexture(archiveMedia, "redstone2", 0);
+			imageRedstone2hv = Renderer.get().createIndexed(archiveMedia, "redstone2", 0);
 			imageRedstone2hv.flipH();
 			imageRedstone2hv.flipV();
 			for (int i = 0; i < 2; i++) {
-				imageModIcons[i] = new IndexedTexture(archiveMedia, "mod_icons", i);
+				imageModIcons[i] = Renderer.get().createIndexed(archiveMedia, "mod_icons", i);
 			}
-			areaBackleft1 = new DrawArea(RGBTexture.create(archiveMedia, "backleft1", 0));
-			areaBackleft2 = new DrawArea(RGBTexture.create(archiveMedia, "backleft2", 0));
-			areaBackright1 = new DrawArea(RGBTexture.create(archiveMedia, "backright1", 0));
-			areaBackright2 = new DrawArea(RGBTexture.create(archiveMedia, "backright2", 0));
-			areaBacktop1 = new DrawArea(RGBTexture.create(archiveMedia, "backtop1", 0));
-			areaBackvmid1 = new DrawArea(RGBTexture.create(archiveMedia, "backvmid1", 0));
-			areaBackvmid2 = new DrawArea(RGBTexture.create(archiveMedia, "backvmid2", 0));
-			areaBackvmid3 = new DrawArea(RGBTexture.create(archiveMedia, "backvmid3", 0));
-			areaBackhmid2 = new DrawArea(RGBTexture.create(archiveMedia, "backhmid2", 0));
+			areaBackleft1 = new DrawArea(Renderer.get().create(archiveMedia, "backleft1", 0));
+			areaBackleft2 = new DrawArea(Renderer.get().create(archiveMedia, "backleft2", 0));
+			areaBackright1 = new DrawArea(Renderer.get().create(archiveMedia, "backright1", 0));
+			areaBackright2 = new DrawArea(Renderer.get().create(archiveMedia, "backright2", 0));
+			areaBacktop1 = new DrawArea(Renderer.get().create(archiveMedia, "backtop1", 0));
+			areaBackvmid1 = new DrawArea(Renderer.get().create(archiveMedia, "backvmid1", 0));
+			areaBackvmid2 = new DrawArea(Renderer.get().create(archiveMedia, "backvmid2", 0));
+			areaBackvmid3 = new DrawArea(Renderer.get().create(archiveMedia, "backvmid3", 0));
+			areaBackhmid2 = new DrawArea(Renderer.get().create(archiveMedia, "backhmid2", 0));
 
 			int red = (int) (Math.random() * 21D) - 10;
 			int green = (int) (Math.random() * 21D) - 10;
@@ -945,11 +946,12 @@ public class Game extends GameShell {
 
 			showProgress(100, "Preparing game engine");
 
+			byte[] indices = imageMapback.getIndices();
 			for (int y = 0; y < 33; y++) {
 				int left = 999;
 				int right = 0;
 				for (int x = 0; x < 34; x++) {
-					if (imageMapback.pixels[x + (y * imageMapback.getWidth())] == 0) {
+					if (indices[x + (y * imageMapback.getWidth())] == 0) {
 						if (left == 999) {
 							left = x;
 						}
@@ -969,7 +971,7 @@ public class Game extends GameShell {
 				int left = 999;
 				int right = 0;
 				for (int x = 25; x < 172; x++) {
-					if ((imageMapback.pixels[x + (y * imageMapback.getWidth())] == 0) && ((x > 34) || (y > 34))) {
+					if ((indices[x + (y * imageMapback.getWidth())] == 0) && ((x > 34) || (y > 34))) {
 						if (left == 999) {
 							left = x;
 						}
@@ -2651,12 +2653,12 @@ public class Game extends GameShell {
 				IndexedTexture image = Draw3D.textures[17];
 				int k = (image.getWidth() * image.getHeight()) - 1;
 				int j1 = image.getWidth() * delta * 2;
-				byte[] abyte0 = image.pixels;
+				byte[] abyte0 = image.getIndices();
 				byte[] abyte3 = aByteArray912;
 				for (int i2 = 0; i2 <= k; i2++) {
 					abyte3[i2] = abyte0[(i2 - j1) & k];
 				}
-				image.pixels = abyte3;
+				image.setIndices(abyte3);
 				aByteArray912 = abyte0;
 				Draw3D.unloadTexture(17);
 			}
@@ -2664,12 +2666,12 @@ public class Game extends GameShell {
 				IndexedTexture class30_sub2_sub1_sub2_1 = Draw3D.textures[24];
 				int l = (class30_sub2_sub1_sub2_1.getWidth() * class30_sub2_sub1_sub2_1.getHeight()) - 1;
 				int k1 = class30_sub2_sub1_sub2_1.getWidth() * delta * 2;
-				byte[] abyte1 = class30_sub2_sub1_sub2_1.pixels;
+				byte[] abyte1 = class30_sub2_sub1_sub2_1.getIndices();
 				byte[] abyte4 = aByteArray912;
 				for (int j2 = 0; j2 <= l; j2++) {
 					abyte4[j2] = abyte1[(j2 - k1) & l];
 				}
-				class30_sub2_sub1_sub2_1.pixels = abyte4;
+				class30_sub2_sub1_sub2_1.setIndices(abyte4);
 				aByteArray912 = abyte1;
 				Draw3D.unloadTexture(24);
 			}
@@ -2677,12 +2679,12 @@ public class Game extends GameShell {
 				IndexedTexture class30_sub2_sub1_sub2_2 = Draw3D.textures[34];
 				int i1 = (class30_sub2_sub1_sub2_2.getWidth() * class30_sub2_sub1_sub2_2.getHeight()) - 1;
 				int l1 = class30_sub2_sub1_sub2_2.getWidth() * delta * 2;
-				byte[] abyte2 = class30_sub2_sub1_sub2_2.pixels;
+				byte[] abyte2 = class30_sub2_sub1_sub2_2.getIndices();
 				byte[] abyte5 = aByteArray912;
 				for (int k2 = 0; k2 <= i1; k2++) {
 					abyte5[k2] = abyte2[(k2 - l1) & i1];
 				}
-				class30_sub2_sub1_sub2_2.pixels = abyte5;
+				class30_sub2_sub1_sub2_2.setIndices(abyte5);
 				aByteArray912 = abyte2;
 				Draw3D.unloadTexture(34);
 			}
@@ -3290,8 +3292,8 @@ public class Game extends GameShell {
 	}
 
 	public void createTitleImages() throws IOException {
-		imageTitlebox = new IndexedTexture(archiveTitle, "titlebox", 0);
-		imageTitlebutton = new IndexedTexture(archiveTitle, "titlebutton", 0);
+		imageTitlebox = Renderer.get().createIndexed(archiveTitle, "titlebox", 0);
+		imageTitlebutton = Renderer.get().createIndexed(archiveTitle, "titlebutton", 0);
 		imageRunes = new IndexedTexture[12];
 		int icon = 0;
 
@@ -3302,16 +3304,16 @@ public class Game extends GameShell {
 
 		if (icon == 0) {
 			for (int i = 0; i < 12; i++) {
-				imageRunes[i] = new IndexedTexture(archiveTitle, "runes", i);
+				imageRunes[i] = Renderer.get().createIndexed(archiveTitle, "runes", i);
 			}
 		} else {
 			for (int i = 0; i < 12; i++) {
-				imageRunes[i] = new IndexedTexture(archiveTitle, "runes", 12 + (i & 3));
+				imageRunes[i] = Renderer.get().createIndexed(archiveTitle, "runes", 12 + (i & 3));
 			}
 		}
 
-		imageFlamesLeft = RGBTexture.create(128, 265);
-		imageFlamesRight = RGBTexture.create(128, 265);
+		imageFlamesLeft = Renderer.get().create(128, 265);
+		imageFlamesRight = Renderer.get().create(128, 265);
 
 		System.arraycopy(imageTitle0.pixels, 0, imageFlamesLeft.getPixels(), 0, 33920);
 		System.arraycopy(imageTitle1.pixels, 0, imageFlamesRight.getPixels(), 0, 33920);
@@ -3466,7 +3468,7 @@ public class Game extends GameShell {
 	}
 
 	public void createTitleBackground() throws IOException {
-		RGBTexture image = RGBTexture.create(archiveTitle.read("title.dat"));
+		RGBTexture image = Renderer.get().create(archiveTitle.read("title.dat"));
 
 		imageTitle0.bind();
 		image.blitOpaque(0, 0);
@@ -3497,11 +3499,12 @@ public class Game extends GameShell {
 
 		// Flips the title background horizontally
 		int[] tmp = new int[image.getWidth()];
+		int[] pixels = image.getPixels();
 		for (int y = 0; y < image.getHeight(); y++) {
 			for (int x = 0; x < image.getWidth(); x++) {
-				tmp[x] = image.getPixels()[(image.getWidth() - x - 1) + (image.getWidth() * y)];
+				tmp[x] = pixels[(image.getWidth() - x - 1) + (image.getWidth() * y)];
 			}
-			System.arraycopy(tmp, 0, image.getPixels(), image.getWidth() * y, image.getWidth());
+			System.arraycopy(tmp, 0, pixels, image.getWidth() * y, image.getWidth());
 		}
 
 		imageTitle0.bind();
@@ -3531,7 +3534,7 @@ public class Game extends GameShell {
 		imageTitle8.bind();
 		image.blitOpaque(-180, -171);
 
-		image = RGBTexture.create(archiveTitle, "logo", 0);
+		image = Renderer.get().create(archiveTitle, "logo", 0);
 		imageTitle2.bind();
 		image.draw(382 - (image.getWidth() / 2) - 128, 18);
 
@@ -8166,10 +8169,11 @@ public class Game extends GameShell {
 		}
 
 		if (image != null) {
+			byte[] indices = image.getIndices();
 			int offset = 0;
 			for (int y = 0; y < image.getHeight(); y++) {
 				for (int x = 0; x < image.getWidth(); x++) {
-					if (image.pixels[offset++] != 0) {
+					if (indices[offset++] != 0) {
 						int dstX = x + 16 + image.getCropX();
 						int dstY = y + 16 + image.getCropY();
 						flameBuffer0[dstX + (dstY << 7)] = 0;
@@ -8987,7 +8991,7 @@ public class Game extends GameShell {
 		areaMapback.bind();
 
 		if (minimapState == 2) {
-			byte[] mapback = imageMapback.pixels;
+			byte[] mapback = imageMapback.getIndices();
 			int[] pixels = Draw2D.pixels;
 			for (int i = 0; i < mapback.length; i++) {
 				if (mapback[i] == 0) {

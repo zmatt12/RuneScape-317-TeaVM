@@ -3,6 +3,8 @@ package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 // Decompiler options: packimports(3) 
 
 import client.textures.RGBTexture;
+import client.textures.Renderer;
+import client.textures.software.SoftwareRenderer;
 import org.apache.commons.collections4.map.LRUMap;
 
 import java.io.IOException;
@@ -251,7 +253,7 @@ public class Component {
 			return image;
 		}
 		try {
-			image = RGBTexture.create(media, name, id);
+			image = Renderer.get().create(media, name, id);
 			imageCache.put(uid, image);
 		} catch (Exception _ex) {
 			return null;
