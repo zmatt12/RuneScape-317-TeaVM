@@ -2,6 +2,8 @@ package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) 
 
+import client.textures.IndexedTexture;
+
 public class Draw3D {
 
 	/**
@@ -52,7 +54,7 @@ public class Draw3D {
 	public static int[] lineOffset;
 
 	public static int textureCount;
-	public static Image8[] textures = new Image8[50];
+	public static IndexedTexture[] textures = new IndexedTexture[50];
 	public static boolean[] textureTranslucent = new boolean[50];
 	public static int[] averageTextureRGB = new int[50];
 
@@ -166,7 +168,7 @@ public class Draw3D {
 
 		for (int textureId = 0; textureId < 50; textureId++) {
 			try {
-				textures[textureId] = new Image8(archive, String.valueOf(textureId), 0);
+				textures[textureId] = new IndexedTexture(archive, String.valueOf(textureId), 0);
 
 				if (lowmem && (textures[textureId].cropW == 128)) {
 					textures[textureId].shrink();
@@ -242,7 +244,7 @@ public class Draw3D {
 		}
 
 		activeTexels[textureId] = texels;
-		Image8 texture = textures[textureId];
+		IndexedTexture texture = textures[textureId];
 		int[] palette = texturePalette[textureId];
 
 		if (lowmem) {

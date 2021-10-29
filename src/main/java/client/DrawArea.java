@@ -2,6 +2,7 @@ package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) 
 
+import client.textures.RGBTexture;
 import web.IGraphics;
 import web.IImage;
 
@@ -20,7 +21,7 @@ public class DrawArea {
 		bind();
 	}
 
-	public DrawArea(Image24 image) {
+	public DrawArea(RGBTexture image) {
 		this(image.width, image.height);
 		image.blitOpaque(0, 0);
 	}

@@ -15,7 +15,7 @@ public class JSGraphicsGL implements IGraphics {
     private final WebGLRenderingContext gl;
     private float[] color = Color.yellow.asFloatArray();
     private WebGLProgram fill_rect;
-    private WebGLProgram program;
+    private WebGLProgram draw_img;
 
     private WebGLBuffer rect_buffer, indBuf;
 
@@ -55,7 +55,7 @@ public class JSGraphicsGL implements IGraphics {
         rect_buffer = gl.createBuffer();
         indBuf = gl.createBuffer();
 
-        program = gl.createProgram();
+        draw_img = gl.createProgram();
         WebGLShader tex_vertex = createAndCompile(gl.VERTEX_SHADER, "attribute vec4 a_position;\n" +
                 "attribute vec2 a_texcoord;\n" +
                 "\n" +
@@ -76,9 +76,9 @@ public class JSGraphicsGL implements IGraphics {
                 "void main() {\n" +
                 "   gl_FragColor = texture2D(u_texture, v_texcoord);\n" +
                 "}");
-        gl.attachShader(program, tex_vertex);
-        gl.attachShader(program, tex_fragment);
-        gl.linkProgram(program);
+        gl.attachShader(draw_img, tex_vertex);
+        gl.attachShader(draw_img, tex_fragment);
+        gl.linkProgram(draw_img);
     }
 
     private WebGLShader createAndCompile(int type, String source){
@@ -176,15 +176,15 @@ public class JSGraphicsGL implements IGraphics {
             JSImage img = (JSImage) _img;
             WebGLTexture texture = img.getTexture(gl);
 
-        gl.useProgram(program);
+        gl.useProgram(draw_img);
 
             // look up where the vertex data needs to go.
-            int positionLocation = gl.getAttribLocation(program, "a_position");
-            int texcoordLocation = gl.getAttribLocation(program, "a_texcoord");
+            int positionLocation = gl.getAttribLocation(draw_img, "a_position");
+            int texcoordLocation = gl.getAttribLocation(draw_img, "a_texcoord");
 
             // lookup uniforms
-            WebGLUniformLocation matrixLocation = gl.getUniformLocation(program, "u_matrix");
-            WebGLUniformLocation textureLocation = gl.getUniformLocation(program, "u_texture");
+            WebGLUniformLocation matrixLocation = gl.getUniformLocation(draw_img, "u_matrix");
+            WebGLUniformLocation textureLocation = gl.getUniformLocation(draw_img, "u_texture");
 
             // Create a buffer.
             WebGLBuffer positionBuffer = gl.createBuffer();

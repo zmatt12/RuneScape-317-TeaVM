@@ -14,5 +14,5 @@ public interface IGraphics {
 
     void drawString(String str, int x, int y);
 
-    void drawImage(IImage img, int width, int height, Object observer);
+    void drawImage(IImage img, int x, int y, Object observer);
 }

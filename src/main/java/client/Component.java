@@ -2,6 +2,7 @@ package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) 
 
+import client.textures.RGBTexture;
 import org.apache.commons.collections4.map.LRUMap;
 
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.io.IOException;
 public class Component {
 
 	public static final LRUMap<Long, Model> modelCache = new LRUMap<>(30);
-	public static LRUMap<Long, Image24> imageCache;
+	public static LRUMap<Long, RGBTexture> imageCache;
 	public static Component[] instances;
 
 	public static void unpack(FileArchive config, BitmapFont[] fonts, FileArchive media) throws IOException {
@@ -98,7 +99,7 @@ public class Component {
 				c.invMarginY = in.get1U();
 				c.invSlotX = new int[20];
 				c.invSlotY = new int[20];
-				c.invSlotImage = new Image24[20];
+				c.invSlotImage = new RGBTexture[20];
 				for (int j2 = 0; j2 < 20; j2++) {
 					int k3 = in.get1U();
 					if (k3 == 1) {
@@ -243,14 +244,14 @@ public class Component {
 		imageCache = null;
 	}
 
-	public static Image24 getImage(int id, FileArchive media, String name) {
+	public static RGBTexture getImage(int id, FileArchive media, String name) {
 		long uid = (StringUtil.hashCode(name) << 8) + (long) id;
-		Image24 image = imageCache.get(uid);
+		RGBTexture image = imageCache.get(uid);
 		if (image != null) {
 			return image;
 		}
 		try {
-			image = new Image24(media, name, id);
+			image = RGBTexture.create(media, name, id);
 			imageCache.put(uid, image);
 		} catch (Exception _ex) {
 			return null;
@@ -268,7 +269,7 @@ public class Component {
 	public boolean aBoolean249;
 	public int activeColor;
 	public int activeHoverColor;
-	public Image24 activeImage;
+	public RGBTexture activeImage;
 	public int activeModelType;
 	public int activeModelTypeId;
 	public int activeSeqId;
@@ -286,14 +287,14 @@ public class Component {
 	public boolean hidden;
 	public int hoverColor;
 	public int id;
-	public Image24 image;
+	public RGBTexture image;
 	public boolean invDraggable;
 	public int invMarginX;
 	public int invMarginY;
 	public boolean invMoveReplaces;
 	public String[] invOptions;
 	public int[] invSlotAmount;
-	public Image24[] invSlotImage;
+	public RGBTexture[] invSlotImage;
 	public int[] invSlotObjId;
 	public int[] invSlotX;
 	public int[] invSlotY;

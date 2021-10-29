@@ -1,19 +1,17 @@
-package client;
+package client.textures;
+
+import client.Buffer;
+import client.Draw2D;
+import client.FileArchive;
 
 import java.io.IOException;
 
-public class Image8 {
+public class IndexedTexture extends BaseTexture{
 
 	public final int[] palette;
 	public byte[] pixels;
-	public int width;
-	public int height;
-	public int cropX;
-	public int cropY;
-	public int cropW;
-	public int cropH;
 
-	public Image8(FileArchive archive, String s, int i) throws IOException {
+	public IndexedTexture(FileArchive archive, String s, int i) throws IOException {
 		Buffer buffer = new Buffer(archive.read(s + ".dat"));
 		Buffer buffer_1 = new Buffer(archive.read("index.dat"));
 		buffer_1.position = buffer.get2U();
@@ -137,7 +135,7 @@ public class Image8 {
 		}
 	}
 
-	public void blit(int x, int y) {
+	public void draw(int x, int y) {
 		x += cropX;
 		y += cropY;
 		int l = x + (y * Draw2D.width);
@@ -172,11 +170,11 @@ public class Image8 {
 			l1 += l2;
 		}
 		if ((k1 > 0) && (j1 > 0)) {
-			blit(j1, Draw2D.pixels, pixels, l1, l, k1, i1, palette, i2);
+			draw(j1, Draw2D.pixels, pixels, l1, l, k1, i1, palette, i2);
 		}
 	}
 
-	public void blit(int i, int[] ai, byte[] abyte0, int j, int k, int l, int i1, int[] ai1, int j1) {
+	public void draw(int i, int[] ai, byte[] abyte0, int j, int k, int l, int i1, int[] ai1, int j1) {
 		int k1 = -(l >> 2);
 		l = -(l & 3);
 		for (int l1 = -i; l1 < 0; l1++) {

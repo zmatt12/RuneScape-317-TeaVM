@@ -2,13 +2,14 @@ package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) 
 
+import client.textures.RGBTexture;
 import org.apache.commons.collections4.map.LRUMap;
 
 import java.io.IOException;
 
 public class ObjType {
 
-	public static LRUMap<Integer, Image24> iconCache = new LRUMap<>(100);
+	public static LRUMap<Integer, RGBTexture> iconCache = new LRUMap<>(100);
 	public static LRUMap<Integer, Model> modelCache = new LRUMap<>(50);
 	public static ObjType[] cached;
 	public static int cachePos;
@@ -69,9 +70,9 @@ public class ObjType {
 		return type;
 	}
 
-	public static Image24 getIcon(int id, int amount, int outlineColor) {
+	public static RGBTexture getIcon(int id, int amount, int outlineColor) {
 		if (outlineColor == 0) {
-			Image24 icon = iconCache.get(id);
+			RGBTexture icon = iconCache.get(id);
 
 			if ((icon != null) && (icon.cropH != amount) && (icon.cropH != -1)) {
 				icon.unlink();
@@ -108,7 +109,7 @@ public class ObjType {
 		}
 
 		// this will typically be the certificate item for noted stuff
-		Image24 originalIcon = null;
+		RGBTexture originalIcon = null;
 
 		if (type.certificateId != -1) {
 			originalIcon = getIcon(type.linkedId, 10, -1);
@@ -118,7 +119,7 @@ public class ObjType {
 			}
 		}
 
-		Image24 icon = new Image24(32, 32);
+		RGBTexture icon = RGBTexture.create(32, 32);
 
 		// store state
 		int _cx = Draw3D.centerX;
