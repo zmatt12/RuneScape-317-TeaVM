@@ -15,8 +15,8 @@ public class IndexedTexture extends BaseTexture{
 		Buffer buffer = new Buffer(archive.read(s + ".dat"));
 		Buffer buffer_1 = new Buffer(archive.read("index.dat"));
 		buffer_1.position = buffer.get2U();
-		cropW = buffer_1.get2U();
-		cropH = buffer_1.get2U();
+		setCropW(buffer_1.get2U());
+		setCropH(buffer_1.get2U());
 		int j = buffer_1.get1U();
 		palette = new int[j];
 		for (int k = 0; k < (j - 1); k++) {
@@ -27,12 +27,12 @@ public class IndexedTexture extends BaseTexture{
 			buffer.position += buffer_1.get2U() * buffer_1.get2U();
 			buffer_1.position++;
 		}
-		cropX = buffer_1.get1U();
-		cropY = buffer_1.get1U();
-		width = buffer_1.get2U();
-		height = buffer_1.get2U();
+		setCropX(buffer_1.get1U());
+		setCropY(buffer_1.get1U());
+		setWidth(buffer_1.get2U());
+		setHeight(buffer_1.get2U());
 		int i1 = buffer_1.get1U();
-		int j1 = width * height;
+		int j1 = getWidth() * getHeight();
 		pixels = new byte[j1];
 		if (i1 == 0) {
 			for (int k1 = 0; k1 < j1; k1++) {
@@ -41,71 +41,71 @@ public class IndexedTexture extends BaseTexture{
 			return;
 		}
 		if (i1 == 1) {
-			for (int l1 = 0; l1 < width; l1++) {
-				for (int i2 = 0; i2 < height; i2++) {
-					pixels[l1 + (i2 * width)] = buffer.get1();
+			for (int l1 = 0; l1 < getWidth(); l1++) {
+				for (int i2 = 0; i2 < getHeight(); i2++) {
+					pixels[l1 + (i2 * getWidth())] = buffer.get1();
 				}
 			}
 		}
 	}
 
 	public void shrink() {
-		cropW /= 2;
-		cropH /= 2;
-		byte[] pixels = new byte[cropW * cropH];
+		setCropW(getCropW() / 2);
+		setCropH(getCropH() / 2);
+		byte[] pixels = new byte[getCropW() * getCropH()];
 		int i = 0;
-		for (int j = 0; j < height; j++) {
-			for (int k = 0; k < width; k++) {
-				pixels[((k + cropX) >> 1) + (((j + cropY) >> 1) * cropW)] = this.pixels[i++];
+		for (int j = 0; j < getHeight(); j++) {
+			for (int k = 0; k < getWidth(); k++) {
+				pixels[((k + getCropX()) >> 1) + (((j + getCropY()) >> 1) * getCropW())] = this.pixels[i++];
 			}
 		}
 		this.pixels = pixels;
-		width = cropW;
-		height = cropH;
-		cropX = 0;
-		cropY = 0;
+		setWidth(getCropW());
+		setHeight(getCropH());
+		setCropX(0);
+		setCropY(0);
 	}
 
 	public void crop() {
-		if ((width == cropW) && (height == cropH)) {
+		if ((getWidth() == getCropW()) && (getHeight() == getCropH())) {
 			return;
 		}
-		byte[] pixels = new byte[cropW * cropH];
+		byte[] pixels = new byte[getCropW() * getCropH()];
 		int i = 0;
-		for (int j = 0; j < height; j++) {
-			for (int k = 0; k < width; k++) {
-				pixels[k + cropX + ((j + cropY) * cropW)] = this.pixels[i++];
+		for (int j = 0; j < getHeight(); j++) {
+			for (int k = 0; k < getWidth(); k++) {
+				pixels[k + getCropX() + ((j + getCropY()) * getCropW())] = this.pixels[i++];
 			}
 		}
 		this.pixels = pixels;
-		width = cropW;
-		height = cropH;
-		cropX = 0;
-		cropY = 0;
+		setWidth(getCropW());
+		setHeight(getCropH());
+		setCropX(0);
+		setCropY(0);
 	}
 
 	public void flipH() {
-		byte[] pixels = new byte[width * height];
+		byte[] pixels = new byte[getWidth() * getHeight()];
 		int i = 0;
-		for (int y = 0; y < height; y++) {
-			for (int x = width - 1; x >= 0; x--) {
-				pixels[i++] = this.pixels[x + (y * width)];
+		for (int y = 0; y < getHeight(); y++) {
+			for (int x = getWidth() - 1; x >= 0; x--) {
+				pixels[i++] = this.pixels[x + (y * getWidth())];
 			}
 		}
 		this.pixels = pixels;
-		cropX = cropW - width - cropX;
+		setCropX(getCropW() - getWidth() - getCropX());
 	}
 
 	public void flipV() {
-		byte[] pixels = new byte[width * height];
+		byte[] pixels = new byte[getWidth() * getHeight()];
 		int i = 0;
-		for (int y = height - 1; y >= 0; y--) {
-			for (int x = 0; x < width; x++) {
-				pixels[i++] = this.pixels[x + (y * width)];
+		for (int y = getHeight() - 1; y >= 0; y--) {
+			for (int x = 0; x < getWidth(); x++) {
+				pixels[i++] = this.pixels[x + (y * getWidth())];
 			}
 		}
 		this.pixels = pixels;
-		cropY = cropH - height - cropY;
+		setCropY(getCropH() - getHeight() - getCropY());
 	}
 
 	public void translate(int r, int g, int b) {
@@ -136,12 +136,12 @@ public class IndexedTexture extends BaseTexture{
 	}
 
 	public void draw(int x, int y) {
-		x += cropX;
-		y += cropY;
+		x += getCropX();
+		y += getCropY();
 		int l = x + (y * Draw2D.width);
 		int i1 = 0;
-		int j1 = height;
-		int k1 = width;
+		int j1 = getHeight();
+		int k1 = getWidth();
 		int l1 = Draw2D.width - k1;
 		int i2 = 0;
 		if (y < Draw2D.top) {
@@ -172,6 +172,15 @@ public class IndexedTexture extends BaseTexture{
 		if ((k1 > 0) && (j1 > 0)) {
 			draw(j1, Draw2D.pixels, pixels, l1, l, k1, i1, palette, i2);
 		}
+	}
+
+	@Override
+	public int[] getPixels() {
+		int[] data = new int[pixels.length];
+		for(int i = 0; i < data.length; i++){
+			data[i] = palette[pixels[i]];
+		}
+		return data;
 	}
 
 	public void draw(int i, int[] ai, byte[] abyte0, int j, int k, int l, int i1, int[] ai1, int j1) {

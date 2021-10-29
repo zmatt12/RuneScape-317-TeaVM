@@ -22,7 +22,7 @@ public class DrawArea {
 	}
 
 	public DrawArea(RGBTexture image) {
-		this(image.width, image.height);
+		this(image.getWidth(), image.getHeight());
 		image.blitOpaque(0, 0);
 	}
 

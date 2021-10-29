@@ -21,12 +21,12 @@ class JVMImage implements IImage<JVMComponent> {
 
     @Override
     public int getWidth(Window<JVMComponent> component) {
-        return image.getWidth(component.getComponent().getRealComponent());
+        return image.getWidth(null);
     }
 
     @Override
     public int getHeight(Window<JVMComponent> component) {
-        return image.getHeight(component.getComponent().getRealComponent());
+        return image.getHeight(null);
     }
 
     @Override

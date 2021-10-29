@@ -170,7 +170,7 @@ public class Draw3D {
 			try {
 				textures[textureId] = new IndexedTexture(archive, String.valueOf(textureId), 0);
 
-				if (lowmem && (textures[textureId].cropW == 128)) {
+				if (lowmem && (textures[textureId].getCropW() == 128)) {
 					textures[textureId].shrink();
 				} else {
 					textures[textureId].crop();
@@ -263,7 +263,7 @@ public class Draw3D {
 			}
 		} else {
 			// scale 64x64 textures up to 128x128
-			if (texture.width == 64) {
+			if (texture.getWidth() == 64) {
 				for (int y = 0; y < 128; y++) {
 					for (int x = 0; x < 128; x++) {
 						texels[x + (y << 7)] = palette[texture.pixels[(x >> 1) + ((y >> 1) << 6)]];

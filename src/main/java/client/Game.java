@@ -949,7 +949,7 @@ public class Game extends GameShell {
 				int left = 999;
 				int right = 0;
 				for (int x = 0; x < 34; x++) {
-					if (imageMapback.pixels[x + (y * imageMapback.width)] == 0) {
+					if (imageMapback.pixels[x + (y * imageMapback.getWidth())] == 0) {
 						if (left == 999) {
 							left = x;
 						}
@@ -969,7 +969,7 @@ public class Game extends GameShell {
 				int left = 999;
 				int right = 0;
 				for (int x = 25; x < 172; x++) {
-					if ((imageMapback.pixels[x + (y * imageMapback.width)] == 0) && ((x > 34) || (y > 34))) {
+					if ((imageMapback.pixels[x + (y * imageMapback.getWidth())] == 0) && ((x > 34) || (y > 34))) {
 						if (left == 999) {
 							left = x;
 						}
@@ -1781,7 +1781,7 @@ public class Game extends GameShell {
 	}
 
 	public void createMinimap(int plane) {
-			int[] pixels = imageMinimap.pixels;
+			int[] pixels = imageMinimap.getPixels();
 
 			imageMinimap.fill(0);
 			for (int z = 1; z < 103; z++) {
@@ -1790,10 +1790,10 @@ public class Game extends GameShell {
 				for (int x = 1; x < 103; x++) {
 
 					if ((planeTileFlags[plane][x][z] & 0x18) == 0) {
-						scene.drawMinimapTile(pixels, offset, imageMinimap.width, plane, x, z);
+						scene.drawMinimapTile(pixels, offset, imageMinimap.getWidth(), plane, x, z);
 					}
 					if ((plane < 3) && ((planeTileFlags[plane + 1][x][z] & 8) != 0)) {
-						scene.drawMinimapTile(pixels, offset, imageMinimap.width, plane + 1, x, z);
+						scene.drawMinimapTile(pixels, offset, imageMinimap.getWidth(), plane + 1, x, z);
 					}
 					offset += 4;
 				}
@@ -2649,8 +2649,8 @@ public class Game extends GameShell {
 		if (!lowmem) {
 			if (Draw3D.textureCycle[17] >= j) {
 				IndexedTexture image = Draw3D.textures[17];
-				int k = (image.width * image.height) - 1;
-				int j1 = image.width * delta * 2;
+				int k = (image.getWidth() * image.getHeight()) - 1;
+				int j1 = image.getWidth() * delta * 2;
 				byte[] abyte0 = image.pixels;
 				byte[] abyte3 = aByteArray912;
 				for (int i2 = 0; i2 <= k; i2++) {
@@ -2662,8 +2662,8 @@ public class Game extends GameShell {
 			}
 			if (Draw3D.textureCycle[24] >= j) {
 				IndexedTexture class30_sub2_sub1_sub2_1 = Draw3D.textures[24];
-				int l = (class30_sub2_sub1_sub2_1.width * class30_sub2_sub1_sub2_1.height) - 1;
-				int k1 = class30_sub2_sub1_sub2_1.width * delta * 2;
+				int l = (class30_sub2_sub1_sub2_1.getWidth() * class30_sub2_sub1_sub2_1.getHeight()) - 1;
+				int k1 = class30_sub2_sub1_sub2_1.getWidth() * delta * 2;
 				byte[] abyte1 = class30_sub2_sub1_sub2_1.pixels;
 				byte[] abyte4 = aByteArray912;
 				for (int j2 = 0; j2 <= l; j2++) {
@@ -2675,8 +2675,8 @@ public class Game extends GameShell {
 			}
 			if (Draw3D.textureCycle[34] >= j) {
 				IndexedTexture class30_sub2_sub1_sub2_2 = Draw3D.textures[34];
-				int i1 = (class30_sub2_sub1_sub2_2.width * class30_sub2_sub1_sub2_2.height) - 1;
-				int l1 = class30_sub2_sub1_sub2_2.width * delta * 2;
+				int i1 = (class30_sub2_sub1_sub2_2.getWidth() * class30_sub2_sub1_sub2_2.getHeight()) - 1;
+				int l1 = class30_sub2_sub1_sub2_2.getWidth() * delta * 2;
 				byte[] abyte2 = class30_sub2_sub1_sub2_2.pixels;
 				byte[] abyte5 = aByteArray912;
 				for (int k2 = 0; k2 <= i1; k2++) {
@@ -3169,15 +3169,15 @@ public class Game extends GameShell {
 			if (k1 > 0) {
 				k3 = i1;
 			}
-			int[] ai = imageMinimap.pixels;
+			int[] ai = imageMinimap.getPixels();
 			int k4 = 24624 + (l * 4) + ((103 - i) * 512 * 4);
 			int i5 = (k1 >> 14) & 0x7fff;
 			LocType type_2 = LocType.get(i5);
 			if (type_2.mapsceneIcon != -1) {
 				IndexedTexture class30_sub2_sub1_sub2_2 = imageMapscene[type_2.mapsceneIcon];
 				if (class30_sub2_sub1_sub2_2 != null) {
-					int i6 = ((type_2.width * 4) - class30_sub2_sub1_sub2_2.width) / 2;
-					int j6 = ((type_2.length * 4) - class30_sub2_sub1_sub2_2.height) / 2;
+					int i6 = ((type_2.width * 4) - class30_sub2_sub1_sub2_2.getWidth()) / 2;
+					int j6 = ((type_2.length * 4) - class30_sub2_sub1_sub2_2.getHeight()) / 2;
 					class30_sub2_sub1_sub2_2.draw(48 + (l * 4) + i6, 48 + ((104 - i - type_2.length) * 4) + j6);
 				}
 			} else {
@@ -3250,8 +3250,8 @@ public class Game extends GameShell {
 			if (type_1.mapsceneIcon != -1) {
 				IndexedTexture class30_sub2_sub1_sub2_1 = imageMapscene[type_1.mapsceneIcon];
 				if (class30_sub2_sub1_sub2_1 != null) {
-					int j5 = ((type_1.width * 4) - class30_sub2_sub1_sub2_1.width) / 2;
-					int k5 = ((type_1.length * 4) - class30_sub2_sub1_sub2_1.height) / 2;
+					int j5 = ((type_1.width * 4) - class30_sub2_sub1_sub2_1.getWidth()) / 2;
+					int k5 = ((type_1.length * 4) - class30_sub2_sub1_sub2_1.getHeight()) / 2;
 					class30_sub2_sub1_sub2_1.draw(48 + (l * 4) + j5, 48 + ((104 - i - type_1.length) * 4) + k5);
 				}
 			} else if (j3 == 9) {
@@ -3259,7 +3259,7 @@ public class Game extends GameShell {
 				if (k1 > 0) {
 					l4 = 0xee0000;
 				}
-				int[] ai1 = imageMinimap.pixels;
+				int[] ai1 = imageMinimap.getPixels();
 				int l5 = 24624 + (l * 4) + ((103 - i) * 512 * 4);
 				if ((l2 == 0) || (l2 == 2)) {
 					ai1[l5 + 1536] = l4;
@@ -3281,8 +3281,8 @@ public class Game extends GameShell {
 			if (type.mapsceneIcon != -1) {
 				IndexedTexture image = imageMapscene[type.mapsceneIcon];
 				if (image != null) {
-					int i4 = ((type.width * 4) - image.width) / 2;
-					int j4 = ((type.length * 4) - image.height) / 2;
+					int i4 = ((type.width * 4) - image.getWidth()) / 2;
+					int j4 = ((type.length * 4) - image.getHeight()) / 2;
 					image.draw(48 + (l * 4) + i4, 48 + ((104 - i - type.length) * 4) + j4);
 				}
 			}
@@ -3313,8 +3313,8 @@ public class Game extends GameShell {
 		imageFlamesLeft = RGBTexture.create(128, 265);
 		imageFlamesRight = RGBTexture.create(128, 265);
 
-		System.arraycopy(imageTitle0.pixels, 0, imageFlamesLeft.pixels, 0, 33920);
-		System.arraycopy(imageTitle1.pixels, 0, imageFlamesRight.pixels, 0, 33920);
+		System.arraycopy(imageTitle0.pixels, 0, imageFlamesLeft.getPixels(), 0, 33920);
+		System.arraycopy(imageTitle1.pixels, 0, imageFlamesRight.getPixels(), 0, 33920);
 
 		flameGradient0 = new int[256];
 
@@ -3496,12 +3496,12 @@ public class Game extends GameShell {
 		image.blitOpaque(-562, -171);
 
 		// Flips the title background horizontally
-		int[] tmp = new int[image.width];
-		for (int y = 0; y < image.height; y++) {
-			for (int x = 0; x < image.width; x++) {
-				tmp[x] = image.pixels[(image.width - x - 1) + (image.width * y)];
+		int[] tmp = new int[image.getWidth()];
+		for (int y = 0; y < image.getHeight(); y++) {
+			for (int x = 0; x < image.getWidth(); x++) {
+				tmp[x] = image.getPixels()[(image.getWidth() - x - 1) + (image.getWidth() * y)];
 			}
-			System.arraycopy(tmp, 0, image.pixels, image.width * y, image.width);
+			System.arraycopy(tmp, 0, image.getPixels(), image.getWidth() * y, image.getWidth());
 		}
 
 		imageTitle0.bind();
@@ -3533,7 +3533,7 @@ public class Game extends GameShell {
 
 		image = RGBTexture.create(archiveTitle, "logo", 0);
 		imageTitle2.bind();
-		image.draw(382 - (image.width / 2) - 128, 18);
+		image.draw(382 - (image.getWidth() / 2) - 128, 18);
 
 		System.gc();
 	}
@@ -7934,7 +7934,7 @@ public class Game extends GameShell {
 									}
 
 									// draw item amount
-									if ((itemIcon.cropW == 33) || (child.invSlotAmount[slot] != 1)) {
+									if ((itemIcon.getCropW() == 33) || (child.invSlotAmount[slot] != 1)) {
 										int amount = child.invSlotAmount[slot];
 										fontPlain11.drawString(formatObjAmount(amount), slotX + 1 + dx, slotY + 10 + dy, 0);
 										fontPlain11.drawString(formatObjAmount(amount), slotX + dx, slotY + 9 + dy, 0xffff00);
@@ -8167,11 +8167,11 @@ public class Game extends GameShell {
 
 		if (image != null) {
 			int offset = 0;
-			for (int y = 0; y < image.height; y++) {
-				for (int x = 0; x < image.width; x++) {
+			for (int y = 0; y < image.getHeight(); y++) {
+				for (int x = 0; x < image.getWidth(); x++) {
 					if (image.pixels[offset++] != 0) {
-						int dstX = x + 16 + image.cropX;
-						int dstY = y + 16 + image.cropY;
+						int dstX = x + 16 + image.getCropX();
+						int dstY = y + 16 + image.getCropY();
 						flameBuffer0[dstX + (dstY << 7)] = 0;
 					}
 				}
@@ -9326,7 +9326,7 @@ public class Game extends GameShell {
 			System.arraycopy(flameGradient0, 0, flameGradient, 0, 256);
 		}
 
-		System.arraycopy(imageFlamesLeft.pixels, 0, imageTitle0.pixels, 0, 33920);
+		System.arraycopy(imageFlamesLeft.getPixels(), 0, imageTitle0.pixels, 0, 33920);
 
 		int srcOffset = 0;
 		int dstOffset = 1152;
@@ -9362,7 +9362,7 @@ public class Game extends GameShell {
 		}
 
 		imageTitle0.draw(super.graphics, 0, 0);
-		System.arraycopy(imageFlamesRight.pixels, 0, imageTitle1.pixels, 0, 33920);
+		System.arraycopy(imageFlamesRight.getPixels(), 0, imageTitle1.pixels, 0, 33920);
 
 		srcOffset = 0;
 		dstOffset = 1176;
@@ -9995,9 +9995,9 @@ public class Game extends GameShell {
 		int x = ((dy * sinAngle) + (dx * cosAngle)) >> 16;
 		int y = ((dy * cosAngle) - (dx * sinAngle)) >> 16;
 		if (distance > 2500) {
-			image.drawMasked(imageMapback, ((94 + x) - (image.cropW / 2)) + 4, 83 - y - (image.cropH / 2) - 4);
+			image.drawMasked(imageMapback, ((94 + x) - (image.getCropW() / 2)) + 4, 83 - y - (image.getCropH() / 2) - 4);
 		} else {
-			image.draw(((94 + x) - (image.cropW / 2)) + 4, 83 - y - (image.cropH / 2) - 4);
+			image.draw(((94 + x) - (image.getCropW() / 2)) + 4, 83 - y - (image.getCropH() / 2) - 4);
 		}
 	}
 

@@ -11,26 +11,30 @@ import java.util.Arrays;
 
 public class RGBTexture extends AbstractRGBTexture {
 
-    public int[] pixels;
+    private int[] pixels;
 
     private RGBTexture(int width, int height) {
         pixels = new int[width * height];
-        this.width = cropW = width;
-        this.height = cropH = height;
-        cropX = cropY = 0;
+        this.setWidth(width);
+        this.setCropW(width);
+        this.setHeight(height);
+        this.setCropH(height);
+        this.setCropX(0);
+        this.setCropY(0);
     }
 
     private RGBTexture(byte[] data) {
         try {
             IImage<?> img = Platform.getDefault().createImage(data);
-            width = img.getWidth();
-            height = img.getHeight();
-            cropW = width;
-            cropH = height;
-            cropX = 0;
-            cropY = 0;
+            setWidth(img.getWidth());
+            setHeight(img.getHeight());
+            setCropW(getWidth());
+            setCropH(getHeight());
+            setCropX(0);
+            setCropY(0);
             pixels = img.getBufferAsIntegers();
         } catch (Exception _ex) {
+            _ex.printStackTrace();
             System.out.println("Error converting jpg");
         }
     }
@@ -39,8 +43,8 @@ public class RGBTexture extends AbstractRGBTexture {
         Buffer buffer = new Buffer(archive.read(file + ".dat"));
         Buffer buffer_1 = new Buffer(archive.read("index.dat"));
         buffer_1.position = buffer.get2U();
-        cropW = buffer_1.get2U();
-        cropH = buffer_1.get2U();
+        setCropW(buffer_1.get2U());
+        setCropH(buffer_1.get2U());
         int j = buffer_1.get1U();
         int[] ai = new int[j];
         for (int k = 0; k < (j - 1); k++) {
@@ -54,23 +58,23 @@ public class RGBTexture extends AbstractRGBTexture {
             buffer.position += buffer_1.get2U() * buffer_1.get2U();
             buffer_1.position++;
         }
-        cropX = buffer_1.get1U();
-        cropY = buffer_1.get1U();
-        width = buffer_1.get2U();
-        height = buffer_1.get2U();
+        setCropX(buffer_1.get1U());
+        setCropY(buffer_1.get1U());
+        setWidth(buffer_1.get2U());
+        setHeight(buffer_1.get2U());
         int layout = buffer_1.get1U();
-        int pixelLen = width * height;
+        int pixelLen = getWidth() * getHeight();
         pixels = new int[pixelLen];
         if (layout == 0) {
             for (int k1 = 0; k1 < pixelLen; k1++) {
-                pixels[k1] = ai[buffer.get1U()];
+                getPixels()[k1] = ai[buffer.get1U()];
             }
             return;
         }
         if (layout == 1) {
-            for (int l1 = 0; l1 < width; l1++) {
-                for (int i2 = 0; i2 < height; i2++) {
-                    pixels[l1 + (i2 * width)] = ai[buffer.get1U()];
+            for (int l1 = 0; l1 < getWidth(); l1++) {
+                for (int i2 = 0; i2 < getHeight(); i2++) {
+                    getPixels()[l1 + (i2 * getWidth())] = ai[buffer.get1U()];
                 }
             }
         }
@@ -212,12 +216,12 @@ public class RGBTexture extends AbstractRGBTexture {
     }
 
     public void bind() {
-        Draw2D.bind(pixels, width, height);
+        Draw2D.bind(getPixels(), getWidth(), getHeight());
     }
 
     public void translate(int r, int g, int b) {
-        for (int i = 0; i < pixels.length; i++) {
-            int rgb = pixels[i];
+        for (int i = 0; i < getPixels().length; i++) {
+            int rgb = getPixels()[i];
             if (rgb != 0) {
                 int red = (rgb >> 16) & 0xff;
                 red += r;
@@ -240,37 +244,37 @@ public class RGBTexture extends AbstractRGBTexture {
                 } else if (blue > 255) {
                     blue = 255;
                 }
-                pixels[i] = (red << 16) + (green << 8) + blue;
+                getPixels()[i] = (red << 16) + (green << 8) + blue;
             }
         }
     }
 
     public void crop() {
-        int[] pixels = new int[cropW * cropH];
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                pixels[((y + cropY) * cropW) + (x + cropX)] = this.pixels[(y * width) + x];
+        int[] pixels = new int[getCropW() * getCropH()];
+        for (int y = 0; y < getHeight(); y++) {
+            for (int x = 0; x < getWidth(); x++) {
+                pixels[((y + getCropY()) * getCropW()) + (x + getCropX())] = this.getPixels()[(y * getWidth()) + x];
             }
         }
         this.pixels = pixels;
-        width = cropW;
-        height = cropH;
-        cropX = 0;
-        cropY = 0;
+        setWidth(getCropW());
+        setHeight(getCropH());
+        setCropX(0);
+        setCropY(0);
     }
 
     @Override
     public void fill(int rgb) {
-        Arrays.fill(pixels, rgb);
+        Arrays.fill(getPixels(), rgb);
     }
 
     public void blitOpaque(int x, int y) {
-        x += cropX;
-        y += cropY;
+        x += getCropX();
+        y += getCropY();
         int dstOff = x + (y * Draw2D.width);
         int srcOff = 0;
-        int h = height;
-        int w = width;
+        int h = getHeight();
+        int w = getWidth();
         int dstStep = Draw2D.width - w;
         int srcStep = 0;
         if (y < Draw2D.top) {
@@ -299,17 +303,17 @@ public class RGBTexture extends AbstractRGBTexture {
             dstStep += trim;
         }
         if ((w > 0) && (h > 0)) {
-            copyPixels(dstOff, w, h, srcStep, srcOff, dstStep, pixels, Draw2D.pixels);
+            copyPixels(dstOff, w, h, srcStep, srcOff, dstStep, getPixels(), Draw2D.pixels);
         }
     }
 
     public void draw(int x, int y) {
-        x += cropX;
-        y += cropY;
+        x += getCropX();
+        y += getCropY();
         int dstOff = x + (y * Draw2D.width);
         int srcOff = 0;
-        int h = height;
-        int w = width;
+        int h = getHeight();
+        int w = getWidth();
         int dstStep = Draw2D.width - w;
         int srcStep = 0;
         if (y < Draw2D.top) {
@@ -338,17 +342,17 @@ public class RGBTexture extends AbstractRGBTexture {
             dstStep += trim;
         }
         if ((w > 0) && (h > 0)) {
-            copyPixels(Draw2D.pixels, pixels, srcOff, dstOff, w, h, dstStep, srcStep);
+            copyPixels(Draw2D.pixels, getPixels(), srcOff, dstOff, w, h, dstStep, srcStep);
         }
     }
 
     public void draw(int x, int y, int alpha) {
-        x += cropX;
-        y += cropY;
+        x += getCropX();
+        y += getCropY();
         int i1 = x + (y * Draw2D.width);
         int j1 = 0;
-        int k1 = height;
-        int w = width;
+        int k1 = getHeight();
+        int w = getWidth();
         int i2 = Draw2D.width - w;
         int j2 = 0;
         if (y < Draw2D.top) {
@@ -377,7 +381,7 @@ public class RGBTexture extends AbstractRGBTexture {
             i2 += i3;
         }
         if ((w > 0) && (k1 > 0)) {
-            copyPixelsAlpha(j1, w, Draw2D.pixels, pixels, j2, k1, i2, alpha, i1);
+            copyPixelsAlpha(j1, w, Draw2D.pixels, getPixels(), j2, k1, i2, alpha, i1);
         }
     }
 
@@ -398,7 +402,7 @@ public class RGBTexture extends AbstractRGBTexture {
                 int srcX = leftX + (cos * lineOffset);
                 int srcY = lefty - (sin * lineOffset);
                 for (x = -lineLengths[y]; x < 0; x++) {
-                    Draw2D.pixels[dstOff++] = pixels[(srcX >> 16) + ((srcY >> 16) * this.width)];
+                    Draw2D.pixels[dstOff++] = getPixels()[(srcX >> 16) + ((srcY >> 16) * this.getWidth())];
                     srcX += cos;
                     srcY -= sin;
                 }
@@ -427,7 +431,7 @@ public class RGBTexture extends AbstractRGBTexture {
                 int dstX = leftX;
                 int dstY = leftY;
                 for (x = -width; x < 0; x++) {
-                    int rgb = pixels[(dstX >> 16) + ((dstY >> 16) * this.width)];
+                    int rgb = getPixels()[(dstX >> 16) + ((dstY >> 16) * this.getWidth())];
                     if (rgb != 0) {
                         Draw2D.pixels[dstOff++] = rgb;
                     } else {
@@ -445,12 +449,12 @@ public class RGBTexture extends AbstractRGBTexture {
     }
 
     public void drawMasked(IndexedTexture mask, int x, int y) {
-        x += cropX;
-        y += cropY;
+        x += getCropX();
+        y += getCropY();
         int dstOff = x + (y * Draw2D.width);
         int srcOff = 0;
-        int h = height;
-        int w = width;
+        int h = getHeight();
+        int w = getWidth();
         int dstStep = Draw2D.width - w;
         int srcStep = 0;
         if (y < Draw2D.top) {
@@ -479,8 +483,11 @@ public class RGBTexture extends AbstractRGBTexture {
             dstStep += trim;
         }
         if ((w > 0) && (h > 0)) {
-            copyPixelsMasked(pixels, srcOff, srcStep, mask.pixels, w, h, Draw2D.pixels, dstOff, dstStep);
+            copyPixelsMasked(getPixels(), srcOff, srcStep, mask.pixels, w, h, Draw2D.pixels, dstOff, dstStep);
         }
     }
 
+    public int[] getPixels() {
+        return pixels;
+    }
 }

@@ -74,7 +74,7 @@ public class ObjType {
 		if (outlineColor == 0) {
 			RGBTexture icon = iconCache.get(id);
 
-			if ((icon != null) && (icon.cropH != amount) && (icon.cropH != -1)) {
+			if ((icon != null) && (icon.getCropH() != amount) && (icon.getCropH() != -1)) {
 				icon.unlink();
 				icon = null;
 			}
@@ -135,7 +135,7 @@ public class ObjType {
 
 		// set up drawing area
 		Draw3D.jagged = false;
-		Draw2D.bind(icon.pixels, 32, 32);
+		Draw2D.bind(icon.getPixels(), 32, 32);
 		Draw2D.fillRect(0, 0, 32, 32, 0);
 		Draw3D.init2D();
 
@@ -157,17 +157,17 @@ public class ObjType {
 		// define outline
 		for (int x = 31; x >= 0; x--) {
 			for (int y = 31; y >= 0; y--) {
-				if (icon.pixels[x + (y * 32)] != 0) {
+				if (icon.getPixels()[x + (y * 32)] != 0) {
 					continue;
 				}
-				if ((x > 0) && (icon.pixels[(x - 1) + (y * 32)] > 1)) {
-					icon.pixels[x + (y * 32)] = 1;
-				} else if ((y > 0) && (icon.pixels[x + ((y - 1) * 32)] > 1)) {
-					icon.pixels[x + (y * 32)] = 1;
-				} else if ((x < 31) && (icon.pixels[x + 1 + (y * 32)] > 1)) {
-					icon.pixels[x + (y * 32)] = 1;
-				} else if ((y < 31) && (icon.pixels[x + ((y + 1) * 32)] > 1)) {
-					icon.pixels[x + (y * 32)] = 1;
+				if ((x > 0) && (icon.getPixels()[(x - 1) + (y * 32)] > 1)) {
+					icon.getPixels()[x + (y * 32)] = 1;
+				} else if ((y > 0) && (icon.getPixels()[x + ((y - 1) * 32)] > 1)) {
+					icon.getPixels()[x + (y * 32)] = 1;
+				} else if ((x < 31) && (icon.getPixels()[x + 1 + (y * 32)] > 1)) {
+					icon.getPixels()[x + (y * 32)] = 1;
+				} else if ((y < 31) && (icon.getPixels()[x + ((y + 1) * 32)] > 1)) {
+					icon.getPixels()[x + (y * 32)] = 1;
 				}
 			}
 		}
@@ -176,15 +176,15 @@ public class ObjType {
 		if (outlineColor > 0) {
 			for (int x = 31; x >= 0; x--) {
 				for (int y = 31; y >= 0; y--) {
-					if (icon.pixels[x + (y * 32)] == 0) {
-						if ((x > 0) && (icon.pixels[(x - 1) + (y * 32)] == 1)) {
-							icon.pixels[x + (y * 32)] = outlineColor;
-						} else if ((y > 0) && (icon.pixels[x + ((y - 1) * 32)] == 1)) {
-							icon.pixels[x + (y * 32)] = outlineColor;
-						} else if ((x < 31) && (icon.pixels[x + 1 + (y * 32)] == 1)) {
-							icon.pixels[x + (y * 32)] = outlineColor;
-						} else if ((y < 31) && (icon.pixels[x + ((y + 1) * 32)] == 1)) {
-							icon.pixels[x + (y * 32)] = outlineColor;
+					if (icon.getPixels()[x + (y * 32)] == 0) {
+						if ((x > 0) && (icon.getPixels()[(x - 1) + (y * 32)] == 1)) {
+							icon.getPixels()[x + (y * 32)] = outlineColor;
+						} else if ((y > 0) && (icon.getPixels()[x + ((y - 1) * 32)] == 1)) {
+							icon.getPixels()[x + (y * 32)] = outlineColor;
+						} else if ((x < 31) && (icon.getPixels()[x + 1 + (y * 32)] == 1)) {
+							icon.getPixels()[x + (y * 32)] = outlineColor;
+						} else if ((y < 31) && (icon.getPixels()[x + ((y + 1) * 32)] == 1)) {
+							icon.getPixels()[x + (y * 32)] = outlineColor;
 						}
 					}
 				}
@@ -194,21 +194,21 @@ public class ObjType {
 		else if (outlineColor == 0) {
 			for (int x = 31; x >= 0; x--) {
 				for (int y = 31; y >= 0; y--) {
-					if ((icon.pixels[x + (y * 32)] == 0) && (x > 0) && (y > 0) && (icon.pixels[(x - 1) + ((y - 1) * 32)] > 0)) {
-						icon.pixels[x + (y * 32)] = 0x302020;
+					if ((icon.getPixels()[x + (y * 32)] == 0) && (x > 0) && (y > 0) && (icon.getPixels()[(x - 1) + ((y - 1) * 32)] > 0)) {
+						icon.getPixels()[x + (y * 32)] = 0x302020;
 					}
 				}
 			}
 		}
 
 		if (type.certificateId != -1) {
-			int w = originalIcon.cropW;
-			int h = originalIcon.cropH;
-			originalIcon.cropW = 32;
-			originalIcon.cropH = 32;
+			int w = originalIcon.getCropW();
+			int h = originalIcon.getCropH();
+			originalIcon.setCropW(32);
+			originalIcon.setCropH(32);
 			originalIcon.draw(0, 0);
-			originalIcon.cropW = w;
-			originalIcon.cropH = h;
+			originalIcon.setCropW(w);
+			originalIcon.setCropH(h);
 		}
 
 		if (outlineColor == 0) {
@@ -224,12 +224,12 @@ public class ObjType {
 		Draw3D.jagged = true;
 
 		if (type.stackable) {
-			icon.cropW = 33;
+			icon.setCropW(33);
 		} else {
-			icon.cropW = 32;
+			icon.setCropW(32);
 		}
 
-		icon.cropH = amount;
+		icon.setCropH(amount);
 		return icon;
 	}
 
