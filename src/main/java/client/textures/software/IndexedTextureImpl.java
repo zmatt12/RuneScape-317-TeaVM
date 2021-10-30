@@ -12,42 +12,10 @@ class IndexedTextureImpl extends IndexedTexture {
     private final int[] palette;
     private byte[] indices;
 
-    IndexedTextureImpl(FileArchive archive, String s, int i) throws IOException {
-        Buffer buffer = new Buffer(archive.read(s + ".dat"));
-        Buffer buffer_1 = new Buffer(archive.read("index.dat"));
-        buffer_1.position = buffer.get2U();
-        setCropW(buffer_1.get2U());
-        setCropH(buffer_1.get2U());
-        int count = buffer_1.get1U();
-        palette = new int[count];
-        for (int k = 0; k < (count - 1); k++) {
-            palette[k + 1] = buffer_1.get3();
-        }
-        for (int l = 0; l < i; l++) {
-            buffer_1.position += 2;
-            buffer.position += buffer_1.get2U() * buffer_1.get2U();
-            buffer_1.position++;
-        }
-        setCropX(buffer_1.get1U());
-        setCropY(buffer_1.get1U());
-        setWidth(buffer_1.get2U());
-        setHeight(buffer_1.get2U());
-        int i1 = buffer_1.get1U();
-        int j1 = getWidth() * getHeight();
-        indices = new byte[j1];
-        if (i1 == 0) {
-            for (int k1 = 0; k1 < j1; k1++) {
-                indices[k1] = buffer.get1();
-            }
-            return;
-        }
-        if (i1 == 1) {
-            for (int l1 = 0; l1 < getWidth(); l1++) {
-                for (int i2 = 0; i2 < getHeight(); i2++) {
-                    indices[l1 + (i2 * getWidth())] = buffer.get1();
-                }
-            }
-        }
+    IndexedTextureImpl (int[] palette, int width, int height){
+        setSize(width, height);
+        this.palette = palette;
+        this.indices = new byte[width * height];
     }
 
     @Override

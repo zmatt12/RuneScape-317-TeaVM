@@ -4,7 +4,6 @@ package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 
 import client.textures.IndexedTexture;
 import client.textures.Renderer;
-import client.textures.software.SoftwareRenderer;
 
 public class Draw3D {
 
@@ -170,7 +169,7 @@ public class Draw3D {
 
 		for (int textureId = 0; textureId < 50; textureId++) {
 			try {
-				textures[textureId] = Renderer.get().createIndexed(archive, String.valueOf(textureId), 0);
+				textures[textureId] = Renderer.get().decodeIndexed(archive, String.valueOf(textureId), 0);
 
 				if (lowmem && (textures[textureId].getCropW() == 128)) {
 					textures[textureId].shrink();

@@ -17,4 +17,6 @@ public abstract class RGBTexture extends BaseTexture {
     public abstract void drawRotated(int x, int y, int width, int height, int achorX, int anchorY, double radian, int zoom);
 
     public abstract void drawMasked(IndexedTexture mask, int x, int y);
+
+    public abstract void setPixels(int[] pixels);
 }

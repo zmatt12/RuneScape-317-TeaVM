@@ -662,7 +662,7 @@ public class Game extends GameShell {
 				collisions[plane] = new SceneCollisionMap(104, 104);
 			}
 
-			imageMinimap = Renderer.get().create(512, 512);
+			imageMinimap = Renderer.get().createRGB(512, 512);
 
 			FileArchive archiveVersionlist = loadArchive(5, "update list", "versionlist", archiveChecksum[5], 60);
 
@@ -826,85 +826,85 @@ public class Game extends GameShell {
 			}
 
 			showProgress(80, "Unpacking media");
-			imageInvback = Renderer.get().createIndexed(archiveMedia, "invback", 0);
-			imageChatback = Renderer.get().createIndexed(archiveMedia, "chatback", 0);
-			imageMapback = Renderer.get().createIndexed(archiveMedia, "mapback", 0);
-			imageBackbase1 = Renderer.get().createIndexed(archiveMedia, "backbase1", 0);
-			imageBackbase2 = Renderer.get().createIndexed(archiveMedia, "backbase2", 0);
-			imageBackhmid1 = Renderer.get().createIndexed(archiveMedia, "backhmid1", 0);
+			imageInvback = Renderer.get().decodeIndexed(archiveMedia, "invback", 0);
+			imageChatback = Renderer.get().decodeIndexed(archiveMedia, "chatback", 0);
+			imageMapback = Renderer.get().decodeIndexed(archiveMedia, "mapback", 0);
+			imageBackbase1 = Renderer.get().decodeIndexed(archiveMedia, "backbase1", 0);
+			imageBackbase2 = Renderer.get().decodeIndexed(archiveMedia, "backbase2", 0);
+			imageBackhmid1 = Renderer.get().decodeIndexed(archiveMedia, "backhmid1", 0);
 			for (int i = 0; i < 13; i++) {
-				imageSideicons[i] = Renderer.get().createIndexed(archiveMedia, "sideicons", i);
+				imageSideicons[i] = Renderer.get().decodeIndexed(archiveMedia, "sideicons", i);
 			}
-			imageCompass = Renderer.get().create(archiveMedia, "compass", 0);
-			imageMapedge = Renderer.get().create(archiveMedia, "mapedge", 0);
+			imageCompass = Renderer.get().decodeRGB(archiveMedia, "compass", 0);
+			imageMapedge = Renderer.get().decodeRGB(archiveMedia, "mapedge", 0);
 			imageMapedge.crop();
 			try {
 				for (int k3 = 0; k3 < 100; k3++) {
-					imageMapscene[k3] = Renderer.get().createIndexed(archiveMedia, "mapscene", k3);
+					imageMapscene[k3] = Renderer.get().decodeIndexed(archiveMedia, "mapscene", k3);
 				}
 			} catch (Exception ignored) {
 			}
 			try {
 				for (int l3 = 0; l3 < 100; l3++) {
-					imageMapfunction[l3] = Renderer.get().create(archiveMedia, "mapfunction", l3);
+					imageMapfunction[l3] = Renderer.get().decodeRGB(archiveMedia, "mapfunction", l3);
 				}
 			} catch (Exception ignored) {
 			}
 			try {
 				for (int i4 = 0; i4 < 20; i4++) {
-					imageHitmarks[i4] = Renderer.get().create(archiveMedia, "hitmarks", i4);
+					imageHitmarks[i4] = Renderer.get().decodeRGB(archiveMedia, "hitmarks", i4);
 				}
 			} catch (Exception ignored) {
 			}
 			try {
 				for (int j4 = 0; j4 < 20; j4++) {
-					imageHeadicons[j4] = Renderer.get().create(archiveMedia, "headicons", j4);
+					imageHeadicons[j4] = Renderer.get().decodeRGB(archiveMedia, "headicons", j4);
 				}
 			} catch (Exception ignored) {
 			}
-			imageMapmarker0 = Renderer.get().create(archiveMedia, "mapmarker", 0);
-			imageMapmarker1 = Renderer.get().create(archiveMedia, "mapmarker", 1);
+			imageMapmarker0 = Renderer.get().decodeRGB(archiveMedia, "mapmarker", 0);
+			imageMapmarker1 = Renderer.get().decodeRGB(archiveMedia, "mapmarker", 1);
 			for (int k4 = 0; k4 < 8; k4++) {
-				imageCrosses[k4] = Renderer.get().create(archiveMedia, "cross", k4);
+				imageCrosses[k4] = Renderer.get().decodeRGB(archiveMedia, "cross", k4);
 			}
-			imageMapdot0 = Renderer.get().create(archiveMedia, "mapdots", 0);
-			imageMapdot1 = Renderer.get().create(archiveMedia, "mapdots", 1);
-			imageMapdot2 = Renderer.get().create(archiveMedia, "mapdots", 2);
-			imageMapdot3 = Renderer.get().create(archiveMedia, "mapdots", 3);
-			imageMapdot4 = Renderer.get().create(archiveMedia, "mapdots", 4);
-			imageScrollbar0 = Renderer.get().createIndexed(archiveMedia, "scrollbar", 0);
-			imageScrollbar1 = Renderer.get().createIndexed(archiveMedia, "scrollbar", 1);
-			imageRedstone1 = Renderer.get().createIndexed(archiveMedia, "redstone1", 0);
-			imageRedstone2 = Renderer.get().createIndexed(archiveMedia, "redstone2", 0);
-			imageRedstone3 = Renderer.get().createIndexed(archiveMedia, "redstone3", 0);
-			imageRedstone1h = Renderer.get().createIndexed(archiveMedia, "redstone1", 0);
+			imageMapdot0 = Renderer.get().decodeRGB(archiveMedia, "mapdots", 0);
+			imageMapdot1 = Renderer.get().decodeRGB(archiveMedia, "mapdots", 1);
+			imageMapdot2 = Renderer.get().decodeRGB(archiveMedia, "mapdots", 2);
+			imageMapdot3 = Renderer.get().decodeRGB(archiveMedia, "mapdots", 3);
+			imageMapdot4 = Renderer.get().decodeRGB(archiveMedia, "mapdots", 4);
+			imageScrollbar0 = Renderer.get().decodeIndexed(archiveMedia, "scrollbar", 0);
+			imageScrollbar1 = Renderer.get().decodeIndexed(archiveMedia, "scrollbar", 1);
+			imageRedstone1 = Renderer.get().decodeIndexed(archiveMedia, "redstone1", 0);
+			imageRedstone2 = Renderer.get().decodeIndexed(archiveMedia, "redstone2", 0);
+			imageRedstone3 = Renderer.get().decodeIndexed(archiveMedia, "redstone3", 0);
+			imageRedstone1h = Renderer.get().decodeIndexed(archiveMedia, "redstone1", 0);
 			imageRedstone1h.flipH();
-			imageRedstone2h = Renderer.get().createIndexed(archiveMedia, "redstone2", 0);
+			imageRedstone2h = Renderer.get().decodeIndexed(archiveMedia, "redstone2", 0);
 			imageRedstone2h.flipH();
-			imageRedstone1v = Renderer.get().createIndexed(archiveMedia, "redstone1", 0);
+			imageRedstone1v = Renderer.get().decodeIndexed(archiveMedia, "redstone1", 0);
 			imageRedstone1v.flipV();
-			imageRedstone2v = Renderer.get().createIndexed(archiveMedia, "redstone2", 0);
+			imageRedstone2v = Renderer.get().decodeIndexed(archiveMedia, "redstone2", 0);
 			imageRedstone2v.flipV();
-			imageRedstone3v = Renderer.get().createIndexed(archiveMedia, "redstone3", 0);
+			imageRedstone3v = Renderer.get().decodeIndexed(archiveMedia, "redstone3", 0);
 			imageRedstone3v.flipV();
-			imageRedstone1hv = Renderer.get().createIndexed(archiveMedia, "redstone1", 0);
+			imageRedstone1hv = Renderer.get().decodeIndexed(archiveMedia, "redstone1", 0);
 			imageRedstone1hv.flipH();
 			imageRedstone1hv.flipV();
-			imageRedstone2hv = Renderer.get().createIndexed(archiveMedia, "redstone2", 0);
+			imageRedstone2hv = Renderer.get().decodeIndexed(archiveMedia, "redstone2", 0);
 			imageRedstone2hv.flipH();
 			imageRedstone2hv.flipV();
 			for (int i = 0; i < 2; i++) {
-				imageModIcons[i] = Renderer.get().createIndexed(archiveMedia, "mod_icons", i);
+				imageModIcons[i] = Renderer.get().decodeIndexed(archiveMedia, "mod_icons", i);
 			}
-			areaBackleft1 = new DrawArea(Renderer.get().create(archiveMedia, "backleft1", 0));
-			areaBackleft2 = new DrawArea(Renderer.get().create(archiveMedia, "backleft2", 0));
-			areaBackright1 = new DrawArea(Renderer.get().create(archiveMedia, "backright1", 0));
-			areaBackright2 = new DrawArea(Renderer.get().create(archiveMedia, "backright2", 0));
-			areaBacktop1 = new DrawArea(Renderer.get().create(archiveMedia, "backtop1", 0));
-			areaBackvmid1 = new DrawArea(Renderer.get().create(archiveMedia, "backvmid1", 0));
-			areaBackvmid2 = new DrawArea(Renderer.get().create(archiveMedia, "backvmid2", 0));
-			areaBackvmid3 = new DrawArea(Renderer.get().create(archiveMedia, "backvmid3", 0));
-			areaBackhmid2 = new DrawArea(Renderer.get().create(archiveMedia, "backhmid2", 0));
+			areaBackleft1 = new DrawArea(Renderer.get().decodeRGB(archiveMedia, "backleft1", 0));
+			areaBackleft2 = new DrawArea(Renderer.get().decodeRGB(archiveMedia, "backleft2", 0));
+			areaBackright1 = new DrawArea(Renderer.get().decodeRGB(archiveMedia, "backright1", 0));
+			areaBackright2 = new DrawArea(Renderer.get().decodeRGB(archiveMedia, "backright2", 0));
+			areaBacktop1 = new DrawArea(Renderer.get().decodeRGB(archiveMedia, "backtop1", 0));
+			areaBackvmid1 = new DrawArea(Renderer.get().decodeRGB(archiveMedia, "backvmid1", 0));
+			areaBackvmid2 = new DrawArea(Renderer.get().decodeRGB(archiveMedia, "backvmid2", 0));
+			areaBackvmid3 = new DrawArea(Renderer.get().decodeRGB(archiveMedia, "backvmid3", 0));
+			areaBackhmid2 = new DrawArea(Renderer.get().decodeRGB(archiveMedia, "backhmid2", 0));
 
 			int red = (int) (Math.random() * 21D) - 10;
 			int green = (int) (Math.random() * 21D) - 10;
@@ -1783,9 +1783,8 @@ public class Game extends GameShell {
 	}
 
 	public void createMinimap(int plane) {
-			int[] pixels = imageMinimap.getPixels();
-
 			imageMinimap.fill(0);
+			int[] pixels = imageMinimap.getPixels();
 			for (int z = 1; z < 103; z++) {
 				int offset = (52 + (48 * 512)) + ((103 - z) * 512 * 4);
 
@@ -1865,6 +1864,7 @@ public class Game extends GameShell {
 					activeMapFunctionCount++;
 				}
 			}
+			imageMinimap.setPixels(pixels);
 	}
 
 	public void method25(int x, int z) {
@@ -3171,7 +3171,7 @@ public class Game extends GameShell {
 			if (k1 > 0) {
 				k3 = i1;
 			}
-			int[] ai = imageMinimap.getPixels();
+			int[] pixels = imageMinimap.getPixels();
 			int k4 = 24624 + (l * 4) + ((103 - i) * 512 * 4);
 			int i5 = (k1 >> 14) & 0x7fff;
 			LocType type_2 = LocType.get(i5);
@@ -3185,62 +3185,63 @@ public class Game extends GameShell {
 			} else {
 				if ((i3 == 0) || (i3 == 2)) {
 					if (k2 == 0) {
-						ai[k4] = k3;
-						ai[k4 + 512] = k3;
-						ai[k4 + 1024] = k3;
-						ai[k4 + 1536] = k3;
+						pixels[k4] = k3;
+						pixels[k4 + 512] = k3;
+						pixels[k4 + 1024] = k3;
+						pixels[k4 + 1536] = k3;
 					} else if (k2 == 1) {
-						ai[k4] = k3;
-						ai[k4 + 1] = k3;
-						ai[k4 + 2] = k3;
-						ai[k4 + 3] = k3;
+						pixels[k4] = k3;
+						pixels[k4 + 1] = k3;
+						pixels[k4 + 2] = k3;
+						pixels[k4 + 3] = k3;
 					} else if (k2 == 2) {
-						ai[k4 + 3] = k3;
-						ai[k4 + 3 + 512] = k3;
-						ai[k4 + 3 + 1024] = k3;
-						ai[k4 + 3 + 1536] = k3;
+						pixels[k4 + 3] = k3;
+						pixels[k4 + 3 + 512] = k3;
+						pixels[k4 + 3 + 1024] = k3;
+						pixels[k4 + 3 + 1536] = k3;
 					} else if (k2 == 3) {
-						ai[k4 + 1536] = k3;
-						ai[k4 + 1536 + 1] = k3;
-						ai[k4 + 1536 + 2] = k3;
-						ai[k4 + 1536 + 3] = k3;
+						pixels[k4 + 1536] = k3;
+						pixels[k4 + 1536 + 1] = k3;
+						pixels[k4 + 1536 + 2] = k3;
+						pixels[k4 + 1536 + 3] = k3;
 					}
 				}
 				if (i3 == 3) {
 					if (k2 == 0) {
-						ai[k4] = k3;
+						pixels[k4] = k3;
 					} else if (k2 == 1) {
-						ai[k4 + 3] = k3;
+						pixels[k4 + 3] = k3;
 					} else if (k2 == 2) {
-						ai[k4 + 3 + 1536] = k3;
+						pixels[k4 + 3 + 1536] = k3;
 					} else if (k2 == 3) {
-						ai[k4 + 1536] = k3;
+						pixels[k4 + 1536] = k3;
 					}
 				}
 				if (i3 == 2) {
 					if (k2 == 3) {
-						ai[k4] = k3;
-						ai[k4 + 512] = k3;
-						ai[k4 + 1024] = k3;
-						ai[k4 + 1536] = k3;
+						pixels[k4] = k3;
+						pixels[k4 + 512] = k3;
+						pixels[k4 + 1024] = k3;
+						pixels[k4 + 1536] = k3;
 					} else if (k2 == 0) {
-						ai[k4] = k3;
-						ai[k4 + 1] = k3;
-						ai[k4 + 2] = k3;
-						ai[k4 + 3] = k3;
+						pixels[k4] = k3;
+						pixels[k4 + 1] = k3;
+						pixels[k4 + 2] = k3;
+						pixels[k4 + 3] = k3;
 					} else if (k2 == 1) {
-						ai[k4 + 3] = k3;
-						ai[k4 + 3 + 512] = k3;
-						ai[k4 + 3 + 1024] = k3;
-						ai[k4 + 3 + 1536] = k3;
+						pixels[k4 + 3] = k3;
+						pixels[k4 + 3 + 512] = k3;
+						pixels[k4 + 3 + 1024] = k3;
+						pixels[k4 + 3 + 1536] = k3;
 					} else if (k2 == 2) {
-						ai[k4 + 1536] = k3;
-						ai[k4 + 1536 + 1] = k3;
-						ai[k4 + 1536 + 2] = k3;
-						ai[k4 + 1536 + 3] = k3;
+						pixels[k4 + 1536] = k3;
+						pixels[k4 + 1536 + 1] = k3;
+						pixels[k4 + 1536 + 2] = k3;
+						pixels[k4 + 1536 + 3] = k3;
 					}
 				}
 			}
+			imageMinimap.setPixels(pixels);
 		}
 		k1 = scene.getLocBitset(j1, l, i);
 		if (k1 != 0) {
@@ -3261,19 +3262,20 @@ public class Game extends GameShell {
 				if (k1 > 0) {
 					l4 = 0xee0000;
 				}
-				int[] ai1 = imageMinimap.getPixels();
+				int[] pixels = imageMinimap.getPixels();
 				int l5 = 24624 + (l * 4) + ((103 - i) * 512 * 4);
 				if ((l2 == 0) || (l2 == 2)) {
-					ai1[l5 + 1536] = l4;
-					ai1[l5 + 1024 + 1] = l4;
-					ai1[l5 + 512 + 2] = l4;
-					ai1[l5 + 3] = l4;
+					pixels[l5 + 1536] = l4;
+					pixels[l5 + 1024 + 1] = l4;
+					pixels[l5 + 512 + 2] = l4;
+					pixels[l5 + 3] = l4;
 				} else {
-					ai1[l5] = l4;
-					ai1[l5 + 512 + 1] = l4;
-					ai1[l5 + 1024 + 2] = l4;
-					ai1[l5 + 1536 + 3] = l4;
+					pixels[l5] = l4;
+					pixels[l5 + 512 + 1] = l4;
+					pixels[l5 + 1024 + 2] = l4;
+					pixels[l5 + 1536 + 3] = l4;
 				}
+				imageMinimap.setPixels(pixels);
 			}
 		}
 		k1 = scene.getGroundDecorationBitset(j1, l, i);
@@ -3292,8 +3294,8 @@ public class Game extends GameShell {
 	}
 
 	public void createTitleImages() throws IOException {
-		imageTitlebox = Renderer.get().createIndexed(archiveTitle, "titlebox", 0);
-		imageTitlebutton = Renderer.get().createIndexed(archiveTitle, "titlebutton", 0);
+		imageTitlebox = Renderer.get().decodeIndexed(archiveTitle, "titlebox", 0);
+		imageTitlebutton = Renderer.get().decodeIndexed(archiveTitle, "titlebutton", 0);
 		imageRunes = new IndexedTexture[12];
 		int icon = 0;
 
@@ -3304,19 +3306,22 @@ public class Game extends GameShell {
 
 		if (icon == 0) {
 			for (int i = 0; i < 12; i++) {
-				imageRunes[i] = Renderer.get().createIndexed(archiveTitle, "runes", i);
+				imageRunes[i] = Renderer.get().decodeIndexed(archiveTitle, "runes", i);
 			}
 		} else {
 			for (int i = 0; i < 12; i++) {
-				imageRunes[i] = Renderer.get().createIndexed(archiveTitle, "runes", 12 + (i & 3));
+				imageRunes[i] = Renderer.get().decodeIndexed(archiveTitle, "runes", 12 + (i & 3));
 			}
 		}
 
-		imageFlamesLeft = Renderer.get().create(128, 265);
-		imageFlamesRight = Renderer.get().create(128, 265);
-
-		System.arraycopy(imageTitle0.pixels, 0, imageFlamesLeft.getPixels(), 0, 33920);
-		System.arraycopy(imageTitle1.pixels, 0, imageFlamesRight.getPixels(), 0, 33920);
+		imageFlamesLeft = Renderer.get().createRGB(128, 265);
+		imageFlamesRight = Renderer.get().createRGB(128, 265);
+		int[] left = imageFlamesLeft.getPixels();
+		int[] right = imageFlamesRight.getPixels();
+		System.arraycopy(imageTitle0.pixels, 0, left, 0, 33920);
+		System.arraycopy(imageTitle1.pixels, 0, right, 0, 33920);
+		imageFlamesLeft.setPixels(left);
+		imageFlamesRight.setPixels(right);
 
 		flameGradient0 = new int[256];
 
@@ -3468,7 +3473,7 @@ public class Game extends GameShell {
 	}
 
 	public void createTitleBackground() throws IOException {
-		RGBTexture image = Renderer.get().create(archiveTitle.read("title.dat"));
+		RGBTexture image = Renderer.get().decodeRGB(archiveTitle.read("title.dat"));
 
 		imageTitle0.bind();
 		image.blitOpaque(0, 0);
@@ -3506,6 +3511,7 @@ public class Game extends GameShell {
 			}
 			System.arraycopy(tmp, 0, pixels, image.getWidth() * y, image.getWidth());
 		}
+		image.setPixels(pixels);
 
 		imageTitle0.bind();
 		image.blitOpaque(382, 0);
@@ -3534,7 +3540,7 @@ public class Game extends GameShell {
 		imageTitle8.bind();
 		image.blitOpaque(-180, -171);
 
-		image = Renderer.get().create(archiveTitle, "logo", 0);
+		image = Renderer.get().decodeRGB(archiveTitle, "logo", 0);
 		imageTitle2.bind();
 		image.draw(382 - (image.getWidth() / 2) - 128, 18);
 

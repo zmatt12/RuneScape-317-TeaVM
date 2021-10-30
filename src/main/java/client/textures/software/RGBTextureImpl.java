@@ -17,68 +17,19 @@ class RGBTextureImpl extends RGBTexture {
 
     RGBTextureImpl(int width, int height) {
         pixels = new int[width * height];
-        this.setWidth(width);
-        this.setCropW(width);
-        this.setHeight(height);
-        this.setCropH(height);
-        this.setCropX(0);
-        this.setCropY(0);
+        setSize(width, height);
+        setCrop(0, 0, width, height);
     }
 
     RGBTextureImpl(byte[] data) {
         try {
             IImage<?> img = Platform.getDefault().createImage(data);
-            setWidth(img.getWidth());
-            setHeight(img.getHeight());
-            setCropW(getWidth());
-            setCropH(getHeight());
-            setCropX(0);
-            setCropY(0);
+            setSize(img.getWidth(), img.getHeight());
+            setCrop(0, 0, getWidth(), getHeight());
             pixels = img.getBufferAsIntegers();
         } catch (Exception _ex) {
             _ex.printStackTrace();
             System.out.println("Error converting jpg");
-        }
-    }
-
-    RGBTextureImpl(FileArchive archive, String file, int index) throws IOException {
-        Buffer buffer = new Buffer(archive.read(file + ".dat"));
-        Buffer buffer_1 = new Buffer(archive.read("index.dat"));
-        buffer_1.position = buffer.get2U();
-        setCropW(buffer_1.get2U());
-        setCropH(buffer_1.get2U());
-        int j = buffer_1.get1U();
-        int[] ai = new int[j];
-        for (int k = 0; k < (j - 1); k++) {
-            ai[k + 1] = buffer_1.get3();
-            if (ai[k + 1] == 0) {
-                ai[k + 1] = 1;
-            }
-        }
-        for (int l = 0; l < index; l++) {
-            buffer_1.position += 2;
-            buffer.position += buffer_1.get2U() * buffer_1.get2U();
-            buffer_1.position++;
-        }
-        setCropX(buffer_1.get1U());
-        setCropY(buffer_1.get1U());
-        setWidth(buffer_1.get2U());
-        setHeight(buffer_1.get2U());
-        int layout = buffer_1.get1U();
-        int pixelLen = getWidth() * getHeight();
-        pixels = new int[pixelLen];
-        if (layout == 0) {
-            for (int k1 = 0; k1 < pixelLen; k1++) {
-                pixels[k1] = ai[buffer.get1U()];
-            }
-            return;
-        }
-        if (layout == 1) {
-            for (int l1 = 0; l1 < getWidth(); l1++) {
-                for (int i2 = 0; i2 < getHeight(); i2++) {
-                    pixels[l1 + (i2 * getWidth())] = ai[buffer.get1U()];
-                }
-            }
         }
     }
 
@@ -484,6 +435,11 @@ class RGBTextureImpl extends RGBTexture {
         if ((w > 0) && (h > 0)) {
             copyPixelsMasked(pixels, srcOff, srcStep, mask.getIndices(), w, h, Draw2D.pixels, dstOff, dstStep);
         }
+    }
+
+    @Override
+    public void setPixels(int[] pixels) {
+        this.pixels = pixels;
     }
 
     @Override

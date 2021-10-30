@@ -33,6 +33,11 @@ public abstract class BaseTexture extends DoublyLinkedList.Node {
         this.height = height;
     }
 
+    public void setSize(int width, int height){
+        this.width = width;
+        this.height = height;
+    }
+
     public int getCropX() {
         return cropX;
     }
@@ -63,5 +68,12 @@ public abstract class BaseTexture extends DoublyLinkedList.Node {
 
     public void setCropH(int cropH) {
         this.cropH = cropH;
+    }
+
+    public void setCrop(int x, int y, int width, int height){
+        this.cropX = x;
+        this.cropY = y;
+        this.cropW = width;
+        this.cropH = height;
     }
 }
