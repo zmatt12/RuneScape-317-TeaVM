@@ -22,6 +22,10 @@ public class JSGraphicsGL implements IGraphics {
     private WebGLProgram draw_img;
     private WebGLBuffer rect_buffer, indBuf;
 
+    private WebGLBuffer imagePositionBuffer, imageCoordBuffer;
+    private int positionLocation, texcoordLocation;
+    private WebGLUniformLocation imageTexLocation, imageMatrixLocation;
+
     public JSGraphicsGL(HTMLCanvasElement canvas, WebGLRenderingContext context) {
         this.canvas = canvas;
         this.gl = context;
@@ -34,6 +38,42 @@ public class JSGraphicsGL implements IGraphics {
 
         rect_buffer = gl.createBuffer();
         indBuf = gl.createBuffer();
+
+        imagePositionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, imagePositionBuffer);
+        Float32Array texturePosition = Float32Array.create(12);
+        texturePosition.set(new float[]{
+                0, 0,
+                0, 1,
+                1, 0,
+                1, 0,
+                0, 1,
+                1, 1,
+        });
+        gl.bufferData(gl.ARRAY_BUFFER, texturePosition, gl.STATIC_DRAW);
+        imageCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, imageCoordBuffer);
+
+        // Put texcoords in the buffer
+        float[] texcoords = new float[]{
+                0, 0,
+                0, 1,
+                1, 0,
+                1, 0,
+                0, 1,
+                1, 1
+        };
+        Float32Array texCoords = Float32Array.create(12);
+        texCoords.set(texcoords);
+        gl.bufferData(gl.ARRAY_BUFFER, texCoords, gl.STATIC_DRAW);
+
+        // look up where the vertex data needs to go.
+        positionLocation = gl.getAttribLocation(draw_img, "a_position");
+        texcoordLocation = gl.getAttribLocation(draw_img, "a_texcoord");
+
+        // lookup uniforms
+        imageMatrixLocation = gl.getUniformLocation(draw_img, "u_matrix");
+        imageTexLocation = gl.getUniformLocation(draw_img, "u_texture");
     }
 
     @Override
@@ -126,54 +166,14 @@ public class JSGraphicsGL implements IGraphics {
 
         gl.useProgram(draw_img);
 
-        // look up where the vertex data needs to go.
-        int positionLocation = gl.getAttribLocation(draw_img, "a_position");
-        int texcoordLocation = gl.getAttribLocation(draw_img, "a_texcoord");
-
-        // lookup uniforms
-        WebGLUniformLocation matrixLocation = gl.getUniformLocation(draw_img, "u_matrix");
-        WebGLUniformLocation textureLocation = gl.getUniformLocation(draw_img, "u_texture");
-
-        // Create a buffer.
-        WebGLBuffer positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        // Put a unit quad in the buffer
-        float[] positions = {
-                0, 0,
-                0, 1,
-                1, 0,
-                1, 0,
-                0, 1,
-                1, 1,
-        };
-        Float32Array arr = Float32Array.create(12);
-        arr.set(positions);
-        gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
-
-        WebGLBuffer texcoordBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
-
-        // Put texcoords in the buffer
-        float[] texcoords = new float[]{
-                0, 0,
-                0, 1,
-                1, 0,
-                1, 0,
-                0, 1,
-                1, 1
-        };
-        arr = Float32Array.create(12);
-        arr.set(texcoords);
-        gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
-
         gl.bindTexture(gl.TEXTURE_2D, texture);
 
-
         // Setup the attributes to pull data from our buffers
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, imagePositionBuffer);
         gl.enableVertexAttribArray(positionLocation);
         gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-        gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, imageCoordBuffer);
         gl.enableVertexAttribArray(texcoordLocation);
         gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
         // this matrix will convert from pixels to clip space
@@ -186,10 +186,10 @@ public class JSGraphicsGL implements IGraphics {
         // from 1 unit to texWidth, texHeight units
         matrix = m4.scale(matrix, img.getWidth(), img.getHeight(), 1);
         // Set the matrix.
-        gl.uniformMatrix4fv(matrixLocation, false, matrix);
+        gl.uniformMatrix4fv(imageMatrixLocation, false, matrix);
 
         // Tell the shader to get the texture from texture unit 0
-        gl.uniform1i(textureLocation, 0);
+        gl.uniform1i(imageTexLocation, 0);
 
         // draw the quad (2 triangles, 6 vertices)
         gl.drawArrays(gl.TRIANGLES, 0, 6);
