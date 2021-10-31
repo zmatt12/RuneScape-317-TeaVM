@@ -16,17 +16,17 @@ public final class Color {
 
     public Color(int r, int g, int b, int a) {
         this.colorspace = 255;
-        this.red = r / colorspace;
-        this.green = g / colorspace;
-        this.blue = b / colorspace;
-        this.alpha = a / colorspace;
+        this.red = r / colorspace + 0.5f;
+        this.green = g / colorspace + 0.5f;
+        this.blue = b / colorspace + 0.5f;
+        this.alpha = a / colorspace + 0.5f;
     }
 
     public Color(int rgb){
         this.colorspace = 127;
-        this.red = ((rgb >> 16) & 0x7F ) / colorspace;
-        this.green = ((rgb >> 8) & 0x7F) / colorspace;
-        this.blue = (rgb & 0x7F ) / colorspace;
+        this.red = ((rgb >> 16) & 0x7F ) / colorspace + 0.5f;
+        this.green = ((rgb >> 8) & 0x7F) / colorspace + 0.5f;
+        this.blue = (rgb & 0x7F ) / colorspace + 0.5f;
         this.alpha = 1.0f;
     }
 
