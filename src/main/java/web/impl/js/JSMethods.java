@@ -5,6 +5,7 @@ import client.ObjStackEntity;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.canvas.CanvasRenderingContext2D;
+import org.teavm.jso.canvas.ImageData;
 import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLElement;
@@ -65,6 +66,6 @@ public final class JSMethods {
     @JSBody(params = { "buffer"}, script = "return new Int32Array(buffer);")
     public static native int[] intFromBuffer(ArrayBuffer buffer);
 
-    @JSBody(params = { "buffer"}, script = "return new Uint8ClampedArray(buffer);")
-    public static native byte[] bytesFromBuffer(ArrayBuffer buffer);
+    @JSBody(params = {"width", "height"}, script = "return new ImageData(width, height);")
+    public static native ImageData createImageData(int width, int height);
 }

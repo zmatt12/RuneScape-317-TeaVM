@@ -13,16 +13,23 @@ import web.impl.jvm.impl.JVMComponent;
 
 public class JSImage implements IImage<JVMComponent> {
 
-    private final ImageData data;
-    private final int[] pixels;
-    private final DataView view;
+    private final ImageData data; // the data we are rendering (RGBA)
+    private final int[] pixels; // the pixels that the game expects to be in RGB
+    private final DataView view; // used with the data to set the correct values
     private WebGLTexture texture;
 
     public JSImage(ImageData data) {
         this.data = data;
-        this.view = DataView.create(data.getData().getBuffer());
+        this.view = DataView.create(data.getData());
         this.pixels = new int[data.getData().getByteLength() / 4];
         fetchPixels();
+    }
+
+    public JSImage(int[] pixels, int width, int height){
+        this.data = JSMethods.createImageData(width, height);
+        this.view = DataView.create(data.getData());
+        this.pixels = pixels;
+        //don't need to fetch the pixel values, as they are provided by the game
     }
 
     public ImageData getData() {
@@ -47,8 +54,7 @@ public class JSImage implements IImage<JVMComponent> {
     private void fetchPixels() {
         //convert to RGB for the client
         for (int i = 0; i < pixels.length; i++) {
-            int pixel = (view.getInt32(i * 4) >>> 8);
-            pixels[i] = pixel;
+            pixels[i] = (view.getInt32(i * 4) >>> 8);
         }
     }
 

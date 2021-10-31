@@ -122,9 +122,7 @@ public final class JSPlatform extends Platform {
 
     @Override
     public IImage<?> createImage(int width, int height, int[] pixels) {
-        //TODO implement
-        System.err.println("TODO: Have an image backed by the provided pixels");
-        throw new UnsupportedOperationException("Unimplemented");
+        return new JSImage(pixels, width, height);
     }
 
     @Override
