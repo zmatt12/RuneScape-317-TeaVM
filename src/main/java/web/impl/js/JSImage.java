@@ -20,14 +20,14 @@ public class JSImage implements IImage<JVMComponent> {
 
     public JSImage(ImageData data) {
         this.data = data;
-        this.view = DataView.create(data.getData());
+        this.view = DataView.create(data.getData().getBuffer());
         this.pixels = new int[data.getData().getByteLength() / 4];
         fetchPixels();
     }
 
     public JSImage(int[] pixels, int width, int height){
         this.data = JSMethods.createImageData(width, height);
-        this.view = DataView.create(data.getData());
+        this.view = DataView.create(data.getData().getBuffer());
         this.pixels = pixels;
         //don't need to fetch the pixel values, as they are provided by the game
     }
@@ -91,7 +91,7 @@ public class JSImage implements IImage<JVMComponent> {
                     getWidth(),
                     getHeight(),
                     0, // border
-                    gl.RGBA, //srcFormat (not actually RGBA, but we'll swap that in the shader)
+                    gl.RGBA, //srcFormat
                     gl.UNSIGNED_BYTE, // srcType
                     data.getData() // pixels
                     );
