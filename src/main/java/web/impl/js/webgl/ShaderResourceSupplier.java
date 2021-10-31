@@ -2,6 +2,7 @@ package web.impl.js.webgl;
 
 import org.teavm.classlib.ResourceSupplier;
 import org.teavm.classlib.ResourceSupplierContext;
+import web.util.WebGL;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class ShaderResourceSupplier implements ResourceSupplier {
 
-    public static final String[] RESOURCE_DIRS = { JSGraphicsGL.SHADERS_DIR};
+    public static final String[] RESOURCE_DIRS = { WebGL.SHADERS_DIR };
 
     @Override
     public String[] supplyResources(ResourceSupplierContext context) {

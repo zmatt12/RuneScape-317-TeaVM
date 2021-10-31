@@ -9,12 +9,9 @@ import web.IGraphics;
 import web.IImage;
 import web.impl.js.JSImage;
 import web.util.Color;
-
-import java.io.*;
+import web.util.WebGL;
 
 public class JSGraphicsGL implements IGraphics {
-
-    public static final String SHADERS_DIR = "shaders/";
 
     private final HTMLCanvasElement canvas;
     private final WebGLRenderingContext gl;
@@ -34,64 +31,11 @@ public class JSGraphicsGL implements IGraphics {
     }
 
     private void init(){
-        fill_rect = loadAndCompile("rect_fill", gl);
-        draw_img = loadAndCompile("draw_img", gl);
+        fill_rect = WebGL.loadAndCompile(gl, "rect_fill");
+        draw_img = WebGL.loadAndCompile(gl, "draw_img");
 
         rect_buffer = gl.createBuffer();
         indBuf = gl.createBuffer();
-    }
-
-    private WebGLProgram loadAndCompile(String name, WebGLRenderingContext gl){
-        WebGLShader vertex = null;
-        WebGLShader fragment = null;
-        try{
-            vertex =  createAndCompile(gl.VERTEX_SHADER, getShaderFromResources(name + ".vert"));
-        } catch (FileNotFoundException ignored) {
-
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
-        try{
-            fragment =  createAndCompile(gl.FRAGMENT_SHADER, getShaderFromResources(name + ".frag"));
-        } catch (FileNotFoundException ignored) {
-
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        WebGLProgram program = gl.createProgram();
-
-        if(fragment != null){
-            gl.attachShader(program, fragment);
-        }
-        if(vertex != null){
-            gl.attachShader(program, vertex);
-        }
-        gl.linkProgram(program);
-        return program;
-    }
-
-    private WebGLShader createAndCompile(int type, String source){
-        WebGLShader f_shader = gl.createShader(type);
-        gl.shaderSource(f_shader, source);
-        gl.compileShader(f_shader);
-        return f_shader;
-    }
-
-    private String getShaderFromResources(String name) throws IOException {
-        String file = SHADERS_DIR + name;
-        ClassLoader loader = ClassLoader.getSystemClassLoader();
-        InputStream in = loader.getResourceAsStream(file);
-        if(in == null){
-            throw new FileNotFoundException(file);
-        }
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while((line = br.readLine()) != null){
-            sb.append(line).append('\n');
-        }
-        return sb.toString();
     }
 
     @Override
