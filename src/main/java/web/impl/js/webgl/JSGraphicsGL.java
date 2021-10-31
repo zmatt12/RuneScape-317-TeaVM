@@ -15,14 +15,12 @@ public class JSGraphicsGL implements IGraphics {
 
     private final HTMLCanvasElement canvas;
     private final WebGLRenderingContext gl;
+    private final Float32Array arr = Float32Array.create(12);
+    private final Uint16Array indices = Uint16Array.create(4);
     private float[] color = Color.black.asFloatArray();
     private WebGLProgram fill_rect;
     private WebGLProgram draw_img;
-
     private WebGLBuffer rect_buffer, indBuf;
-
-    private final Float32Array arr = Float32Array.create(12);
-    private final Uint16Array indices = Uint16Array.create(4);
 
     public JSGraphicsGL(HTMLCanvasElement canvas, WebGLRenderingContext context) {
         this.canvas = canvas;
@@ -30,7 +28,7 @@ public class JSGraphicsGL implements IGraphics {
         init();
     }
 
-    private void init(){
+    private void init() {
         fill_rect = WebGL.loadAndCompile(gl, "rect_fill");
         draw_img = WebGL.loadAndCompile(gl, "draw_img");
 
@@ -53,16 +51,16 @@ public class JSGraphicsGL implements IGraphics {
 
         float startX = x / canvasWidth;
         float startY = (y / canvasHeight);
-        float endX =  (x + width) / canvasWidth;
-        float endY =  ((y + height) / canvasHeight);
+        float endX = (x + width) / canvasWidth;
+        float endY = ((y + height) / canvasHeight);
 
         arr.set(new float[]{
                 startX, startY,
                 startX, endY,
-                endX,startY, // Triangle 1
+                endX, startY, // Triangle 1
                 endX, startY,
-                startX,endY,
-                endX,endY // Triangle 2
+                startX, endY,
+                endX, endY // Triangle 2
         });
 
         WebGLBuffer vbuffer = gl.createBuffer();
@@ -89,13 +87,13 @@ public class JSGraphicsGL implements IGraphics {
 
         float startX = x / canvasWidth;
         float startY = (y / canvasHeight);
-        float endX =  (x + width) / canvasWidth;
-        float endY =  ((y + height) / canvasHeight);
+        float endX = (x + width) / canvasWidth;
+        float endY = ((y + height) / canvasHeight);
 
         arr.set(new float[]{
                 startX, startY,
                 endX, startY,
-                endX,endY,
+                endX, endY,
                 startX, endY
         });
         gl.useProgram(fill_rect);
@@ -123,78 +121,78 @@ public class JSGraphicsGL implements IGraphics {
 
     @Override
     public void drawImage(IImage _img, int x, int y, Object observer) {
-            JSImage img = (JSImage) _img;
-            WebGLTexture texture = img.getTexture(gl);
+        JSImage img = (JSImage) _img;
+        WebGLTexture texture = img.getTexture(gl);
 
         gl.useProgram(draw_img);
 
-            // look up where the vertex data needs to go.
-            int positionLocation = gl.getAttribLocation(draw_img, "a_position");
-            int texcoordLocation = gl.getAttribLocation(draw_img, "a_texcoord");
+        // look up where the vertex data needs to go.
+        int positionLocation = gl.getAttribLocation(draw_img, "a_position");
+        int texcoordLocation = gl.getAttribLocation(draw_img, "a_texcoord");
 
-            // lookup uniforms
-            WebGLUniformLocation matrixLocation = gl.getUniformLocation(draw_img, "u_matrix");
-            WebGLUniformLocation textureLocation = gl.getUniformLocation(draw_img, "u_texture");
+        // lookup uniforms
+        WebGLUniformLocation matrixLocation = gl.getUniformLocation(draw_img, "u_matrix");
+        WebGLUniformLocation textureLocation = gl.getUniformLocation(draw_img, "u_texture");
 
-            // Create a buffer.
-            WebGLBuffer positionBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-            // Put a unit quad in the buffer
-            float[] positions = {
-                    0, 0,
-                    0, 1,
-                    1, 0,
-                    1, 0,
-                    0, 1,
-                    1, 1,
-            };
-            Float32Array arr = Float32Array.create(12);
-            arr.set(positions);
-            gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
+        // Create a buffer.
+        WebGLBuffer positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        // Put a unit quad in the buffer
+        float[] positions = {
+                0, 0,
+                0, 1,
+                1, 0,
+                1, 0,
+                0, 1,
+                1, 1,
+        };
+        Float32Array arr = Float32Array.create(12);
+        arr.set(positions);
+        gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
 
-            WebGLBuffer texcoordBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+        WebGLBuffer texcoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
 
-            // Put texcoords in the buffer
-            float[] texcoords = new float[]{
-                    0, 0,
-                    0, 1,
-                    1, 0,
-                    1, 0,
-                    0, 1,
-                    1, 1
-            };
-            arr = Float32Array.create(12);
-            arr.set(texcoords);
-            gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
+        // Put texcoords in the buffer
+        float[] texcoords = new float[]{
+                0, 0,
+                0, 1,
+                1, 0,
+                1, 0,
+                0, 1,
+                1, 1
+        };
+        arr = Float32Array.create(12);
+        arr.set(texcoords);
+        gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
 
-            gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
 
 
-            // Setup the attributes to pull data from our buffers
-            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-            gl.enableVertexAttribArray(positionLocation);
-            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-            gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
-            gl.enableVertexAttribArray(texcoordLocation);
-            gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
-            // this matrix will convert from pixels to clip space
+        // Setup the attributes to pull data from our buffers
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
+        gl.enableVertexAttribArray(texcoordLocation);
+        gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
+        // this matrix will convert from pixels to clip space
         M4 m4 = M4.get();
-            float[] matrix = m4.orthographic(0, canvas.getWidth(), canvas.getHeight(), 0, -1, 1);
+        float[] matrix = m4.orthographic(0, canvas.getWidth(), canvas.getHeight(), 0, -1, 1);
 
-            // this matrix will translate our quad to dstX, dstY
-            matrix = m4.translate(matrix, x, y, 0);
-            // this matrix will scale our 1 unit quad
-            // from 1 unit to texWidth, texHeight units
-            matrix = m4.scale(matrix, img.getWidth(), img.getHeight(), 1);
-            // Set the matrix.
-            gl.uniformMatrix4fv(matrixLocation, false, matrix);
+        // this matrix will translate our quad to dstX, dstY
+        matrix = m4.translate(matrix, x, y, 0);
+        // this matrix will scale our 1 unit quad
+        // from 1 unit to texWidth, texHeight units
+        matrix = m4.scale(matrix, img.getWidth(), img.getHeight(), 1);
+        // Set the matrix.
+        gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
-            // Tell the shader to get the texture from texture unit 0
-            gl.uniform1i(textureLocation, 0);
+        // Tell the shader to get the texture from texture unit 0
+        gl.uniform1i(textureLocation, 0);
 
-            // draw the quad (2 triangles, 6 vertices)
-            gl.drawArrays(gl.TRIANGLES, 0, 6);
+        // draw the quad (2 triangles, 6 vertices)
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     }
 }

@@ -6,37 +6,48 @@ public final class Color {
     public static final Color white = new Color(255, 255, 255);
     public static Color yellow = new Color(255, 255, 0);
 
-    private final int red, green, blue, alpha;
+    private final float colorspace;
+
+    private final float red, green, blue, alpha;
 
     public Color(int r, int g, int b) {
         this(r, g, b, 255);
     }
 
     public Color(int r, int g, int b, int a) {
-        this.red = r;
-        this.green = g;
-        this.blue = b;
-        this.alpha = a;
+        this.colorspace = 255;
+        this.red = r / colorspace;
+        this.green = g / colorspace;
+        this.blue = b / colorspace;
+        this.alpha = a / colorspace;
+    }
+
+    public Color(int rgb){
+        this.colorspace = 127;
+        this.red = ((rgb >> 16) & 0x7F ) / colorspace;
+        this.green = ((rgb >> 8) & 0x7F) / colorspace;
+        this.blue = (rgb & 0x7F ) / colorspace;
+        this.alpha = 1.0f;
     }
 
     public int getRed() {
-        return red;
+        return (int) (red * colorspace);
     }
 
     public int getGreen() {
-        return green;
+        return (int) (green * colorspace);
     }
 
     public int getBlue() {
-        return blue;
+        return (int) (blue * colorspace);
     }
 
     public int getAlpha() {
-        return alpha;
+        return (int) (alpha * colorspace);
     }
 
     public int toRGBA() {
-        return (red << 24) | (blue << 16) | (green << 8) | alpha;
+        return (getRed() << 24) | (getBlue() << 16) | (getGreen() << 8) | getAlpha();
     }
 
     public String toHex() {
@@ -45,6 +56,6 @@ public final class Color {
     }
 
     public float[] asFloatArray() {
-        return new float[]{red / 255f, green / 255f, blue / 255f, alpha / 255f};
+        return new float[]{red, green, blue, alpha};
     }
 }
