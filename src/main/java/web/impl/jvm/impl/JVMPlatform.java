@@ -8,11 +8,12 @@ import web.impl.jvm.event.AWTEventAdapter;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Hashtable;
 
 public class JVMPlatform extends Platform {
 
@@ -45,8 +46,7 @@ public class JVMPlatform extends Platform {
                 tmp.getGraphics().drawImage(br, 0, 0, null);
                 br = tmp;
             }
-            return
-                    new JVMImage(br);
+            return new JVMImage(br);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -67,6 +67,15 @@ public class JVMPlatform extends Platform {
                 throw new RuntimeException("Bad type:" + type);
         }
         return new JVMImage(new BufferedImage(width, height, t));
+    }
+
+    @Override
+    public IImage<?> createImage(int width, int height, int[] pixels) {
+        DataBufferInt buffer = new DataBufferInt(pixels, pixels.length);
+        DirectColorModel model = new DirectColorModel(32, 0xFF0000, 0x00FF00, 0x0000FF);
+        WritableRaster raster = Raster.createWritableRaster(model.createCompatibleSampleModel(width, height), buffer, null);
+        BufferedImage img = new BufferedImage(model, raster, false, new Hashtable<>());
+        return new JVMImage(img);
     }
 
     @Override

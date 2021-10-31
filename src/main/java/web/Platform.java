@@ -43,6 +43,8 @@ public abstract class Platform {
 
     public abstract IImage<?> createImage(int width, int height, int type);
 
+    public abstract IImage<?> createImage(int width, int height, int[] pixels);
+
     public abstract ISocket openSocket(String server, int port) throws IOException;
 
     public abstract IAllocator alloc();
