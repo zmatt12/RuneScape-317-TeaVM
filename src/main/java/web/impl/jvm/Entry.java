@@ -5,6 +5,7 @@ import client.Signlink;
 import web.impl.jvm.impl.JVMComponent;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Entry {
 
@@ -16,10 +17,16 @@ public class Entry {
         Signlink.startpriv("127.0.0.1");
 
         Game g = new Game();
-        g.init(765, 503);
-        frame.add(((JVMComponent) g.getComponent()).getRealComponent());
 
+        int width = 765;
+        int height = 503;
+
+        frame.add(((JVMComponent) g.getComponent()).getRealComponent());
+        frame.setMinimumSize(new Dimension(width, height));
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+        g.init(width, height);
     }
 }
