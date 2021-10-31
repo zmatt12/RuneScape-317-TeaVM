@@ -29,7 +29,7 @@ public class JSImage implements IImage<JVMComponent> {
         this.data = JSMethods.createImageData(width, height);
         this.view = DataView.create(data.getData().getBuffer());
         this.pixels = pixels;
-        //don't need to fetch the pixel values, as they are provided by the game
+        updateData();
     }
 
     public ImageData getData() {
