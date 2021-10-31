@@ -6,8 +6,6 @@ public final class Color {
     public static final Color white = new Color(255, 255, 255);
     public static Color yellow = new Color(255, 255, 0);
 
-    private final float colorspace;
-
     private final float red, green, blue, alpha;
 
     public Color(int r, int g, int b) {
@@ -15,35 +13,33 @@ public final class Color {
     }
 
     public Color(int r, int g, int b, int a) {
-        this.colorspace = 255;
-        this.red = r / colorspace + 0.5f;
-        this.green = g / colorspace + 0.5f;
-        this.blue = b / colorspace + 0.5f;
-        this.alpha = a / colorspace + 0.5f;
+        this.red = r / 255f;
+        this.green = g / 255f;
+        this.blue = b / 255f;
+        this.alpha = a / 255f;
     }
 
     public Color(int rgb){
-        this.colorspace = 127;
-        this.red = ((rgb >> 16) & 0x7F ) / colorspace + 0.5f;
-        this.green = ((rgb >> 8) & 0x7F) / colorspace + 0.5f;
-        this.blue = (rgb & 0x7F ) / colorspace + 0.5f;
+        this.red = ((rgb >> 16) & 0x7F ) / 255f;
+        this.green = ((rgb >> 8) & 0x7F) / 255f;
+        this.blue = (rgb & 0x7F ) / 255f;
         this.alpha = 1.0f;
     }
 
     public int getRed() {
-        return (int) (red * colorspace);
+        return (int) (red * 255f + 0.5f);
     }
 
     public int getGreen() {
-        return (int) (green * colorspace);
+        return (int) (green * 255f + 0.5f);
     }
 
     public int getBlue() {
-        return (int) (blue * colorspace);
+        return (int) (blue * 255f + 0.5f);
     }
 
     public int getAlpha() {
-        return (int) (alpha * colorspace);
+        return (int) (alpha * 255f + 0.5f);
     }
 
     public int toRGBA() {
