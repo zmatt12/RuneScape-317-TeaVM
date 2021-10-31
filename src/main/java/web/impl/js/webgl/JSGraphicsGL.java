@@ -24,7 +24,7 @@ public class JSGraphicsGL implements IGraphics {
     //drawImage program
     private WebGLProgram draw_img;
     private WebGLBuffer imagePositionBuffer, imageCoordBuffer;
-    private int positionLocation, texcoordLocation;
+    private int imagePositionLocation, imageCoordLocation;
     private WebGLUniformLocation imageTexLocation, imageMatrixLocation;
 
     public JSGraphicsGL(HTMLCanvasElement canvas, WebGLRenderingContext context) {
@@ -67,8 +67,8 @@ public class JSGraphicsGL implements IGraphics {
         gl.bufferData(gl.ARRAY_BUFFER, texCoords, gl.STATIC_DRAW);
 
         // look up where the vertex data needs to go.
-        positionLocation = gl.getAttribLocation(draw_img, "a_position");
-        texcoordLocation = gl.getAttribLocation(draw_img, "a_texcoord");
+        imagePositionLocation = gl.getAttribLocation(draw_img, "a_position");
+        imageCoordLocation = gl.getAttribLocation(draw_img, "a_texcoord");
 
         // lookup uniforms
         imageMatrixLocation = gl.getUniformLocation(draw_img, "u_matrix");
@@ -111,12 +111,12 @@ public class JSGraphicsGL implements IGraphics {
 
         // Setup the attributes to pull data from our buffers
         gl.bindBuffer(gl.ARRAY_BUFFER, imagePositionBuffer);
-        gl.enableVertexAttribArray(positionLocation);
-        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(imagePositionLocation);
+        gl.vertexAttribPointer(imagePositionLocation, 2, gl.FLOAT, false, 0, 0);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, imageCoordBuffer);
-        gl.enableVertexAttribArray(texcoordLocation);
-        gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(imageCoordLocation);
+        gl.vertexAttribPointer(imageCoordLocation, 2, gl.FLOAT, false, 0, 0);
         // this matrix will convert from pixels to clip space
         M4 m4 = M4.get();
         float[] matrix = m4.orthographic(0, canvas.getWidth(), canvas.getHeight(), 0, -1, 1);
