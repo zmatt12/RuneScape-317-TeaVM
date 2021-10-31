@@ -10,7 +10,7 @@ public final class Utils {
     }
 
     public static java.awt.Color toJvm(Color color) {
-        return new java.awt.Color(color.getRed(), color.getBlue(), color.getGreen(), color.getAlpha());
+        return new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     }
 
     public static java.awt.Dimension toJvm(Dimension dimension) {
