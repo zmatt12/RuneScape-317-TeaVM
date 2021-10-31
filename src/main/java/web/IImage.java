@@ -3,6 +3,7 @@ package web;
 public interface IImage<T extends IComponent> {
 
     int TYPE_INT_RGB = 1;
+    int TYPE_INT_ARGB = 2;
 
     static IImage<?> create(int width, int height, int type) {
         return Platform.getDefault().createImage(width, height, type);

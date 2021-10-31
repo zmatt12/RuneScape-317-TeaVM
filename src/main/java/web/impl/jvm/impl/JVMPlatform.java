@@ -55,10 +55,13 @@ public class JVMPlatform extends Platform {
 
     @Override
     public IImage createImage(int width, int height, int type) {
-        int t = 0;
-        switch (t) {
+        int t;
+        switch (type) {
             case IImage.TYPE_INT_RGB:
                 t = BufferedImage.TYPE_INT_RGB;
+                break;
+            case IImage.TYPE_INT_ARGB:
+                t = BufferedImage.TYPE_INT_ARGB;
                 break;
             default:
                 throw new RuntimeException("Bad type:" + type);
