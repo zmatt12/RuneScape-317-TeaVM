@@ -39,13 +39,6 @@ public class JSGraphicsGL implements IGraphics {
 
         rect_buffer = gl.createBuffer();
         indBuf = gl.createBuffer();
-
-        draw_img = gl.createProgram();
-        WebGLShader tex_vertex = createAndCompile(gl.VERTEX_SHADER, "");
-        WebGLShader tex_fragment = createAndCompile(gl.FRAGMENT_SHADER, "");
-        gl.attachShader(draw_img, tex_vertex);
-        gl.attachShader(draw_img, tex_fragment);
-        gl.linkProgram(draw_img);
     }
 
     private WebGLProgram loadAndCompile(String name, WebGLRenderingContext gl){
