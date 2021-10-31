@@ -1,4 +1,4 @@
-package web.impl.js;
+package web.impl.js.webgl;
 
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.typedarrays.Float32Array;
@@ -7,13 +7,18 @@ import org.teavm.jso.webgl.*;
 import web.IFont;
 import web.IGraphics;
 import web.IImage;
-import web.impl.js.webgl.M4;
+import web.impl.js.JSImage;
 import web.util.Color;
 
+import java.io.*;
+
 public class JSGraphicsGL implements IGraphics {
+
+    public static final String SHADERS_DIR = "shaders/";
+
     private final HTMLCanvasElement canvas;
     private final WebGLRenderingContext gl;
-    private float[] color = Color.yellow.asFloatArray();
+    private float[] color = Color.black.asFloatArray();
     private WebGLProgram fill_rect;
     private WebGLProgram draw_img;
 
@@ -29,56 +34,48 @@ public class JSGraphicsGL implements IGraphics {
     }
 
     private void init(){
-        WebGLShader v_shader = createAndCompile(gl.VERTEX_SHADER,"attribute vec2 aVertexPosition;\n" +
-                "\n" +
-                "void main() {\n" +
-                "gl_Position = vec4(aVertexPosition, 0.0, 1.0);\n" +
-                "}");
-
-        WebGLShader f_color_shader = createAndCompile(gl.FRAGMENT_SHADER, "#ifdef GL_ES\n" +
-                "precision highp float;\n" +
-                "#endif\n" +
-                "\n" +
-                "uniform vec4 uColor;\n" +
-                "\n" +
-                "void main() {\n" +
-                "gl_FragColor = uColor;\n" +
-                "}");
-
-        fill_rect = gl.createProgram();
-        gl.attachShader(fill_rect, v_shader);
-        gl.attachShader(fill_rect, f_color_shader);
-        gl.linkProgram(fill_rect);
-
-        indices.set(new short[]{0,1,2,3});
+        fill_rect = loadAndCompile("rect_fill", gl);
+        draw_img = loadAndCompile("draw_img", gl);
 
         rect_buffer = gl.createBuffer();
         indBuf = gl.createBuffer();
 
         draw_img = gl.createProgram();
-        WebGLShader tex_vertex = createAndCompile(gl.VERTEX_SHADER, "attribute vec4 a_position;\n" +
-                "attribute vec2 a_texcoord;\n" +
-                "\n" +
-                "uniform mat4 u_matrix;\n" +
-                "\n" +
-                "varying vec2 v_texcoord;\n" +
-                "\n" +
-                "void main() {\n" +
-                "   gl_Position = u_matrix * a_position;\n" +
-                "   v_texcoord = a_texcoord;\n" +
-                "}");
-        WebGLShader tex_fragment = createAndCompile(gl.FRAGMENT_SHADER, "precision mediump float;\n" +
-                "\n" +
-                "varying vec2 v_texcoord;\n" +
-                "\n" +
-                "uniform sampler2D u_texture;\n" +
-                "\n" +
-                "void main() {\n" +
-                "   gl_FragColor = texture2D(u_texture, v_texcoord);\n" +
-                "}");
+        WebGLShader tex_vertex = createAndCompile(gl.VERTEX_SHADER, "");
+        WebGLShader tex_fragment = createAndCompile(gl.FRAGMENT_SHADER, "");
         gl.attachShader(draw_img, tex_vertex);
         gl.attachShader(draw_img, tex_fragment);
         gl.linkProgram(draw_img);
+    }
+
+    private WebGLProgram loadAndCompile(String name, WebGLRenderingContext gl){
+        WebGLShader vertex = null;
+        WebGLShader fragment = null;
+        try{
+            vertex =  createAndCompile(gl.VERTEX_SHADER, getShaderFromResources(name + ".vert"));
+        } catch (FileNotFoundException ignored) {
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        try{
+            fragment =  createAndCompile(gl.FRAGMENT_SHADER, getShaderFromResources(name + ".frag"));
+        } catch (FileNotFoundException ignored) {
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        WebGLProgram program = gl.createProgram();
+
+        if(fragment != null){
+            gl.attachShader(program, fragment);
+        }
+        if(vertex != null){
+            gl.attachShader(program, vertex);
+        }
+        gl.linkProgram(program);
+        return program;
     }
 
     private WebGLShader createAndCompile(int type, String source){
@@ -86,6 +83,22 @@ public class JSGraphicsGL implements IGraphics {
         gl.shaderSource(f_shader, source);
         gl.compileShader(f_shader);
         return f_shader;
+    }
+
+    private String getShaderFromResources(String name) throws IOException {
+        String file = SHADERS_DIR + name;
+        ClassLoader loader = ClassLoader.getSystemClassLoader();
+        InputStream in = loader.getResourceAsStream(file);
+        if(in == null){
+            throw new FileNotFoundException(file);
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while((line = br.readLine()) != null){
+            sb.append(line).append('\n');
+        }
+        return sb.toString();
     }
 
     @Override

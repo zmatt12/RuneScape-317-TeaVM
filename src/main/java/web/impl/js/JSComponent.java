@@ -15,6 +15,7 @@ import web.IFont;
 import web.IFontMetrics;
 import web.IGraphics;
 import web.event.*;
+import web.impl.js.webgl.JSGraphicsGL;
 import web.impl.js.webgl.WebGLOptions;
 import web.util.Dimension;
 
