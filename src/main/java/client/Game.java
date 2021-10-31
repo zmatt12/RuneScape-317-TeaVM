@@ -1178,7 +1178,7 @@ public class Game extends GameShell {
 		if (!ingame) {
 			drawTitleScreen(false);
 		} else {
-			method102();
+			drawGame();
 		}
 		anInt1213 = 0;
 	}
@@ -7529,7 +7529,7 @@ public class Game extends GameShell {
 		}
 	}
 
-	public void method102() {
+	public void drawGame() {
 		if (redrawTitleBackground) {
 			redrawTitleBackground = false;
 			areaBackleft1.draw(super.graphics, 0, 4);
@@ -7551,7 +7551,7 @@ public class Game extends GameShell {
 			}
 		}
 		if (sceneState == 2) {
-			method146();
+			drawScene();
 		}
 		if (menuVisible && (mouseArea == 1)) {
 			redrawInvback = true;
@@ -11281,7 +11281,7 @@ public class Game extends GameShell {
 		return true;
 	}
 
-	public void method146() {
+	public void drawScene() {
 		sceneCycle++;
 		method47(true);
 		method26(true);

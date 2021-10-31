@@ -1,6 +1,6 @@
 package client.textures;
 
-public abstract class IndexedTexture extends BaseTexture{
+public abstract class IndexedTexture extends CroppedTexture{
 
     public abstract void shrink();
 

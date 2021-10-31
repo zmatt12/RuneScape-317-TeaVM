@@ -194,10 +194,16 @@ class RGBTextureImpl extends RGBTexture {
 
     @Override
     public void crop() {
-        int[] pixels = new int[getCropW() * getCropH()];
-        for (int y = 0; y < getHeight(); y++) {
-            for (int x = 0; x < getWidth(); x++) {
-                pixels[((y + getCropY()) * getCropW()) + (x + getCropX())] = this.pixels[(y * getWidth()) + x];
+        int cX = getCropX();
+        int cY = getCropY();
+        int cW = getCropW();
+        int cH = getCropH();
+        int width = getWidth();
+        int height = getHeight();
+        int[] pixels = new int[cW * cH];
+        if(width > 0) {
+            for (int y = 0; y < height; y++) {
+                System.arraycopy(this.pixels, (y * getWidth()), pixels, ((y + cY) * cW) + cX, width);
             }
         }
         this.pixels = pixels;

@@ -1,6 +1,6 @@
 package client.textures;
 
-public abstract class RGBTexture extends BaseTexture {
+public abstract class RGBTexture extends CroppedTexture {
 
     public abstract void bind();
 

@@ -1,11 +1,8 @@
 package client.textures.software;
 
-import client.Buffer;
 import client.Draw2D;
-import client.FileArchive;
 import client.textures.IndexedTexture;
 
-import java.io.IOException;
 
 class IndexedTextureImpl extends IndexedTexture {
 
@@ -113,39 +110,39 @@ class IndexedTextureImpl extends IndexedTexture {
 	public void draw(int x, int y) {
         x += getCropX();
         y += getCropY();
-        int l = x + (y * Draw2D.width);
-        int i1 = 0;
-        int j1 = getHeight();
-        int k1 = getWidth();
-        int l1 = Draw2D.width - k1;
-        int i2 = 0;
+        int destStart = x + (y * Draw2D.width);
+        int start = 0;
+        int height = getHeight();
+        int width = getWidth();
+        int destOffset = Draw2D.width - width;
+        int srcOffset = 0;
         if (y < Draw2D.top) {
             int j2 = Draw2D.top - y;
-            j1 -= j2;
+            height -= j2;
             y = Draw2D.top;
-            i1 += j2 * k1;
-            l += j2 * Draw2D.width;
+            start += j2 * width;
+            destStart += j2 * Draw2D.width;
         }
-        if ((y + j1) > Draw2D.bottom) {
-            j1 -= (y + j1) - Draw2D.bottom;
+        if ((y + height) > Draw2D.bottom) {
+            height -= (y + height) - Draw2D.bottom;
         }
         if (x < Draw2D.left) {
             int k2 = Draw2D.left - x;
-            k1 -= k2;
+            width -= k2;
             x = Draw2D.left;
-            i1 += k2;
-            l += k2;
-            i2 += k2;
-            l1 += k2;
+            start += k2;
+            destStart += k2;
+            srcOffset += k2;
+            destOffset += k2;
         }
-        if ((x + k1) > Draw2D.right) {
-            int l2 = (x + k1) - Draw2D.right;
-            k1 -= l2;
-            i2 += l2;
-            l1 += l2;
+        if ((x + width) > Draw2D.right) {
+            int l2 = (x + width) - Draw2D.right;
+            width -= l2;
+            srcOffset += l2;
+            destOffset += l2;
         }
-        if ((k1 > 0) && (j1 > 0)) {
-            draw(j1, Draw2D.pixels, indices, l1, l, k1, i1, palette, i2);
+        if ((width > 0) && (height > 0)) {
+            draw(height, Draw2D.pixels, indices, destOffset, destStart, width, start, palette, srcOffset);
         }
     }
 
@@ -158,46 +155,47 @@ class IndexedTextureImpl extends IndexedTexture {
         return data;
     }
 
-    public void draw(int i, int[] ai, byte[] abyte0, int j, int k, int l, int i1, int[] ai1, int j1) {
-        int k1 = -(l >> 2);
-        l = -(l & 3);
-        for (int l1 = -i; l1 < 0; l1++) {
+    private static void draw(int height, int[] dest, byte[] indices, int destOffset,
+                             int destIndex, int width, int srcIndex, int[] palette, int srcOffset) {
+        int k1 = -(width >> 2);
+        width = -(width & 3);
+        for (int l1 = -height; l1 < 0; l1++) {
             for (int i2 = k1; i2 < 0; i2++) {
-                byte byte1 = abyte0[i1++];
-                if (byte1 != 0) {
-                    ai[k++] = ai1[byte1 & 0xff];
+                byte index = indices[srcIndex++];
+                if (index != 0) {
+                    dest[destIndex++] = palette[index & 0xff];
                 } else {
-                    k++;
+                    destIndex++;
                 }
-                byte1 = abyte0[i1++];
-                if (byte1 != 0) {
-                    ai[k++] = ai1[byte1 & 0xff];
+                index = indices[srcIndex++];
+                if (index != 0) {
+                    dest[destIndex++] = palette[index & 0xff];
                 } else {
-                    k++;
+                    destIndex++;
                 }
-                byte1 = abyte0[i1++];
-                if (byte1 != 0) {
-                    ai[k++] = ai1[byte1 & 0xff];
+                index = indices[srcIndex++];
+                if (index != 0) {
+                    dest[destIndex++] = palette[index & 0xff];
                 } else {
-                    k++;
+                    destIndex++;
                 }
-                byte1 = abyte0[i1++];
-                if (byte1 != 0) {
-                    ai[k++] = ai1[byte1 & 0xff];
+                index = indices[srcIndex++];
+                if (index != 0) {
+                    dest[destIndex++] = palette[index & 0xff];
                 } else {
-                    k++;
-                }
-            }
-            for (int j2 = l; j2 < 0; j2++) {
-                byte byte2 = abyte0[i1++];
-                if (byte2 != 0) {
-                    ai[k++] = ai1[byte2 & 0xff];
-                } else {
-                    k++;
+                    destIndex++;
                 }
             }
-            k += j;
-            i1 += j1;
+            for (int j2 = width; j2 < 0; j2++) {
+                byte index = indices[srcIndex++];
+                if (index != 0) {
+                    dest[destIndex++] = palette[index & 0xff];
+                } else {
+                    destIndex++;
+                }
+            }
+            destIndex += destOffset;
+            srcIndex += srcOffset;
         }
     }
 
