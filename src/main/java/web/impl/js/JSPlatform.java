@@ -4,6 +4,7 @@ import client.Entity;
 import client.Model;
 import client.ObjStackEntity;
 import client.ObjType;
+import client.textures.Renderer;
 import org.teavm.interop.Async;
 import org.teavm.interop.AsyncCallback;
 import org.teavm.jso.JSObject;
@@ -16,6 +17,7 @@ import org.teavm.jso.dom.html.HTMLImageElement;
 import org.teavm.jso.typedarrays.Uint8Array;
 import web.*;
 import web.impl.js.sound.JSSoundEngine;
+import web.impl.js.webgl.JSGraphicsGL;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -30,6 +32,8 @@ public final class JSPlatform extends Platform {
     private static String codebase;
 
     private static final HTMLCanvasElement imgCanvas = Window.current().getDocument().createElement("canvas").cast();
+
+    private Renderer renderer;
 
     public static void init(String canvasId) {
         init(canvasId, 10000);
@@ -129,6 +133,18 @@ public final class JSPlatform extends Platform {
     public ISocket openSocket(String server, int port) throws IOException {
         port -= portOffset;
         return JSSocket.open(server, port);
+    }
+
+    @Override
+    public Renderer getRenderer() {
+        if(renderer != null){
+            return renderer;
+        }
+        if(JSConfig.get().hasRenderer() && "webgl".equals(JSConfig.get().getRenderer())) {
+            JSGraphicsGL g = (JSGraphicsGL) component.getGraphics();
+            return renderer = g.getRenderer();
+        }
+        return super.getRenderer();
     }
 
     @Override

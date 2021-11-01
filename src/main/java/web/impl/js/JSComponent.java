@@ -94,6 +94,8 @@ class JSComponent extends AbstractComponent {
             if (key.length() > 1) {
                 code += 1000;
                 c = '\0';
+            }else if(type == KeyEvent.TYPE_PRESSED){
+                dispatch(new ImmutableKeyEvent(KeyEvent.TYPE_TYPED, code, c));
             }
             ImmutableKeyEvent event = new ImmutableKeyEvent(type,
                     code, c);

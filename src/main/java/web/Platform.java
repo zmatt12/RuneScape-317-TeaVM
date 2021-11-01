@@ -2,6 +2,8 @@ package web;
 
 import client.Entity;
 import client.Model;
+import client.textures.Renderer;
+import client.textures.software.SoftwareRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import web.impl.js.JSPlatform;
@@ -29,6 +31,10 @@ public abstract class Platform {
         }
         logger.info("Using JS Platform");
         return new JSPlatform();
+    }
+
+    public Renderer getRenderer(){
+        return SoftwareRenderer.getInstance();
     }
 
     public static Platform getDefault() {
