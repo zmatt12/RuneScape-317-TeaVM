@@ -2,9 +2,9 @@ package web.event;
 
 public abstract class KeyEvent extends Event {
 
-    public static final int TYPE_PRESSED = 0;
-    public static final int TYPE_RELEASED = 1;
-    public static final int TYPE_TYPED = 2;
+    public static final int TYPE_TYPED = 400;
+    public static final int TYPE_PRESSED = 401;
+    public static final int TYPE_RELEASED = 402;
 
     public static final int VK_LEFT = 1037;
     public static final int VK_RIGHT = 1039;

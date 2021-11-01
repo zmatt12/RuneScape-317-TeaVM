@@ -6,11 +6,11 @@ public class ImmutableMouseEvent extends MouseEvent {
     private final boolean right;
 
     public ImmutableMouseEvent(int type, int x, int y) {
-        this(type, x, y, false);
+        this(type, x, y, MouseEvent.BUTTON_ONE, 1, false);
     }
 
-    public ImmutableMouseEvent(int type, int x, int y, boolean right) {
-        super(x, y);
+    public ImmutableMouseEvent(int type, int x, int y, int button, int count, boolean right) {
+        super(x, y, button, count);
         this.type = type;
         this.right = right;
     }

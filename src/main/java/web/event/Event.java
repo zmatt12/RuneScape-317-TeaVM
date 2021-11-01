@@ -19,4 +19,8 @@ public abstract class Event {
     public void consume() {
         this.consumed = true;
     }
+
+    public boolean isMetaDown(){
+        return false;
+    }
 }

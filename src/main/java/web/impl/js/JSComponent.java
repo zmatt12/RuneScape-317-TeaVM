@@ -120,9 +120,7 @@ class JSComponent extends AbstractComponent {
                 y *= scale;
             }
 
-
-            dispatch(new ImmutableMouseEvent(type,
-                    x, y, evt.getButton() == 2));
+            dispatch(new ImmutableMouseEvent(type, x, y, evt.getButton(), 1, evt.getButton() == 2));
         };
     }
 

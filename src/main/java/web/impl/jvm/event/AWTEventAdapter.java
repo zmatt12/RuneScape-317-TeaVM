@@ -4,7 +4,7 @@ import web.IComponent;
 
 import java.awt.event.*;
 
-public class AWTEventAdapter implements FocusListener, KeyListener, MouseMotionListener, MouseListener {
+public class AWTEventAdapter implements FocusListener, KeyListener, MouseMotionListener, MouseListener, MouseWheelListener {
 
     private final IComponent target;
 
@@ -69,6 +69,11 @@ public class AWTEventAdapter implements FocusListener, KeyListener, MouseMotionL
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        target.dispatch(new AWTMouseEvent(e));
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
         target.dispatch(new AWTMouseEvent(e));
     }
 }

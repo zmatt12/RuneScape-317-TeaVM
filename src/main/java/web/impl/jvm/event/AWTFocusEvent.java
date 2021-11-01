@@ -12,12 +12,6 @@ public class AWTFocusEvent extends FocusEvent {
 
     @Override
     public int getEventType() {
-        switch (event.getID()) {
-            case java.awt.event.FocusEvent.FOCUS_LOST:
-                return TYPE_LOST;
-            case java.awt.event.FocusEvent.FOCUS_GAINED:
-                return TYPE_GAINED;
-        }
-        return -1;
+        return event.getID();
     }
 }
