@@ -1,6 +1,6 @@
 package web.event;
 
-public abstract class MouseEvent extends Event {
+public abstract class MouseEvent<T> extends Event {
 
     public static final int TYPE_CLICKED = 500;
     public static final int TYPE_PRESSED = 501;
@@ -16,22 +16,14 @@ public abstract class MouseEvent extends Event {
     public static final int BUTTON_TWO = 2;
     public static final int BUTTON_THREE = 3;
 
-    private final int x, y;
+    private final T source;
 
-    private final int button;
-    private final int clickCount;
-    private final int wheelRotation;
-
-    public MouseEvent(int x, int y, int button, int clickCount){
-        this(x, y, button, clickCount, -1);
+    public MouseEvent(T source){
+        this.source = source;
     }
 
-    public MouseEvent(int x, int y, int button, int clickCount, int wheelRotation) {
-        this.x = x;
-        this.y = y;
-        this.button = button;
-        this.clickCount = clickCount;
-        this.wheelRotation = wheelRotation;
+    public T getSource(){
+        return source;
     }
 
     public abstract boolean isRightMouseButton();
@@ -41,27 +33,17 @@ public abstract class MouseEvent extends Event {
         return TYPE_MOUSE;
     }
 
-    public final int getX() {
-        return x;
-    }
+    public abstract int getX();
 
-    public final int getY() {
-        return y;
-    }
+    public abstract int getY();
 
     public boolean isPopupTrigger(){
         return false;
     }
 
-    public final int getButton(){
-        return button;
-    }
+    public abstract int getButton();
 
-    public final int getClickCount(){
-        return clickCount;
-    }
+    public abstract int getClickCount();
 
-    public final int getWheelRotation(){
-        return wheelRotation;
-    }
+    public abstract int getWheelRotation();
 }

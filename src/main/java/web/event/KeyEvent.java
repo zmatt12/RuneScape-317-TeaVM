@@ -1,11 +1,6 @@
 package web.event;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public abstract class KeyEvent extends Event {
-
-    private static final Map<String, Integer> keyMap = new HashMap<>();
 
     public static final int TYPE_TYPED = 400;
     public static final int TYPE_PRESSED = 401;
@@ -52,40 +47,6 @@ public abstract class KeyEvent extends Event {
     public static final int VK_AUDIO_DOWN = 0xE001;
     public static final int VK_AUDIO_UP = 0xE002;
 
-    static {
-        keyMap.put("ArrowLeft", VK_LEFT);
-        keyMap.put("ArrowRight", VK_RIGHT);
-        keyMap.put("ArrowUp", VK_UP);
-        keyMap.put("ArrowDown", VK_DOWN);
-
-        keyMap.put("Control", VK_CONTROL);
-        keyMap.put("Alt", VK_ALT);
-        keyMap.put("Enter", VK_ENTER);
-        keyMap.put("Backspace", VK_BACK_SPACE);
-        keyMap.put("Tab", VK_TAB);
-        keyMap.put("Escape", VK_ESC);
-        keyMap.put("Shift", VK_SHIFT);
-
-        for(int i = 1; i <= 12; i++){
-            keyMap.put("F" + i, VK_F1 + i - 1);
-        }
-
-        keyMap.put("Insert", VK_INSERT);
-        keyMap.put("Delete", VK_DELETE);
-        keyMap.put("Home", VK_HOME);
-        keyMap.put("End", VK_END);
-        keyMap.put("PageUp", VK_PAGE_UP);
-        keyMap.put("PageDown", VK_PAGE_DOWN);
-
-        keyMap.put("PrintScreen", VK_PRINT_SCREEN);
-        keyMap.put("Pause", VK_PAUSE);
-        keyMap.put("ScrollLock", VK_SCROLL_LOCK);
-        keyMap.put("AudioVolumeMute", VK_AUDIO_MUTE);
-        keyMap.put("AudioVolumeDown", VK_AUDIO_DOWN);
-        keyMap.put("AudioVolumeUp", VK_AUDIO_UP);
-
-    }
-
     @Override
     public final int getType() {
         return TYPE_KEY;
@@ -94,12 +55,4 @@ public abstract class KeyEvent extends Event {
     public abstract int getKeyCode();
 
     public abstract char getKeyChar();
-
-    public static int getCodeFromName(String name){
-        Integer i = keyMap.get(name);
-        if(i != null){
-            return i;
-        }
-        return -1;
-    }
 }

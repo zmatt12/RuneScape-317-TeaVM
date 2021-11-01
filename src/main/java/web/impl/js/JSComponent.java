@@ -15,6 +15,8 @@ import web.IFont;
 import web.IFontMetrics;
 import web.IGraphics;
 import web.event.*;
+import web.impl.js.event.JSKeyEvent;
+import web.impl.js.event.JSMouseEvent;
 import web.impl.js.webgl.JSGraphicsGL;
 import web.impl.js.webgl.WebGLOptions;
 import web.util.Dimension;
@@ -88,49 +90,16 @@ class JSComponent extends AbstractComponent {
     private EventListener<KeyboardEvent> createKeyListener(int type) {
         return evt -> {
             evt.preventDefault(); // stop stuff like F1-F12 affecting the webpage
-            String key = evt.getKey();
-            int code = evt.getKeyCode();
-            char c = key.charAt(0);
-            if (key.length() > 1) {
-                int i = KeyEvent.getCodeFromName(key);
-                if(i == -1){
-                    code += 1000;
-                    logger.info("Unimplemented key name '{}'", key);
-                }else {
-                    code += 1000;
-                }
-                c = '\0';
-            }else if(type == KeyEvent.TYPE_PRESSED){
-                dispatch(new ImmutableKeyEvent(KeyEvent.TYPE_TYPED, code, c));
+            if(type == KeyEvent.TYPE_PRESSED){
+                dispatch(new JSKeyEvent(KeyEvent.TYPE_TYPED, evt));
             }
-            ImmutableKeyEvent event = new ImmutableKeyEvent(type,
-                    code, c);
-            dispatch(event);
+            dispatch(new JSKeyEvent(type, evt));
         };
     }
 
     private EventListener<MouseEvent> createMouseListener(int type) {
         return evt -> {
-            TextRectangle bounds = canvas.getBoundingClientRect();
-
-            int x = evt.getClientX() - bounds.getLeft();
-            int y = evt.getClientY() - bounds.getTop();
-
-            if(bounds.getWidth() != canvas.getWidth()){
-                double scale = canvas.getWidth();
-                scale /= bounds.getWidth();
-                x *= scale;
-            }
-
-            if(bounds.getHeight() != canvas.getHeight()){
-                double scale = canvas.getHeight();
-                scale /= bounds.getHeight();
-                y *= scale;
-            }
-
-            int[] buttons = { 1, 2, 4 };
-            int button = evt.getButton();
-            dispatch(new ImmutableMouseEvent(type, x, y, button > 2 ? button : buttons[button], 1, evt.getButton() == 2));
+            dispatch(new JSMouseEvent(canvas, type, evt));
         };
     }
 
