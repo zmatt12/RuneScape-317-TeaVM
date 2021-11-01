@@ -92,7 +92,13 @@ class JSComponent extends AbstractComponent {
             int code = evt.getKeyCode();
             char c = key.charAt(0);
             if (key.length() > 1) {
-                code += 1000;
+                int i = KeyEvent.getCodeFromName(key);
+                if(i == -1){
+                    code += 1000;
+                    logger.info("Unimplemented key name '{}'", key);
+                }else {
+                    code += 1000;
+                }
                 c = '\0';
             }else if(type == KeyEvent.TYPE_PRESSED){
                 dispatch(new ImmutableKeyEvent(KeyEvent.TYPE_TYPED, code, c));
@@ -122,7 +128,9 @@ class JSComponent extends AbstractComponent {
                 y *= scale;
             }
 
-            dispatch(new ImmutableMouseEvent(type, x, y, evt.getButton(), 1, evt.getButton() == 2));
+            int[] buttons = { 1, 2, 4 };
+            int button = evt.getButton();
+            dispatch(new ImmutableMouseEvent(type, x, y, button > 2 ? button : buttons[button], 1, evt.getButton() == 2));
         };
     }
 
