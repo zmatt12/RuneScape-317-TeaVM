@@ -29,6 +29,7 @@ public class JVMPlatform extends Platform {
         res.addKeyListener(adapter);
         res.addMouseListener(adapter);
         res.addMouseMotionListener(adapter);
+        res.addMouseWheelListener(adapter);
         return component;
     }
 
