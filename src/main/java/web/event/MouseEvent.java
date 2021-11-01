@@ -20,12 +20,18 @@ public abstract class MouseEvent extends Event {
 
     private final int button;
     private final int clickCount;
+    private final int wheelRotation;
 
-    public MouseEvent(int x, int y, int button, int clickCount) {
+    public MouseEvent(int x, int y, int button, int clickCount){
+        this(x, y, button, clickCount, -1);
+    }
+
+    public MouseEvent(int x, int y, int button, int clickCount, int wheelRotation) {
         this.x = x;
         this.y = y;
         this.button = button;
         this.clickCount = clickCount;
+        this.wheelRotation = wheelRotation;
     }
 
     public abstract boolean isRightMouseButton();
@@ -53,5 +59,9 @@ public abstract class MouseEvent extends Event {
 
     public final int getClickCount(){
         return clickCount;
+    }
+
+    public final int getWheelRotation(){
+        return wheelRotation;
     }
 }

@@ -8,6 +8,11 @@ public class AWTMouseEvent extends MouseEvent {
 
     private final java.awt.event.MouseEvent event;
 
+    public AWTMouseEvent(java.awt.event.MouseWheelEvent event){
+        super(event.getX(), event.getY(), event.getButton(), event.getClickCount(), event.getWheelRotation());
+        this.event = event;
+    }
+
     public AWTMouseEvent(java.awt.event.MouseEvent event) {
         super(event.getX(), event.getY(), event.getButton(), event.getClickCount());
         this.event = event;
