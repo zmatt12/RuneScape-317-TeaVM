@@ -284,6 +284,9 @@ public abstract class GameShell extends Window implements Runnable, EventListene
 			case MouseEvent.TYPE_RELEASED:
 				mouseReleased(e);
 				return;
+			case MouseEvent.TYPE_WHEEL:
+				//this is where I would dispatch a mousewheel event, if I needed to
+				return;
 		}
 	}
 
