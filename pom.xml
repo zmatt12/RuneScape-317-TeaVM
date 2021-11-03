@@ -91,7 +91,7 @@
                 <version>${teavm.version}</version>
                 <executions>
                     <execution>
-                        <id>web</id>
+                        <id>web-js</id>
                         <goals>
                             <goal>compile</goal>
                         </goals>
@@ -106,6 +106,20 @@
                             <!-- Optimization level. Valid values are: SIMPLE, ADVANCED, FULL -->
                             <optimizationLevel>SIMPLE</optimizationLevel>
                             <targetType>JAVASCRIPT</targetType>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>web-webassembly</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <debugInformationGenerated>true</debugInformationGenerated>
+                            <mainClass>web.impl.webassembly.Entry</mainClass>
+
+                            <!-- Optimization level. Valid values are: SIMPLE, ADVANCED, FULL -->
+                            <optimizationLevel>SIMPLE</optimizationLevel>
+                            <targetType>WEBASSEMBLY</targetType>
                         </configuration>
                     </execution>
                 </executions>

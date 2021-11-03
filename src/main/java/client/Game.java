@@ -653,8 +653,7 @@ public class Game extends GameShell {
 
 			planeTileFlags = Platform.getDefault().alloc().byteArray(4, 104, 104);
 
-			planeHeightmap = Platform.getDefault().alloc().intArray(4, 105, 105);
-
+			planeHeightmap = new int[4][105][105];
 
 			scene = new Scene(104, 104, planeHeightmap, 4);
 

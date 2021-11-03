@@ -378,7 +378,7 @@ public class SceneBuilder {
 		aByteArrayArrayArray130 = Platform.getDefault().alloc().byteArray(4, this.maxTileX, this.maxTileZ);
 		aByteArrayArrayArray136 = Platform.getDefault().alloc().byteArray(4, this.maxTileX, this.maxTileZ);
 		aByteArrayArrayArray148 = Platform.getDefault().alloc().byteArray(4, this.maxTileX, this.maxTileZ);
-		anIntArrayArrayArray135 = Platform.getDefault().alloc().intArray(4, this.maxTileX + 1, this.maxTileZ + 1);
+		anIntArrayArrayArray135 = new int[4][this.maxTileX + 1][this.maxTileZ + 1];
 		aByteArrayArrayArray134 = Platform.getDefault().alloc().byteArray(4, this.maxTileX + 1, this.maxTileZ + 1);
 		anIntArrayArray139 = new int[this.maxTileX + 1][this.maxTileZ + 1];
 		anIntArray124 = new int[this.maxTileZ];

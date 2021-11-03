@@ -19,6 +19,7 @@ public class Entry {
 
     //Don't actually try to run this, you'd be in for a bad time.
     public static void main(String[] args) throws Exception {
+        Platform.setDefaultPlatform(new JSPlatform());
         if(!JSConfig.exists()){
             Window.alert("No webclient config exists! Please create it!");
             return;

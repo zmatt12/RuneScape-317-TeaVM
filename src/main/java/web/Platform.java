@@ -6,39 +6,26 @@ import client.textures.Renderer;
 import client.textures.software.SoftwareRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teavm.classlib.PlatformDetector;
 import web.impl.js.JSPlatform;
+import web.impl.webassembly.WebAssemblyPlatform;
 
 import java.io.IOException;
 
 public abstract class Platform {
 
-    private static final Logger logger = LoggerFactory.getLogger(Platform.class);
+    private static Platform defaultPlatform = null;
 
-    private static final Platform defaultEngine = findDefault();
-
-    private static String text;
-
-    private static Platform findDefault() {
-        //This dirty hack is to force the class check to be at runtime, otherwise TeaVM will attempt to
-        //compile all of AWT, and we really don't want that
-        try {
-            text = "java.awt.Component";
-            Class.forName(text);
-            text = "web.impl.jvm.impl.JVMPlatform";
-            logger.info("Using JVM Platform");
-            return (Platform) Class.forName(text).getDeclaredConstructor().newInstance();
-        } catch (Throwable ignored) {
-        }
-        logger.info("Using JS Platform");
-        return new JSPlatform();
-    }
-
-    public Renderer getRenderer(){
-        return SoftwareRenderer.getInstance();
+    public static void setDefaultPlatform(Platform platform) {
+        defaultPlatform = platform;
     }
 
     public static Platform getDefault() {
-        return defaultEngine;
+        return defaultPlatform;
+    }
+
+    public Renderer getRenderer() {
+        return SoftwareRenderer.getInstance();
     }
 
     public abstract IComponent createComponent();
