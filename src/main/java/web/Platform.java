@@ -4,11 +4,6 @@ import client.Entity;
 import client.Model;
 import client.textures.Renderer;
 import client.textures.software.SoftwareRenderer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.teavm.classlib.PlatformDetector;
-import web.impl.js.JSPlatform;
-import web.impl.webassembly.WebAssemblyPlatform;
 
 import java.io.IOException;
 

@@ -3,8 +3,6 @@ package web.impl.webassembly;
 import client.Game;
 import client.Signlink;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import web.Platform;
 
 
