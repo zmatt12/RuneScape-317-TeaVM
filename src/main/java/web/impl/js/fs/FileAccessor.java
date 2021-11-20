@@ -1,5 +1,7 @@
 package web.impl.js.fs;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teavm.classlib.fs.VirtualFileAccessor;
 import org.teavm.jso.core.JSNumber;
 import web.impl.js.fs.generic.GenericFileSystem;
@@ -9,11 +11,11 @@ import java.io.*;
 
 class FileAccessor implements VirtualFileAccessor {
 
-    private JSNumber fd;
+    private int fd;
     private final GenericFileSystem fs;
     private int pos;
 
-    public FileAccessor(JSNumber fd, GenericFileSystem fs){
+    public FileAccessor(int fd, GenericFileSystem fs){
         this.fs = fs;
         this.fd = fd;
         this.pos = 0;

@@ -12,11 +12,9 @@ import java.net.URL;
 
 public class Signlink implements Runnable {
 
-	public static final RandomAccessFile[] cache_idx = new RandomAccessFile[5];
 	public static final Applet mainapp = null;
 	public static int uid;
 	public static int storeid = 32;
-	public static RandomAccessFile cache_dat = null;
 	public static boolean sunjava;
 	public static boolean active;
 	public static int threadliveid;
@@ -202,10 +200,7 @@ public class Signlink implements Runnable {
 			if (file.exists() && (file.length() > 0x3200000L)) {
 				file.delete();
 			}
-			cache_dat = new RandomAccessFile(s + "main_file_cache.dat", "rw");
-			for (int j = 0; j < 5; j++) {
-				cache_idx[j] = new RandomAccessFile(s + "main_file_cache.idx" + j, "rw");
-			}
+			Platform.getDefault().files().init(s);
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}

@@ -25,10 +25,6 @@ public class Entry {
             return;
         }
         JSConfig config = JSConfig.get();
-        if(GenericFileSystem.isSupported()){
-            logger.info("Using generic filesystem driver");
-            VirtualFileSystemProvider.setInstance(new GenericVirtualFileSystem());
-        }
 
         if (config.hasFile()) {
             JSConfig.FileViewerConfig file = config.file();
@@ -37,10 +33,6 @@ public class Entry {
         }
 
         JSPlatform.init(config.getCanvasId(), config.hasPortOffset() ? config.getPortOffset() : 0);
-
-        //We need to do this due to a bug in TeaVM, where randomaccess files aren't created when opened
-        File cacheDir = new File("/tmp/.file_store_32");
-        createCache(cacheDir);
 
         Signlink.storeid = 32;
 
@@ -59,26 +51,5 @@ public class Entry {
 
         Game g = new Game();
         g.init(765, 503);
-    }
-
-    private static void createCache(File cacheDir) throws Exception {
-        if(!cacheDir.exists()) {
-            if (!cacheDir.mkdirs()) {
-                throw new Exception("Unable to create cache root");
-            }
-        }
-        File cache_dat = new File(cacheDir, "main_file_cache.dat");
-        if(cache_dat.exists()){
-            return;
-        }
-        if(!cache_dat.createNewFile()){
-            throw new Exception("Unable to make main_file_cache");
-        }
-        for (int j = 0; j < 5; j++) {
-            File idx = new File(cacheDir, "main_file_cache.idx" + j);
-            if(!idx.createNewFile()){
-                throw new Exception("Unable to make index:" + idx);
-            }
-        }
     }
 }

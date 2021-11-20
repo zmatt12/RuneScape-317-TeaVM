@@ -9,10 +9,7 @@ import org.teavm.jso.canvas.ImageData;
 import org.teavm.jso.dom.events.Event;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.HTMLElement;
-import org.teavm.jso.typedarrays.ArrayBuffer;
-import org.teavm.jso.typedarrays.Int32Array;
-import org.teavm.jso.typedarrays.Uint8Array;
-import org.teavm.jso.typedarrays.Uint8ClampedArray;
+import org.teavm.jso.typedarrays.*;
 import org.teavm.jso.websocket.WebSocket;
 
 public final class JSMethods {
@@ -68,4 +65,7 @@ public final class JSMethods {
 
     @JSBody(params = {"width", "height"}, script = "return new ImageData(width, height);")
     public static native ImageData createImageData(int width, int height);
+
+    @JSBody(params = {"arr"}, script = "return arr;")
+    public static native byte[] unwrap(Int8Array arr);
 }

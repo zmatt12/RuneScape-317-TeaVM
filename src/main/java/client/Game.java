@@ -2,6 +2,8 @@ package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3)
 
+import client.files.FileArchive;
+import client.files.FileStore;
 import client.textures.IndexedTexture;
 import client.textures.RGBTexture;
 import client.textures.Renderer;
@@ -183,7 +185,7 @@ public class Game extends GameShell {
 	public static final int[] CHAT_COLORS = {0xffff00, 0xff0000, 65280, 65535, 0xff00ff, 0xffffff};
 	public final int[] compassMaskLineOffsets = new int[33];
 	public final int[] flameLineOffset = new int[256];
-	public final FileStore[] filestores = new FileStore[5];
+	public final IFileStore[] filestores = new IFileStore[5];
 	public final int anInt975 = 50;
 	public final int[] chatScreenX = new int[anInt975];
 	public final int[] chatScreenY = new int[anInt975];
@@ -626,11 +628,17 @@ public class Game extends GameShell {
 
 		started = true;
 
-		if (Signlink.cache_dat != null) {
-			for (int i = 0; i < 5; i++) {
-				filestores[i] = new FileStore(500000, Signlink.cache_dat, Signlink.cache_idx[i], i + 1);
+		if(Platform.getDefault().files().canLoad()){
+			for(int i = 0; i < 5; i++){
+				filestores[i] = Platform.getDefault().files().openOrCreateStore(500000, i);
 			}
 		}
+
+//		if (Signlink.cache_dat != null) {
+//			for (int i = 0; i < 5; i++) {
+//				filestores[i] = new FileStore(500000, Signlink.cache_dat, Signlink.cache_idx[i], i + 1);
+//			}
+//		}
 
 		try {
 			loadArchiveChecksums();
@@ -1730,7 +1738,7 @@ public class Game extends GameShell {
 //			out.put4(0x3f008edd);
 //		}
 
-		if (lowmem && (Signlink.cache_dat != null)) {
+		if (lowmem && Platform.getDefault().files().canLoad()) {
 			int count = ondemand.getFileCount(0);
 			for (int i = 0; i < count; i++) {
 				if ((ondemand.getModelFlags(i) & 0x79) == 0) {

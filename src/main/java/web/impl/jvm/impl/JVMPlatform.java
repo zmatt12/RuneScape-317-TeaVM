@@ -19,6 +19,7 @@ public class JVMPlatform extends Platform {
 
     private static final JVMAllocator alloc = new JVMAllocator();
     private static final JVMSoundEngine sound = new JVMSoundEngine();
+    private static final JVMFileManager files = new JVMFileManager();
 
     @Override
     public IComponent createComponent() {
@@ -92,6 +93,11 @@ public class JVMPlatform extends Platform {
     @Override
     public SoundEngine sound() {
         return sound;
+    }
+
+    @Override
+    public IFileManager files() {
+        return files;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package client;
 
+import client.files.FileArchive;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import web.ISocket;
 import web.util.InputStreamPolyFill;

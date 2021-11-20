@@ -27,6 +27,7 @@ public final class JSPlatform extends Platform {
 
     private static final JSAllocator alloc = new JSAllocator();
     private static final JSSoundEngine sound = new JSSoundEngine();
+    private static final IndexedDBFileManager fileManager = new IndexedDBFileManager();
     private static JSComponent component;
     private static int portOffset;
     private static String codebase;
@@ -155,6 +156,11 @@ public final class JSPlatform extends Platform {
     @Override
     public SoundEngine sound() {
         return sound;
+    }
+
+    @Override
+    public IFileManager files() {
+        return fileManager;
     }
 
     @Override

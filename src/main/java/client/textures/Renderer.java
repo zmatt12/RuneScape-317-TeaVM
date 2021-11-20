@@ -1,7 +1,7 @@
 package client.textures;
 
 import client.Buffer;
-import client.FileArchive;
+import client.files.FileArchive;
 import client.textures.software.SoftwareRenderer;
 
 import java.io.IOException;

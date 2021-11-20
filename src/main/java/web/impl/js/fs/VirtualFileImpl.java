@@ -1,13 +1,19 @@
 package web.impl.js.fs;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teavm.classlib.fs.VirtualFile;
 import org.teavm.classlib.fs.VirtualFileAccessor;
 import org.teavm.jso.core.*;
+import web.impl.js.fs.generic.FSConstants;
 import web.impl.js.fs.generic.GenericFileSystem;
 
 import java.io.IOException;
 
 public class VirtualFileImpl implements VirtualFile {
+
+    private static final Logger logger = LoggerFactory.getLogger(VirtualFileImpl.class);
+
     private final GenericFileSystem fs;
     private final String path;
 
@@ -44,23 +50,22 @@ public class VirtualFileImpl implements VirtualFile {
         if(isDirectory()){
             return null;
         }
-        System.out.println(path + "," + readable + "," + writable + "," + append);
-        String flag;
-        if(readable && writable){
-            if(!fs.exists(path)){
-                fs.createFile(path);
-            }
-            flag = "r+";
-        }else if(readable){
-            flag = "r";
-        }else {
-            flag = "w";
-        }
+        FSConstants constants = fs.constants();
+        int mode = constants.O_RDWR();
+//        if(readable && !writable){
+//            mode = constants.O_RDONLY();
+//        }else if(!readable && writable){
+//            mode = constants.O_WRONLY();
+//        }else{
+//            mode = constants.O_RDWR();
+//        }
+
         if(append){
-            System.err.println("Append called");
-            throw new IllegalStateException("Append");
+            mode |= constants.O_APPEND();
         }
-        return new BufferedFileAccessor(fs.open(path, flag), fs);
+        logger.info("{}, flags: {}, {}, {} - mode:{}", path, readable, writable, append, mode);
+        //return new BufferedFileAccessor(fs.open(path, mode), fs);
+        return new FileAccessor(fs.open(path, mode), fs);
     }
 
     @Override
@@ -69,8 +74,10 @@ public class VirtualFileImpl implements VirtualFile {
             fileName = "/" + fileName;
         }
         String p = this.path + fileName;
-        JSNumber fd = fs.open(p, "w");
-        if(fd.intValue() != -1) {
+        FSConstants constants = fs.constants();
+        int flag = constants.O_WRONLY() | constants.O_CREAT();
+        int fd = fs.open(p, flag);
+        if(fd != -1) {
             fs.close(fd);
             return true;
         }

@@ -1,5 +1,7 @@
 package client;
 
+import client.files.FileArchive;
+
 import java.io.IOException;
 import java.util.Random;
 

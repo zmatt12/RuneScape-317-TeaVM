@@ -28,11 +28,11 @@ public final class BufferedFileAccessor extends FileAccessor {
     private boolean hitEOF_; // buffer contains last file block?
     private long diskPos_; // disk position
 
-    public BufferedFileAccessor(JSNumber fd, GenericFileSystem fs) {
+    public BufferedFileAccessor(int fd, GenericFileSystem fs) {
         this(fd, fs, 0);
     }
 
-    public BufferedFileAccessor(JSNumber fd, GenericFileSystem fs, int size) {
+    public BufferedFileAccessor(int fd, GenericFileSystem fs, int size) {
         super(fd, fs);
         this.init(size);
     }

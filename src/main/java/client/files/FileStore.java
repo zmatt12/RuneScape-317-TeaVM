@@ -1,11 +1,13 @@
-package client;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
+package client.files;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
 // Decompiler options: packimports(3) 
+
+import web.IFileStore;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-public class FileStore {
+public class FileStore implements IFileStore {
 
 	public static final byte[] buf = new byte[520];
 	public final RandomAccessFile dat;

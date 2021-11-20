@@ -3,7 +3,7 @@ config317 = {
     server: "localhost",
     portOffset: 10000,
     canvasId: "web-client",
-    renderer: "webgl",
+//    renderer: "webgl",
     file: {
         tableId: "file-view",
         numberId: "file-update-interval",

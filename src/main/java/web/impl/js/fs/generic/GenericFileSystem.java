@@ -2,9 +2,8 @@ package web.impl.js.fs.generic;
 
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
+import org.teavm.jso.JSProperty;
 import org.teavm.jso.core.JSDate;
-import org.teavm.jso.core.JSNumber;
-
 
 public abstract class GenericFileSystem implements JSObject {
 
@@ -14,15 +13,18 @@ public abstract class GenericFileSystem implements JSObject {
     @JSBody(script = "return typeof fs != 'undefined'")
     public static native boolean isSupported();
 
+    @JSProperty("constants")
+    public native FSConstants constants();
+
     public abstract String[] readdir(String path);
 
     public abstract boolean isFile(String path);
 
     public abstract boolean isDirectory(String path);
 
-    public abstract JSNumber open(String path, String flag);
+    public abstract int open(String path, int flag);
 
-    public abstract void close(JSNumber fd);
+    public abstract void close(int fd);
 
     public abstract void mkdir(String path);
 
@@ -34,13 +36,13 @@ public abstract class GenericFileSystem implements JSObject {
 
     public abstract int length(String path);
 
-    public abstract int flength(JSNumber fd);
+    public abstract int flength(int fd);
 
-    public abstract int read(JSNumber fd, Buffer buffer, int offset, int length, int pos);
+    public abstract int read(int fd, Buffer buffer, int offset, int length, int pos);
 
-    public abstract int write(JSNumber fd, Buffer from, int offset, int length, int pos);
+    public abstract int write(int fd, Buffer from, int offset, int length, int pos);
 
-    public abstract void ftruncate(JSNumber fd, int size);
+    public abstract void ftruncate(int fd, int size);
 
     public abstract boolean exists(String path);
 

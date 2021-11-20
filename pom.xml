@@ -108,20 +108,20 @@
                             <targetType>JAVASCRIPT</targetType>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>web-webassembly</id>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <debugInformationGenerated>true</debugInformationGenerated>
-                            <mainClass>web.impl.webassembly.Entry</mainClass>
+<!--                    <execution>-->
+<!--                        <id>web-webassembly</id>-->
+<!--                        <goals>-->
+<!--                            <goal>compile</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <debugInformationGenerated>true</debugInformationGenerated>-->
+<!--                            <mainClass>web.impl.webassembly.Entry</mainClass>-->
 
-                            <!-- Optimization level. Valid values are: SIMPLE, ADVANCED, FULL -->
-                            <optimizationLevel>SIMPLE</optimizationLevel>
-                            <targetType>WEBASSEMBLY</targetType>
-                        </configuration>
-                    </execution>
+<!--                            &lt;!&ndash; Optimization level. Valid values are: SIMPLE, ADVANCED, FULL &ndash;&gt;-->
+<!--                            <optimizationLevel>SIMPLE</optimizationLevel>-->
+<!--                            <targetType>WEBASSEMBLY</targetType>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
                 </executions>
             </plugin>
         </plugins>

@@ -1,4 +1,7 @@
-package client;
+package client.files;
+
+import client.BZip2;
+import client.Buffer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

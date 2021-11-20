@@ -39,6 +39,8 @@ public abstract class Platform {
 
     public abstract SoundEngine sound();
 
+    public abstract IFileManager files();
+
     public abstract String getCodeBase();
 
     public abstract Model getModel(Entity entity);

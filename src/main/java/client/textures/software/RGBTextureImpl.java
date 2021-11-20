@@ -1,14 +1,11 @@
 package client.textures.software;
 
-import client.Buffer;
 import client.Draw2D;
-import client.FileArchive;
 import client.textures.IndexedTexture;
 import client.textures.RGBTexture;
 import web.IImage;
 import web.Platform;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 class RGBTextureImpl extends RGBTexture {

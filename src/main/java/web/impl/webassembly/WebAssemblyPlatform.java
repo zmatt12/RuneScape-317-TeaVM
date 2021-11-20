@@ -68,6 +68,11 @@ public class WebAssemblyPlatform extends Platform {
     }
 
     @Override
+    public IFileManager files() {
+        return null;
+    }
+
+    @Override
     public String getCodeBase() {
         return PlatformModule.getCodebase();
     }
