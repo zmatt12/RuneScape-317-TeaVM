@@ -11,10 +11,13 @@ class IDBFileStore {
     constructor(dbName = "Cache", storeName = "Cache"){
         this.#dbName = dbName;
         this.#storeName = storeName;
-        this.#version = 1; //manually increment when update the store
+        this.#version = 1; //manually increment when changes are made to the structure of the DB
     }
 
     open(onsuccess, onerror){
+        if(this.#db){
+            throw "Already open!";
+        }
         if(!onsuccess){
             throw "Missing onsuccess handler";
         }
@@ -23,9 +26,6 @@ class IDBFileStore {
         }
         if(!this.#dbName || !this.#storeName){
             throw "Missing name(s)";
-        }
-        if(this.#db){
-            throw "Already open!";
         }
         var store = this;
         let request = window.indexedDB.open(this.#dbName, this.#version);
@@ -42,6 +42,33 @@ class IDBFileStore {
         };
     }
 
+    write(storeId, fileId, data, onsuccess, onerror){
+        this.#validate(storeId, fileId);
+        if(!(data instanceof Int8Array)) {
+            throw "data must be an Int8Array!";
+        }
+        let store = this.#db.transaction(this.#storeName, "readwrite").objectStore(this.#storeName);
+        let request = store.put({storeId:storeId, fileId: fileId, data: data});
+        request.onerror = onerror;
+        request.onsuccess = function(event){
+            onsuccess(request.result);
+        }
+    }
+
+    read(storeId, fileId, onsuccess, onerror) {
+        this.#validate(storeId, fileId);
+        let store = this.#db.transaction(this.#storeName, "readonly").objectStore(this.#storeName);
+        let request = store.get([storeId, fileId]);
+        request.onerror = onerror;
+        request.onsuccess = function(event){
+            if(request.result){
+                onsuccess(request.result.data);
+            }else{
+                onsuccess(null);
+            }
+        };
+    }
+    
     #validate(storeId, fileId){
         if(!this.#db){
             throw "Not open!";
@@ -52,36 +79,6 @@ class IDBFileStore {
         if(typeof storeId !== 'number'){
            throw "storeId must be a number!";
         }
-    }
-
-    write(storeId, fileId, data, onsuccess, onerror){
-        this.#validate(storeId, fileId);
-        if(!(data instanceof Int8Array)) {
-            throw "data must be an Int8Array!";
-        }
-        var filestore = this;
-
-        let store = filestore.#db.transaction(filestore.#storeName, "readwrite").objectStore(filestore.#storeName);
-        let request = store.put({storeId:storeId, fileId: fileId, data: data});
-        request.onerror = onerror;
-        request.onsuccess = function(event){
-            onsuccess(request.result);
-        }
-    }
-
-    read(storeId, fileId, onsuccess, onerror) {
-        this.#validate(storeId, fileId);
-        var filestore = this;
-        let store = filestore.#db.transaction(filestore.#storeName, "readonly").objectStore(filestore.#storeName);
-        let request = store.get([storeId, fileId]);
-        request.onerror = onerror;
-        request.onsuccess = function(event){
-            if(request.result){
-                onsuccess(request.result.data);
-            }else{
-                onsuccess(null);
-            }
-        };
     }
 
     static isSupported(){
