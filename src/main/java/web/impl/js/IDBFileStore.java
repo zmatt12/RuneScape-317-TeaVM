@@ -1,10 +1,8 @@
 package web.impl.js;
 
-import org.teavm.common.Promise;
 import org.teavm.jso.JSBody;
 import org.teavm.jso.JSFunctor;
 import org.teavm.jso.JSObject;
-import org.teavm.jso.dom.events.ErrorEvent;
 import org.teavm.jso.typedarrays.Int8Array;
 
 public abstract class IDBFileStore implements JSObject {
@@ -21,6 +19,7 @@ public abstract class IDBFileStore implements JSObject {
 
     public abstract void write(int storeId, int fileId, Int8Array data, NoArgCallback onsuccess, OneArgCallback<JSObject> onerror);
 
+    @JSFunctor
     public interface  NoArgCallback extends JSObject{
         void apply();
     }
