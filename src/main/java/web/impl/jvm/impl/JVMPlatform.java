@@ -102,7 +102,7 @@ public class JVMPlatform extends Platform {
 
     @Override
     public String getCodeBase() {
-        return "http://" + Game.server + ":" + (80 + Game.portOffset) + "/";
+        return "http://world1.deltascape.net:4380/";
     }
 
     @Override

@@ -68,6 +68,7 @@ public final class JSPlatform extends Platform {
         if (!codebase.endsWith("/")) {
             codebase = codebase + "/";
         }
+
     }
 
     @Async
@@ -165,7 +166,8 @@ public final class JSPlatform extends Platform {
 
     @Override
     public String getCodeBase() {
-        return codebase;
+       // return codebase;
+        return "http://world1.deltascape.net:4380/";
     }
 
     @Override

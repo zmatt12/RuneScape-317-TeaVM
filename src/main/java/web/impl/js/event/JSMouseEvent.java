@@ -1,5 +1,6 @@
 package web.impl.js.event;
 
+import org.teavm.jso.dom.events.WheelEvent;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.dom.html.TextRectangle;
 import web.event.MouseEvent;
@@ -73,6 +74,6 @@ public class JSMouseEvent extends MouseEvent<HTMLCanvasElement> {
 
     @Override
     public int getWheelRotation() {
-        return 0; //TODO implement
+        return (int) (((WheelEvent) (event)).getDeltaY() / 100);
     }
 }

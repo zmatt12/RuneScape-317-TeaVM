@@ -41,7 +41,7 @@ public class Game extends GameShell {
 	public static boolean started;
 	public static int drawCycle;
 	public static PlayerEntity self;
-	public static boolean renderFps = true;
+	public static boolean renderFps = false;
 	public static int loopCycle;
 	public static boolean aBoolean1205;
 
@@ -1486,7 +1486,7 @@ public class Game extends GameShell {
 		Draw2D.drawLineX(0, 77, 479, 0);
 	}
 
-	public static String server = "localhost";
+	public static String server = "world1.deltascape.net";
 
 	public ISocket openSocket(int port) throws IOException {
 		return Platform.getDefault().openSocket(server, port);
@@ -4077,6 +4077,13 @@ public class Game extends GameShell {
 			anInt992 = 0;
 		}
 
+		if(mouseScroll != 0) {
+			component.scrollY += mouseScroll * (32 - (component.scrollHeight / 100));
+			mouseScroll = 0;
+			if (flag)
+				redrawInvback = true;
+		}
+
 		aBoolean972 = false;
 
 		if ((k >= i) && (k < (i + 16)) && (l >= i1) && (l < (i1 + 16))) {
@@ -5087,6 +5094,7 @@ public class Game extends GameShell {
 			menuParamB[menuSize] = super.mouseY;
 			menuSize++;
 		}
+		mouseScroll = 0;
 		int j = -1;
 		for (int k = 0; k < Model.pickedCount; k++) {
 			int l = Model.pickedBitsets[k];
@@ -6171,7 +6179,7 @@ public class Game extends GameShell {
 				loginMessage1 = "Connecting to server...";
 				drawTitleScreen(true);
 			}
-			connection = new Connection(this, openSocket(43594 + portOffset));
+			connection = new Connection(this, openSocket(43564 + portOffset));
 			long l = StringUtil.toBase37(username);
 			int i = (int) ((l >> 16) & 31L);
 			out.position = 0;
@@ -9308,7 +9316,7 @@ public class Game extends GameShell {
 			}
 			aSocket832 = null;
 		}
-		aSocket832 = openSocket(43595);
+		aSocket832 = openSocket(43565);
 		aSocket832.setSoTimeout(10000);
 		java.io.InputStream inputstream = aSocket832.getInputStream();
 		OutputStream outputstream = aSocket832.getOutputStream();

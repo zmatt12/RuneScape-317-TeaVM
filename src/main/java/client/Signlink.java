@@ -112,6 +112,7 @@ public class Signlink implements Runnable {
 	}
 
 	public static synchronized DataInputStream openurl(String s) throws IOException {
+		System.out.println("Opening url: "+s );
 		for (urlreq = s; urlreq != null; ) {
 			try {
 				Thread.sleep(50L);

@@ -21,8 +21,8 @@ public class Entry {
 
         Game g = new Game();
 
-        int width = 765;
-        int height = 503;
+        int width = 781;
+        int height = 542;
 
         frame.add(((JVMComponent) g.getComponent()).getRealComponent());
         frame.setMinimumSize(new Dimension(width, height));

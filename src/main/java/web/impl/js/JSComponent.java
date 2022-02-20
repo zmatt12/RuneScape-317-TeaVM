@@ -73,6 +73,7 @@ class JSComponent extends AbstractComponent {
         canvas.addEventListener("mousemove", createMouseListener(web.event.MouseEvent.TYPE_MOVED));
         canvas.addEventListener("mouseleave", createMouseListener(web.event.MouseEvent.TYPE_EXITED));
         canvas.addEventListener("mouseenter", createMouseListener(web.event.MouseEvent.TYPE_ENTERED));
+        canvas.addEventListener("wheel", createMouseListener(web.event.MouseEvent.TYPE_WHEEL));
 
         //keyboard events
         canvas.addEventListener("keyup", createKeyListener(KeyEvent.TYPE_RELEASED));

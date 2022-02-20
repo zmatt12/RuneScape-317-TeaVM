@@ -24,6 +24,7 @@ public abstract class GameShell extends Window implements Runnable, EventListene
 	public boolean refresh = true;
 	public boolean aBoolean17 = true;
 	public int idleCycles;
+	public int mouseScroll;
 	public int mouseButton;
 	public int mouseX;
 	public int mouseY;
@@ -285,9 +286,13 @@ public abstract class GameShell extends Window implements Runnable, EventListene
 				mouseReleased(e);
 				return;
 			case MouseEvent.TYPE_WHEEL:
-				//this is where I would dispatch a mousewheel event, if I needed to
+				mouseWheelMoved(e);
 				return;
 		}
+	}
+
+	public void mouseWheelMoved(MouseEvent e) {
+		mouseScroll += e.getWheelRotation();
 	}
 
 	public void mousePressed(MouseEvent e) {
