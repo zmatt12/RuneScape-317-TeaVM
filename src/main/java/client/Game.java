@@ -260,6 +260,7 @@ public class Game extends GameShell {
 	public IndexedTexture imageRedstone1hv;
 	public IndexedTexture imageRedstone2hv;
 	public RGBTexture imageMapmarker0;
+	public RGBTexture multiOverlay;
 	public RGBTexture imageMapmarker1;
 	public boolean jaggrabEnabled = false; // original value: false
 	public int lastWaveId = -1;
@@ -447,7 +448,9 @@ public class Game extends GameShell {
 	public int[] menuParamB = new int[500];
 	public int[] menuAction = new int[500];
 	public int[] menuParamC = new int[500];
-	public RGBTexture[] imageHeadicons = new RGBTexture[20];
+	public RGBTexture[] imageHeadicons = new RGBTexture[8];
+	public RGBTexture[] imageSkullicons = new RGBTexture[3];
+	public RGBTexture[] imageHinticons = new RGBTexture[6];
 	public int anInt1098;
 	public int anInt1099;
 	public int anInt1100;
@@ -864,11 +867,18 @@ public class Game extends GameShell {
 			} catch (Exception ignored) {
 			}
 			try {
-				for (int j4 = 0; j4 < 20; j4++) {
-					imageHeadicons[j4] = Renderer.get().decodeRGB(archiveMedia, "headicons", j4);
+				for (int j4 = 0; j4 < 8; j4++) {
+					imageHeadicons[j4] = Renderer.get().decodeRGB(archiveMedia, "headicons_prayer", j4);
+				}
+				for (int j45 = 0; j45 < 3; j45++) {
+					imageSkullicons[j45] = Renderer.get().decodeRGB(archiveMedia, "headicons_pk", j45);
+				}
+				for (int h1 = 0; h1 < 6; h1++) {
+					imageHinticons[h1] = Renderer.get().decodeRGB(archiveMedia, "headicons_hint", h1);
 				}
 			} catch (Exception ignored) {
 			}
+			multiOverlay = Renderer.get().decodeRGB(archiveMedia, "overlay_multiway", 0);
 			imageMapmarker0 = Renderer.get().decodeRGB(archiveMedia, "mapmarker", 0);
 			imageMapmarker1 = Renderer.get().decodeRGB(archiveMedia, "mapmarker", 1);
 			for (int k4 = 0; k4 < 8; k4++) {
@@ -1111,9 +1121,12 @@ public class Game extends GameShell {
 		imageRedstone3v = null;
 		imageRedstone1hv = null;
 		imageRedstone2hv = null;
+		multiOverlay = null;
 		imageCompass = null;
 		imageHitmarks = null;
 		imageHeadicons = null;
+		imageSkullicons = null;
+		imageHinticons = null;
 		imageCrosses = null;
 		imageMapdot0 = null;
 		imageMapdot1 = null;
@@ -1955,8 +1968,12 @@ public class Game extends GameShell {
 		}
 
 		if ((mouseX < x) || (mouseY < y) || (mouseX > (x + parent.width)) || (mouseY > (y + parent.height))) {
+			canScroll = false;
 			return;
 		}
+
+		if(parent.scrollHeight > 0)
+			canScroll = true;
 
 		int childCount = parent.children.length;
 
@@ -1976,6 +1993,7 @@ public class Game extends GameShell {
 				}
 			}
 
+
 			if (child.type == 0) {
 				handleParentComponentInput(cx, child, mouseX, cy, mouseY, child.scrollY);
 
@@ -1983,6 +2001,7 @@ public class Game extends GameShell {
 					method65(cx + child.width, child.height, mouseX, mouseY, child, cy, true, child.scrollHeight);
 				}
 			} else {
+
 				if ((child.optionType == 1) && (mouseX >= cx) && (mouseY >= cy) && (mouseX < (cx + child.width)) && (mouseY < (cy + child.height))) {
 					boolean flag = false;
 					if (child.contentType != 0) {
@@ -2063,81 +2082,90 @@ public class Game extends GameShell {
 											menuSize++;
 										}
 									} else {
-										if (child.aBoolean249) {
-											for (int l3 = 4; l3 >= 3; l3--) {
-												if ((type.inventoryOptions != null) && (type.inventoryOptions[l3] != null)) {
-													menuOption[menuSize] = type.inventoryOptions[l3] + " @lre@" + type.name;
-													if (l3 == 3) {
-														menuAction[menuSize] = 493;
-													}
-													if (l3 == 4) {
-														menuAction[menuSize] = 847;
-													}
-													menuParamC[menuSize] = type.id;
-													menuParamA[menuSize] = k2;
-													menuParamB[menuSize] = child.id;
-													menuSize++;
-												} else if (l3 == 4) {
-													menuOption[menuSize] = "Drop @lre@" + type.name;
-													menuAction[menuSize] = 847;
-													menuParamC[menuSize] = type.id;
-													menuParamA[menuSize] = k2;
-													menuParamB[menuSize] = child.id;
-													menuSize++;
-												}
-											}
-										}
-										if (child.invUsable) {
-											menuOption[menuSize] = "Use @lre@" + type.name;
-											menuAction[menuSize] = 447;
+										if(actionKey[11] == 1){
+											menuOption[menuSize] = "Drop @lre@" + type.name;
+											menuAction[menuSize] = 847;
 											menuParamC[menuSize] = type.id;
 											menuParamA[menuSize] = k2;
 											menuParamB[menuSize] = child.id;
 											menuSize++;
-										}
-										if (child.aBoolean249 && (type.inventoryOptions != null)) {
-											for (int i4 = 2; i4 >= 0; i4--) {
-												if (type.inventoryOptions[i4] != null) {
-													menuOption[menuSize] = type.inventoryOptions[i4] + " @lre@" + type.name;
-													if (i4 == 0) {
-														menuAction[menuSize] = 74;
+										} else {
+											if (child.aBoolean249) {
+												for (int l3 = 4; l3 >= 3; l3--) {
+													if ((type.inventoryOptions != null) && (type.inventoryOptions[l3] != null)) {
+														menuOption[menuSize] = type.inventoryOptions[l3] + " @lre@" + type.name;
+														if (l3 == 3) {
+															menuAction[menuSize] = 493;
+														}
+														if (l3 == 4) {
+															menuAction[menuSize] = 847;
+														}
+														menuParamC[menuSize] = type.id;
+														menuParamA[menuSize] = k2;
+														menuParamB[menuSize] = child.id;
+														menuSize++;
+													} else if (l3 == 4) {
+														menuOption[menuSize] = "Drop @lre@" + type.name;
+														menuAction[menuSize] = 847;
+														menuParamC[menuSize] = type.id;
+														menuParamA[menuSize] = k2;
+														menuParamB[menuSize] = child.id;
+														menuSize++;
 													}
-													if (i4 == 1) {
-														menuAction[menuSize] = 454;
-													}
-													if (i4 == 2) {
-														menuAction[menuSize] = 539;
-													}
-													menuParamC[menuSize] = type.id;
-													menuParamA[menuSize] = k2;
-													menuParamB[menuSize] = child.id;
-													menuSize++;
 												}
 											}
-										}
-										if (child.invOptions != null) {
-											for (int j4 = 4; j4 >= 0; j4--) {
-												if (child.invOptions[j4] != null) {
-													menuOption[menuSize] = child.invOptions[j4] + " @lre@" + type.name;
-													if (j4 == 0) {
-														menuAction[menuSize] = 632;
+											if (child.invUsable) {
+												menuOption[menuSize] = "Use @lre@" + type.name;
+												menuAction[menuSize] = 447;
+												menuParamC[menuSize] = type.id;
+												menuParamA[menuSize] = k2;
+												menuParamB[menuSize] = child.id;
+												menuSize++;
+											}
+											if (child.aBoolean249 && (type.inventoryOptions != null)) {
+												for (int i4 = 2; i4 >= 0; i4--) {
+													if (type.inventoryOptions[i4] != null) {
+														menuOption[menuSize] = type.inventoryOptions[i4] + " @lre@" + type.name;
+														if (i4 == 0) {
+															menuAction[menuSize] = 74;
+														}
+														if (i4 == 1) {
+															menuAction[menuSize] = 454;
+														}
+														if (i4 == 2) {
+															menuAction[menuSize] = 539;
+														}
+														menuParamC[menuSize] = type.id;
+														menuParamA[menuSize] = k2;
+														menuParamB[menuSize] = child.id;
+														menuSize++;
 													}
-													if (j4 == 1) {
-														menuAction[menuSize] = 78;
+												}
+											}
+											if (child.invOptions != null) {
+												for (int j4 = 4; j4 >= 0; j4--) {
+													if (child.invOptions[j4] != null) {
+														menuOption[menuSize] = child.invOptions[j4] + " @lre@" + type.name;
+														if (j4 == 0) {
+															menuAction[menuSize] = 632;
+														}
+														if (j4 == 1) {
+															menuAction[menuSize] = 78;
+														}
+														if (j4 == 2) {
+															menuAction[menuSize] = 867;
+														}
+														if (j4 == 3) {
+															menuAction[menuSize] = 431;
+														}
+														if (j4 == 4) {
+															menuAction[menuSize] = 53;
+														}
+														menuParamC[menuSize] = type.id;
+														menuParamA[menuSize] = k2;
+														menuParamB[menuSize] = child.id;
+														menuSize++;
 													}
-													if (j4 == 2) {
-														menuAction[menuSize] = 867;
-													}
-													if (j4 == 3) {
-														menuAction[menuSize] = 431;
-													}
-													if (j4 == 4) {
-														menuAction[menuSize] = 53;
-													}
-													menuParamC[menuSize] = type.id;
-													menuParamA[menuSize] = k2;
-													menuParamB[menuSize] = child.id;
-													menuSize++;
 												}
 											}
 										}
@@ -2381,15 +2409,17 @@ public class Game extends GameShell {
 				int l = 30;
 				PlayerEntity player = (PlayerEntity) e;
 
-				if (player.headicons != 0) {
+				if (player.headicons != 255 || player.skullicon != 255) {
 					projectToScreen(e, e.height + 15);
 
 					if (projectX > -1) {
-						for (int i2 = 0; i2 < 8; i2++) {
-							if ((player.headicons & (1 << i2)) != 0) {
-								//imageHeadicons[i2].draw(projectX - 12, projectY - l);
-								l -= 25;
-							}
+						if (player.skullicon < 2) {
+							imageSkullicons[player.skullicon].draw(projectX - 12, projectY - l);
+							l += 25;
+						}
+						if (player.headicons < 7) {
+							imageHeadicons[player.headicons].draw(projectX - 12, projectY - l);
+							l += 18;
 						}
 					}
 				}
@@ -2398,7 +2428,7 @@ public class Game extends GameShell {
 					projectToScreen(e, e.height + 15);
 
 					if (projectX > -1) {
-						imageHeadicons[7].draw(projectX - 12, projectY - l);
+						imageHinticons[1].draw(projectX - 12, projectY - l);
 					}
 				}
 			} else {
@@ -2413,7 +2443,7 @@ public class Game extends GameShell {
 				if ((hintType == 1) && (hintNPC == npcIndices[i - playerCount]) && ((loopCycle % 20) < 10)) {
 					projectToScreen(e, e.height + 15);
 					if (projectX > -1) {
-						imageHeadicons[2].draw(projectX - 12, projectY - 28);
+						imageHinticons[0].draw(projectX - 12, projectY - 28);
 					}
 				}
 			}
@@ -3705,7 +3735,7 @@ public class Game extends GameShell {
 		}
 		projectToScreen(((hintTileX - sceneBaseTileX) << 7) + hintOffsetX, hintHeight * 2, ((hintTileZ - sceneBaseTileZ) << 7) + hintOffsetZ);
 		if ((projectX > -1) && ((loopCycle % 20) < 10)) {
-			imageHeadicons[2].draw(projectX - 12, projectY - 28);
+			imageHinticons[0].draw(projectX - 12, projectY - 28);
 		}
 	}
 
@@ -5095,6 +5125,20 @@ public class Game extends GameShell {
 			menuSize++;
 		}
 		mouseScroll = 0;
+
+		if(mouseButton == 3) {
+			int i = mouseWheelX - mouseX;
+			int j = -(mouseWheelY - mouseY);
+			this.cameraYawTranslate += i * 3;
+			this.cameraPitchTranslate += (j << 1);
+		}
+
+		mouseWheelX = mouseX;
+		mouseWheelY = mouseY;
+
+
+
+
 		int j = -1;
 		for (int k = 0; k < Model.pickedCount; k++) {
 			int l = Model.pickedBitsets[k];
@@ -7588,7 +7632,8 @@ public class Game extends GameShell {
 		}
 		if (chatbackComponentId == -1) {
 			aComponent_1059.scrollY = chatScrollHeight - anInt1089 - 77;
-			if ((super.mouseX > 448) && (super.mouseX < 560) && (super.mouseY > 332)) {
+			if ((super.mouseX > 0/*448*/) && (super.mouseX < 560) && (super.mouseY > 332)) {
+				canScroll = true;
 				method65(463, 77, super.mouseX - 17, super.mouseY - 357, aComponent_1059, 0, false, chatScrollHeight);
 			}
 			int i = chatScrollHeight - 77 - aComponent_1059.scrollY;
@@ -8362,7 +8407,7 @@ public class Game extends GameShell {
 			cameraFocusZ += (focusZ - cameraFocusZ) / 16;
 		}
 
-		if (super.actionKey[1] == 1) {
+		if (super.actionKey[1] == 1) {//
 			cameraYawTranslate += (-24 - cameraYawTranslate) / 2;
 		} else if (super.actionKey[2] == 1) {
 			cameraYawTranslate += (24 - cameraYawTranslate) / 2;
@@ -8426,7 +8471,6 @@ public class Game extends GameShell {
 			anInt984 += (j2 - anInt984) / 80;
 		}
 	}
-
 	public boolean isFriend(String name) {
 		if (name == null) {
 			return false;
@@ -8472,7 +8516,7 @@ public class Game extends GameShell {
 			drawMenu();
 		}
 		if (anInt1055 == 1) {
-			imageHeadicons[1].draw(472, 296);
+			multiOverlay.draw(472, 296);
 		}
 		if (renderFps) {
 			char c = '\u01FB';

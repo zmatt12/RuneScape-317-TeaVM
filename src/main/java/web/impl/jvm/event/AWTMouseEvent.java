@@ -32,6 +32,11 @@ public class AWTMouseEvent extends MouseEvent<Object> {
     }
 
     @Override
+    public boolean isMiddleMouseButton() {
+        return SwingUtilities.isMiddleMouseButton(event);
+    }
+
+    @Override
     public int getX() {
         return event.getX();
     }

@@ -28,6 +28,8 @@ public abstract class MouseEvent<T> extends Event {
 
     public abstract boolean isRightMouseButton();
 
+    public abstract boolean isMiddleMouseButton();
+
     @Override
     public final int getType() {
         return TYPE_MOUSE;

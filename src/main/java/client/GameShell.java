@@ -24,10 +24,13 @@ public abstract class GameShell extends Window implements Runnable, EventListene
 	public boolean refresh = true;
 	public boolean aBoolean17 = true;
 	public int idleCycles;
+	public boolean canScroll;
 	public int mouseScroll;
 	public int mouseButton;
 	public int mouseX;
 	public int mouseY;
+	public int mouseWheelX;
+	public int mouseWheelY;
 	public int lastMousePressButton;
 	public int lastMousePressX;
 	public int lastMousePressY;
@@ -292,7 +295,8 @@ public abstract class GameShell extends Window implements Runnable, EventListene
 	}
 
 	public void mouseWheelMoved(MouseEvent e) {
-		mouseScroll += e.getWheelRotation();
+		if(canScroll)
+			mouseScroll += e.getWheelRotation();
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -304,7 +308,10 @@ public abstract class GameShell extends Window implements Runnable, EventListene
 		lastMousePressY = y;
 		lastMousePressTime = System.currentTimeMillis();
 
-		if (e.isRightMouseButton()) {
+		if(e.isMiddleMouseButton()) {
+			lastMousePressButton = 3;
+			mouseButton = 3;
+		} else if (e.isRightMouseButton()) {
 			lastMousePressButton = 2;
 			mouseButton = 2;
 		} else {
@@ -333,6 +340,7 @@ public abstract class GameShell extends Window implements Runnable, EventListene
 	public void mouseDragged(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
+
 		idleCycles = 0;
 		mouseX = x;
 		mouseY = y;
@@ -373,6 +381,8 @@ public abstract class GameShell extends Window implements Runnable, EventListene
 			ch = 9;
 		} else if (code == KeyEvent.VK_ENTER) {
 			ch = 10;
+		} else if (code == KeyEvent.VK_SHIFT) {
+			ch = 11;
 		} else if ((code >= KeyEvent.VK_F1) && (code <= KeyEvent.VK_F12)) {
 			ch = (1008 + code) - KeyEvent.VK_F1;
 		} else if (code == KeyEvent.VK_HOME) {
@@ -423,6 +433,8 @@ public abstract class GameShell extends Window implements Runnable, EventListene
 			action = 9;
 		} else if (code == KeyEvent.VK_ENTER) {
 			action = 10;
+		} else if (code == KeyEvent.VK_SHIFT) {
+			action = 11;
 		}
 
 		if ((action > 0) && (action < 128)) {

@@ -49,6 +49,11 @@ public class JSMouseEvent extends MouseEvent<HTMLCanvasElement> {
     }
 
     @Override
+    public boolean isMiddleMouseButton() {
+        return getButton() == BUTTON_TWO;
+    }
+
+    @Override
     public int getX() {
         return x;
     }

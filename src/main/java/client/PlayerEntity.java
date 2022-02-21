@@ -17,6 +17,7 @@ public class PlayerEntity extends PathingEntity {
 	public String name;
 	public int combatLevel;
 	public int headicons;
+	public int skullicon;
 	public int anInt1707;
 	public int anInt1708;
 	public int y;
@@ -107,6 +108,7 @@ public class PlayerEntity extends PathingEntity {
 		buffer.position = 0;
 		gender = buffer.get1U();
 		headicons = buffer.get1U();
+		skullicon = buffer.get1U();
 		aType_1698 = null;
 		team = 0;
 		for (int j = 0; j < 12; j++) {
